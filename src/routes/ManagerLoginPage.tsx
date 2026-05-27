@@ -30,8 +30,12 @@ export function ManagerLoginPage() {
   const errorMessage =
     login.error instanceof ApiError && login.error.code === 'INVALID_PASSWORD'
       ? t('login.error')
+      : login.error instanceof ApiError && login.error.code === 'RATE_LIMIT'
+        ? t('login.error.rateLimit')
+        : login.error instanceof ApiError && login.error.status >= 500
+          ? t('login.error.config')
       : login.isError
-        ? t('common.error')
+        ? t('login.error.network')
         : null;
 
   return (

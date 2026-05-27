@@ -56,7 +56,11 @@ export const onRequestPost: PagesFunction<Env, 'secret'> = async (ctx) => {
     return json(200, { ok: false, ignored: 'unknown' });
   }
 
-  if (!isAllowedFormId(payload.formId, ctx.env.JOTFORM_ALLOWED_FORM_IDS)) {
+  if (
+    !isAllowedFormId(payload.formId, ctx.env.JOTFORM_ALLOWED_FORM_IDS, {
+      requireConfigured: true,
+    })
+  ) {
     console.warn('jotform webhook: formID not in allowlist', payload.formId);
     return json(200, { ok: false, ignored: 'form_not_allowed' });
   }

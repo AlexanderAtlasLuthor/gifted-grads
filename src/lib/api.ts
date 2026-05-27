@@ -16,7 +16,11 @@ import { getToken } from './auth';
 import { mockApi } from './mockApi';
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '';
-const USE_MOCK = import.meta.env.VITE_USE_MOCK_API === 'true';
+const USE_MOCK =
+  import.meta.env.VITE_USE_MOCK_API === 'true' ||
+  (import.meta.env.DEV &&
+    import.meta.env.VITE_USE_MOCK_API !== 'false' &&
+    !BASE_URL);
 
 export class ApiError extends Error {
   status: number;

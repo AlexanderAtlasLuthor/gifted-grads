@@ -64,9 +64,10 @@ const nombresSeed = [
   'Tomás Aguirre',
 ];
 
-let attendees: Attendee[] = [];
+const attendees: Attendee[] = [];
 let nextNumber = 1;
 let currentWinner: CurrentRaffleResponse | null = null;
+const drawnAttendeeIds = new Set<string>();
 let activeToken: { token: string; expiresAt: string } | null = null;
 
 function seed() {
@@ -253,11 +254,27 @@ export const mockApi = {
           'Número de participante no encontrado',
         );
       }
+      if (drawnAttendeeIds.has(found.id)) {
+        throw new ApiError(
+          409,
+          'RAFFLE_ALREADY_DRAWN',
+          'Ese participante ya fue seleccionado',
+        );
+      }
       winner = found;
     } else {
-      winner = attendees[Math.floor(Math.random() * attendees.length)];
+      const eligible = attendees.filter((a) => !drawnAttendeeIds.has(a.id));
+      if (eligible.length === 0) {
+        throw new ApiError(
+          409,
+          'RAFFLE_ALREADY_DRAWN',
+          'Ya no quedan participantes disponibles',
+        );
+      }
+      winner = eligible[Math.floor(Math.random() * eligible.length)];
     }
     const drawnAt = new Date().toISOString();
+    drawnAttendeeIds.add(winner.id);
     currentWinner = { winner, drawnAt };
     return delay({ winner, drawnAt, emailSent: true });
   },

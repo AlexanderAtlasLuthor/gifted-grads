@@ -17,6 +17,7 @@ export function RafflePanel() {
   const [lastResult, setLastResult] = useState<RaffleDrawResponse | null>(null);
 
   async function drawRandom() {
+    if (displayed && !window.confirm(t('raffle.confirm.redraw'))) return;
     setLastResult(null);
     try {
       const res = await drawMutation.mutateAsync({ mode: 'random' });
@@ -29,6 +30,7 @@ export function RafflePanel() {
   async function drawManual() {
     const n = Number(manualNumber);
     if (!Number.isInteger(n) || n <= 0) return;
+    if (!window.confirm(t('raffle.confirm.manual', { number: n }))) return;
     setLastResult(null);
     try {
       const res = await drawMutation.mutateAsync({
@@ -49,6 +51,7 @@ export function RafflePanel() {
     if (err instanceof ApiError) {
       if (err.code === 'WINNER_NOT_FOUND') return t('raffle.error.notFound');
       if (err.code === 'NO_ATTENDEES') return t('raffle.error.empty');
+      if (err.code === 'RAFFLE_ALREADY_DRAWN') return t('raffle.error.alreadyDrawn');
     }
     return t('raffle.error.generic');
   })();

@@ -33,14 +33,22 @@ function BarRow({
   );
 }
 
-function CategoryList({ items, emptyLabel }: { items: CategoryCount[]; emptyLabel: string }) {
+function CategoryList({
+  items,
+  emptyLabel,
+  labelFor = (key) => key,
+}: {
+  items: CategoryCount[];
+  emptyLabel: string;
+  labelFor?: (key: string) => string;
+}) {
   if (items.length === 0) {
     return <div className="text-xs text-slate-500">{emptyLabel}</div>;
   }
   return (
     <div className="space-y-2">
       {items.slice(0, 5).map((c) => (
-        <BarRow key={c.key} label={c.key} count={c.count} percent={c.percent} />
+        <BarRow key={c.key} label={labelFor(c.key)} count={c.count} percent={c.percent} />
       ))}
     </div>
   );
@@ -65,13 +73,14 @@ export function MetricsGrid() {
   const generos = (['M', 'F', 'OTRO', 'PREFIERO_NO_DECIR'] as const).filter(
     (k) => data.byGenero[k] > 0,
   );
+  const updatedTime = new Date(data.updatedAt).toLocaleTimeString();
 
   return (
     <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
       <MetricCard
         label={t('dashboard.metric.total')}
         value={data.total}
-        hint={`actualizado ${new Date(data.updatedAt).toLocaleTimeString()}`}
+        hint={t('dashboard.metric.updatedAt', { time: updatedTime })}
       />
       <MetricCard
         label={t('dashboard.metric.promedioEdad')}
@@ -93,7 +102,11 @@ export function MetricsGrid() {
         </div>
       </MetricCard>
       <MetricCard label={t('dashboard.metric.nivel')}>
-        <CategoryList items={data.byNivel} emptyLabel="—" />
+        <CategoryList
+          items={data.byNivel}
+          emptyLabel="—"
+          labelFor={(key) => t(`nivel.${key}`)}
+        />
       </MetricCard>
       <MetricCard
         className="md:col-span-2"

@@ -8,9 +8,12 @@
 ```bash
 npm install
 
-# Modo mock (sin backend): store en memoria, password "admin"
-VITE_USE_MOCK_API=true npm run dev
+# Dev local: usa mock automáticamente si no configuras VITE_API_BASE_URL.
+# Password del manager en mock: "admin".
+npm run dev
 ```
+
+Si quieres forzar el backend real desde Vite, define `VITE_USE_MOCK_API=false` y `VITE_API_BASE_URL`.
 
 Compilación de producción: `npm run build` (sale a `dist/`). Tests: `npm test`.
 
@@ -139,7 +142,7 @@ Conecta el repositorio a Cloudflare Pages:
 ### Frontend (build-time, prefijo `VITE_`)
 
 - `VITE_API_BASE_URL` — vacío para mismo origen (Pages Functions).
-- `VITE_USE_MOCK_API` — `"true"` activa el mock in-memory (renderiza el form legacy en lugar del embed de Jotform).
+- `VITE_USE_MOCK_API` — `"true"` activa el mock in-memory; `"false"` lo desactiva. En `npm run dev`, si no hay `VITE_API_BASE_URL`, el mock se activa automáticamente.
 - `VITE_JOTFORM_FORM_ID_ES` — Form ID del formulario en español.
 - `VITE_JOTFORM_FORM_ID_EN` — Form ID del formulario en inglés.
 

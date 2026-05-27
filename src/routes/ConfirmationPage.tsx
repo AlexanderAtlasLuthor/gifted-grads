@@ -247,11 +247,8 @@ function Loaded({
         </section>
       </div>
 
-      <div className="mt-8 grid gap-3 sm:grid-cols-2">
-        <button type="button" className="btn-primary w-full py-3 text-base" disabled>
-          <DownloadIcon /> {t('confirmation.download')}
-        </button>
-        <Link to="/" className="btn-secondary w-full py-3 text-base">
+      <div className="mt-8">
+        <Link to="/" className="btn-secondary w-full py-3 text-base sm:w-auto">
           <HomeIcon /> {t('confirmation.backHome')}
         </Link>
       </div>
@@ -347,13 +344,6 @@ function InfoIcon({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" className={className} fill="currentColor">
       <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 5a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5zm1 10h-2v-6h2v6z" />
-    </svg>
-  );
-}
-function DownloadIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-      <path d="M12 4v12m0 0l-4-4m4 4l4-4M5 20h14" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }

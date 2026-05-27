@@ -152,8 +152,12 @@ export function parseJotformPayload(form: FormData): ParsedJotformPayload {
   return { submissionId, formId, data: parsed.data };
 }
 
-export function isAllowedFormId(formId: string, csv: string | undefined): boolean {
-  if (!csv) return true; // empty CSV means "no restriction" — useful in dev
+export function isAllowedFormId(
+  formId: string,
+  csv: string | undefined,
+  options: { requireConfigured?: boolean } = {},
+): boolean {
+  if (!csv) return options.requireConfigured ? false : true;
   return csv
     .split(',')
     .map((s) => s.trim())

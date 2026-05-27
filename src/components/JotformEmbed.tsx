@@ -5,7 +5,11 @@ import { ErrorBanner } from './ErrorBanner';
 import { Spinner } from './Spinner';
 
 const HANDLER_SRC = 'https://cdn.jotfor.ms/s/umd/latest/for-form-embed-handler.js';
-const USE_MOCK = import.meta.env.VITE_USE_MOCK_API === 'true';
+const USE_MOCK =
+  import.meta.env.VITE_USE_MOCK_API === 'true' ||
+  (import.meta.env.DEV &&
+    import.meta.env.VITE_USE_MOCK_API !== 'false' &&
+    !import.meta.env.VITE_API_BASE_URL);
 
 declare global {
   interface Window {
@@ -52,14 +56,25 @@ export function JotformEmbed() {
   }
 
   if (!formId) {
+    if (import.meta.env.DEV) {
+      return <RegisterForm />;
+    }
+
     return (
-      <ErrorBanner
-        message={
-          locale === 'en'
-            ? 'Jotform Form ID is not configured. Set VITE_JOTFORM_FORM_ID_EN.'
-            : 'Falta configurar el Form ID de Jotform. Define VITE_JOTFORM_FORM_ID_ES.'
-        }
-      />
+      <div className="space-y-4">
+        <ErrorBanner
+          message={
+            locale === 'en'
+              ? 'Registration is not available yet. Please check back shortly.'
+              : 'El registro todavía no está disponible. Vuelve a intentarlo en unos minutos.'
+          }
+        />
+        <p className="text-sm text-slate-500">
+          {locale === 'en'
+            ? 'The event team is finishing the form setup.'
+            : 'El equipo del evento está terminando la configuración del formulario.'}
+        </p>
+      </div>
     );
   }
 

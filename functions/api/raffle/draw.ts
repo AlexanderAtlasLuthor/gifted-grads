@@ -26,6 +26,19 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
 
   let winnerRow: AttendeeRow | null = null;
   if (body.mode === 'manual') {
+    const alreadyDrawn = await ctx.env.DB.prepare(
+      `SELECT r.id
+       FROM raffle_draws r
+       JOIN attendees a ON a.id = r.attendee_id
+       WHERE a.participant_number = ?
+       LIMIT 1`,
+    )
+      .bind(body.participantNumber)
+      .first<{ id: string }>();
+    if (alreadyDrawn) {
+      return error(409, 'RAFFLE_ALREADY_DRAWN', 'Ese participante ya fue seleccionado');
+    }
+
     winnerRow = await ctx.env.DB.prepare(
       `SELECT id, participant_number, nombre, email, telefono, genero, edad, institucion, carrera, nivel_academico, created_at
        FROM attendees WHERE participant_number = ? LIMIT 1`,
@@ -38,10 +51,13 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   } else {
     winnerRow = await ctx.env.DB.prepare(
       `SELECT id, participant_number, nombre, email, telefono, genero, edad, institucion, carrera, nivel_academico, created_at
-       FROM attendees ORDER BY RANDOM() LIMIT 1`,
+       FROM attendees
+       WHERE id NOT IN (SELECT attendee_id FROM raffle_draws)
+       ORDER BY RANDOM()
+       LIMIT 1`,
     ).first<AttendeeRow>();
     if (!winnerRow) {
-      return error(400, 'NO_ATTENDEES', 'No hay asistentes registrados');
+      return error(409, 'RAFFLE_ALREADY_DRAWN', 'Ya no quedan participantes disponibles');
     }
   }
 
