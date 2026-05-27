@@ -9,16 +9,23 @@ export function Logo({
 }) {
   return (
     <div className={clsx('flex items-center gap-3', className)}>
-      <img
-        src="/logo.png"
-        alt="Gifted Grads"
-        className="h-12 w-auto drop-shadow-sm"
-        draggable={false}
-      />
+      <div className="grid place-items-center rounded-full bg-white/95 p-1.5 shadow-[0_4px_20px_rgba(247,201,72,0.25)] ring-1 ring-accent-400/30">
+        <img
+          src="/logo.png"
+          alt="Gifted Grads"
+          className="h-9 w-auto"
+          draggable={false}
+        />
+      </div>
       {showText && (
-        <span className="text-lg font-semibold uppercase tracking-[0.24em] text-slate-100">
-          Born Gifted
-        </span>
+        <div className="flex flex-col leading-tight">
+          <span className="font-display text-xs uppercase tracking-widest text-accent-300">
+            Born Gifted
+          </span>
+          <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-ink-200/80">
+            Gifted Grads · Events
+          </span>
+        </div>
       )}
     </div>
   );

@@ -39,14 +39,12 @@ export function ManagerLoginPage() {
         : null;
 
   return (
-    <div className="event-shell min-h-full">
-      <div className="event-sphere -right-32 top-14 h-80 w-80 opacity-45" />
-      <div className="relative mx-auto max-w-md px-4 py-14 sm:px-6">
-      <div className="card-lg p-7">
-        <h1 className="text-2xl font-black uppercase tracking-normal text-white">
-          {t('login.title')}
-        </h1>
-        <p className="mt-2 text-sm text-slate-300">{t('login.subtitle')}</p>
+    <div className="relative mx-auto max-w-md px-4 py-20 sm:px-6">
+      <div className="pointer-events-none absolute -top-10 left-1/2 h-80 w-80 -translate-x-1/2 rounded-full bg-sky-glow blur-[100px]" />
+      <div className="card-lg grain-on relative p-8">
+        <span className="eyebrow">Manager access</span>
+        <h1 className="headline mt-3 text-3xl">{t('login.title')}</h1>
+        <p className="mt-2 text-sm text-ink-100/80">{t('login.subtitle')}</p>
 
         <form className="mt-5 space-y-4" onSubmit={onSubmit}>
           {errorMessage && <ErrorBanner message={errorMessage} />}
@@ -79,7 +77,6 @@ export function ManagerLoginPage() {
             )}
           </button>
         </form>
-      </div>
       </div>
     </div>
   );

@@ -125,7 +125,7 @@ export function RegisterForm() {
         )}
       </button>
 
-      <p className="flex items-center justify-center gap-1 text-center text-xs text-[#8FA9C4]">
+      <p className="flex items-center justify-center gap-1 text-center text-xs text-ink-200/70">
         <LockMiniIcon /> {t('register.privacy')}
       </p>
     </form>

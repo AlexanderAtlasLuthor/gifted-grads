@@ -60,13 +60,14 @@ export function RafflePanel() {
     lastResult ?? currentQuery.data ?? null;
 
   return (
-    <div className="card space-y-4 overflow-hidden p-5">
+    <div className="card grain-on relative overflow-hidden p-6 space-y-5">
+      <div className="pointer-events-none absolute -right-20 -top-20 h-48 w-48 rounded-full bg-accent-400/15 blur-3xl" />
       <div className="flex items-center justify-between">
-        <h3 className="text-base font-semibold text-white">
+        <h3 className="font-display text-xl uppercase tracking-wider text-white">
           {t('dashboard.section.raffle')}
         </h3>
         {displayed && (
-          <span className="text-xs text-slate-400">
+          <span className="text-[10px] uppercase tracking-[0.3em] text-ink-200/70">
             {t('raffle.previous')} · {formatDateTime(displayed.drawnAt, locale)}
           </span>
         )}
@@ -75,24 +76,30 @@ export function RafflePanel() {
       {errorMessage && <ErrorBanner message={errorMessage} />}
 
       {displayed && (
-        <div className="rounded-2xl border border-accent-300/30 bg-accent-300/10 p-4 shadow-[0_0_36px_rgba(247,201,72,0.08)]">
-          <div className="text-xs uppercase tracking-[0.2em] text-accent-200">
+        <div className="relative rounded-2xl border border-accent-400/30 bg-accent-400/[0.07] p-5">
+          <div className="text-[10px] uppercase tracking-[0.35em] text-accent-300">
             {t('raffle.winner.title')}
           </div>
-          <div className="mt-2 grid gap-2 sm:grid-cols-3">
+          <div className="mt-3 grid gap-3 sm:grid-cols-3">
             <div>
-              <div className="text-xs text-slate-400">{t('raffle.winner.number')}</div>
-              <div className="font-mono text-2xl font-bold text-accent-200">
+              <div className="text-[10px] uppercase tracking-[0.3em] text-ink-200/60">
+                {t('raffle.winner.number')}
+              </div>
+              <div className="mt-1 font-display text-3xl text-accent-300">
                 #{formatParticipantNumber(displayed.winner.participantNumber)}
               </div>
             </div>
             <div>
-              <div className="text-xs text-slate-400">{t('raffle.winner.name')}</div>
-              <div className="font-medium text-white">{displayed.winner.nombre}</div>
+              <div className="text-[10px] uppercase tracking-[0.3em] text-ink-200/60">
+                {t('raffle.winner.name')}
+              </div>
+              <div className="mt-1 font-medium text-white">{displayed.winner.nombre}</div>
             </div>
             <div>
-              <div className="text-xs text-slate-400">{t('raffle.winner.email')}</div>
-              <div className="font-medium text-white">{displayed.winner.email}</div>
+              <div className="text-[10px] uppercase tracking-[0.3em] text-ink-200/60">
+                {t('raffle.winner.email')}
+              </div>
+              <div className="mt-1 font-medium text-white">{displayed.winner.email}</div>
             </div>
           </div>
           {lastResult && (
