@@ -16,8 +16,8 @@ export function Logo({
         draggable={false}
       />
       {showText && (
-        <span className="text-lg font-semibold tracking-wide text-slate-700">
-          EVENTS
+        <span className="text-lg font-semibold uppercase tracking-[0.24em] text-slate-100">
+          Born Gifted
         </span>
       )}
     </div>

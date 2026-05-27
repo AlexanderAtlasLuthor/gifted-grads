@@ -3,7 +3,7 @@ import { Link, Navigate, useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from '../i18n/I18nProvider';
 import { formatDateTime, formatParticipantNumber } from '../lib/format';
-import { PaperPlane, Sparkle } from '../components/decorations';
+import { Sparkle } from '../components/decorations';
 import { Spinner } from '../components/Spinner';
 import { ApiError, api } from '../lib/api';
 import type { Attendee, InsuranceType } from '@shared/types';
@@ -75,8 +75,8 @@ export function ConfirmationPage() {
   }
 
   return (
-    <div className="relative overflow-hidden">
-      <PaperPlane className="absolute right-[28%] top-6 hidden h-32 w-72 lg:block" />
+    <div className="event-shell min-h-full">
+      <div className="event-sphere -right-32 top-16 h-80 w-80 opacity-50 lg:right-[8%] lg:h-[28rem] lg:w-[28rem]" />
       <div className="relative mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:py-14">
         {displayed ? (
           <Loaded participantNumber={displayed.participantNumber} attendee={displayed.attendee} />
@@ -93,8 +93,8 @@ export function ConfirmationPage() {
 function Pending({ message }: { message: string }) {
   return (
     <div className="mx-auto flex max-w-md flex-col items-center gap-4 py-20 text-center">
-      <Spinner className="h-8 w-8 text-brand-500" />
-      <div className="text-slate-700">{message}</div>
+      <Spinner className="h-8 w-8 text-[#6EC6E8]" />
+      <div className="text-slate-200">{message}</div>
     </div>
   );
 }
@@ -105,10 +105,10 @@ function Timeout() {
     <div className="mx-auto max-w-xl py-12 text-center">
       <div className="card-lg p-8">
         <div className="text-3xl">⌛</div>
-        <h1 className="mt-4 text-2xl font-bold tracking-tight text-slate-900">
+        <h1 className="mt-4 text-2xl font-bold tracking-tight text-white">
           {t('confirmation.timeout.title')}
         </h1>
-        <p className="mt-2 text-slate-600">{t('confirmation.timeout.body')}</p>
+        <p className="mt-2 text-slate-300">{t('confirmation.timeout.body')}</p>
         <Link to="/" className="btn-secondary mt-6 inline-flex">
           {t('confirmation.backHome')}
         </Link>
@@ -130,14 +130,15 @@ function Loaded({
   return (
     <>
       <header className="flex items-start gap-5">
-        <div className="grid h-16 w-16 shrink-0 place-items-center rounded-full bg-emerald-500 text-white shadow-cardLg">
+        <div className="grid h-16 w-16 shrink-0 place-items-center rounded-full bg-accent-400 text-[#08111F] shadow-[0_0_34px_rgba(247,201,72,0.26)]">
           <CheckIcon />
         </div>
         <div>
-          <h1 className="text-3xl font-bold leading-tight tracking-tight text-slate-900 sm:text-4xl">
-            <span className="accent-underline">{t('confirmation.title')}</span>
+          <p className="eyebrow">{t('register.heroTitle')}</p>
+          <h1 className="mt-2 text-4xl font-black uppercase leading-tight tracking-normal text-white sm:text-6xl">
+            {t('confirmation.title')}
           </h1>
-          <p className="mt-2 max-w-2xl text-slate-600">
+          <p className="mt-3 max-w-2xl text-slate-300">
             {t('confirmation.subtitle.line1')}
             <br />
             {t('confirmation.subtitle.line2')}
@@ -148,10 +149,10 @@ function Loaded({
       <div className="mt-10 grid gap-6 lg:grid-cols-3">
         <section className="card-lg p-6 lg:row-span-2">
           <div className="mb-4 flex items-center gap-2">
-            <div className="grid h-9 w-9 place-items-center rounded-full bg-brand-50 text-brand-600">
+            <div className="grid h-9 w-9 place-items-center rounded-full bg-[#6EC6E8]/[0.12] text-[#BDEEFF]">
               <UserMiniIcon />
             </div>
-            <h2 className="text-base font-semibold text-slate-800">
+            <h2 className="text-base font-semibold text-white">
               {t('confirmation.summaryTitle')}
             </h2>
           </div>
@@ -171,32 +172,34 @@ function Loaded({
         </section>
 
         <section className="card-lg relative overflow-hidden p-6 text-center">
+          <div className="absolute inset-y-0 left-0 w-3 border-y-8 border-white/0 bg-[radial-gradient(circle_at_center,#08111F_5px,transparent_6px)] bg-[length:12px_22px]" />
+          <div className="absolute inset-y-0 right-0 w-3 border-y-8 border-white/0 bg-[radial-gradient(circle_at_center,#08111F_5px,transparent_6px)] bg-[length:12px_22px]" />
           <Sparkle className="spark absolute left-4 top-6 h-6 w-6" />
           <Sparkle className="spark absolute right-6 top-10 h-4 w-4 [animation-delay:600ms]" />
           <Sparkle className="spark absolute bottom-8 left-8 h-5 w-5 [animation-delay:1200ms]" />
           <Sparkle className="spark absolute bottom-6 right-10 h-4 w-4 [animation-delay:300ms]" />
-          <div className="text-sm font-semibold text-slate-600">
+          <div className="text-sm font-semibold uppercase tracking-[0.22em] text-[#8FA9C4]">
             {t('confirmation.numberLabel')}
           </div>
-          <div className="mt-3 font-mono text-7xl font-extrabold tracking-tight text-brand-500">
+          <div className="mt-3 font-mono text-7xl font-extrabold tracking-tight text-accent-300">
             {formatParticipantNumber(participantNumber)}
           </div>
-          <p className="mt-4 text-sm text-slate-600">
+          <p className="mt-4 text-sm text-slate-300">
             {t('confirmation.numberNotice')}
           </p>
         </section>
 
         <section className="card-lg relative overflow-hidden p-6">
-          <div className="absolute -right-12 -top-12 h-32 w-32 rounded-full bg-brand-100/60 blur-2xl" />
+          <div className="absolute -right-12 -top-12 h-32 w-32 rounded-full bg-[#6EC6E8]/[0.18] blur-2xl" />
           <div className="relative flex flex-col items-center text-center">
             <EnvelopeIllustration className="h-24 w-auto" />
-            <h2 className="mt-4 text-base font-semibold text-slate-800">
+            <h2 className="mt-4 text-base font-semibold text-white">
               {t('confirmation.email.title')}
             </h2>
-            <p className="mt-1 text-sm text-slate-600">
+            <p className="mt-1 text-sm text-slate-300">
               {t('confirmation.email.body')}
             </p>
-            <div className="mt-4 rounded-xl bg-brand-50 px-3 py-2 text-xs text-brand-700">
+            <div className="mt-4 rounded-xl border border-[#6EC6E8]/20 bg-[#6EC6E8]/10 px-3 py-2 text-xs text-[#BDEEFF]">
               <InfoIcon className="mr-1 inline h-3.5 w-3.5" />
               {t('confirmation.email.spam')}
             </div>
@@ -234,10 +237,10 @@ function Loaded({
 function SummaryItem({ label, value }: { label: string; value?: string }) {
   return (
     <div>
-      <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+      <dt className="text-xs font-semibold uppercase tracking-wide text-[#8FA9C4]">
         {label}
       </dt>
-      <dd className="mt-1 text-sm font-medium text-slate-800">{value ?? '—'}</dd>
+      <dd className="mt-1 text-sm font-medium text-slate-100">{value ?? '—'}</dd>
     </div>
   );
 }
@@ -253,12 +256,12 @@ function NoticeRow({
 }) {
   return (
     <div className="flex items-start gap-3">
-      <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-brand-50 text-brand-600">
+      <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#6EC6E8]/[0.12] text-[#BDEEFF]">
         {icon}
       </div>
       <div>
-        <div className="font-semibold text-slate-800">{title}</div>
-        <p className="text-sm text-slate-600">{body}</p>
+        <div className="font-semibold text-white">{title}</div>
+        <p className="text-sm text-slate-300">{body}</p>
       </div>
     </div>
   );

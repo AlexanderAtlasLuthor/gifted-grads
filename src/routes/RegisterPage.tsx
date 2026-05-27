@@ -1,82 +1,122 @@
 import { useTranslation } from '../i18n/I18nProvider';
 import { JotformEmbed } from '../components/JotformEmbed';
-import { PaperPlane, Sparkle, SunBurst } from '../components/decorations';
+import { Sparkle } from '../components/decorations';
 
 export function RegisterPage() {
   const { t } = useTranslation();
   return (
-    <div className="relative isolate overflow-hidden bg-slate-50">
-      <SunBurst className="absolute -right-28 top-10 h-[28rem] w-[28rem] opacity-80" />
-      <PaperPlane className="absolute right-[18%] top-28 hidden h-24 w-48 opacity-70 xl:block" />
+    <div className="event-shell min-h-full">
+      <div className="absolute inset-x-0 top-0 h-[46rem] bg-[radial-gradient(circle_at_50%_26%,rgba(31,78,137,0.46),transparent_42%)]" />
+      <div className="absolute -left-24 top-[30rem] hidden h-72 w-72 rounded-full bg-[#6EC6E8]/10 blur-3xl lg:block" />
 
-      <div className="relative mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:py-10">
-        <header className="max-w-3xl">
-          <div className="inline-flex items-center gap-2 rounded-full border border-brand-100 bg-white px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-700 shadow-sm">
-            <Sparkle className="h-3.5 w-3.5 text-accent-500" />
-            {t('register.badge')}
+      <div className="relative mx-auto max-w-7xl px-4 pb-12 pt-8 sm:px-6 lg:pb-16">
+        <section className="relative min-h-[calc(100svh-7rem)] overflow-hidden border-y border-white/10 py-6 sm:py-8 lg:min-h-[680px]">
+          <div className="pointer-events-none absolute inset-x-[-10%] bottom-0 h-64 bg-gradient-to-t from-black/80 via-black/[0.28] to-transparent" />
+          <div className="event-sphere left-1/2 top-[24%] h-[18rem] w-[18rem] -translate-x-1/2 opacity-80 sm:h-[26rem] sm:w-[26rem] lg:top-[18%] lg:h-[34rem] lg:w-[34rem]" />
+          <SilhouetteStrip />
+
+          <div className="relative z-10 grid gap-6 text-white lg:grid-cols-[0.82fr_1fr_0.82fr]">
+            <div className="space-y-5">
+              <div>
+                <p className="text-[clamp(3.2rem,8vw,5.8rem)] font-black uppercase leading-[0.82] tracking-normal">
+                  May 31<span className="align-super text-[0.42em]">st</span>
+                </p>
+                <p className="mt-2 text-3xl font-light leading-none text-[#F4F7FA] sm:text-4xl">
+                  4pm - until
+                </p>
+              </div>
+              <div className="leading-relaxed">
+                <p className="text-xl font-black">Casa Nübe</p>
+                <p className="mt-1 max-w-[15rem] text-[#D9E7F4]">
+                  2060 NW 1st Ave<br />
+                  Miami, FL 33127
+                </p>
+              </div>
+            </div>
+
+            <div className="flex min-h-[24rem] flex-col items-center justify-center text-center sm:min-h-[30rem]">
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/[0.14] bg-white/[0.08] px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-slate-100 shadow-sm backdrop-blur">
+                <Sparkle className="h-3.5 w-3.5 text-accent-300" />
+                {t('register.badge')}
+              </div>
+              <p className="eyebrow mt-8">{t('register.kicker')}</p>
+              <h1 className="event-title mt-5 text-[clamp(3.4rem,11vw,7.8rem)]">
+                “{t('register.heroTitle')}”
+              </h1>
+              <p className="mt-4 text-lg font-light uppercase tracking-[0.34em] text-[#D8F3FF] sm:text-2xl">
+                Fundraiser Exhibition
+              </p>
+            </div>
+
+            <div className="flex flex-col justify-between gap-10 text-left lg:text-right">
+              <div>
+                <p className="text-lg font-light text-[#F4F7FA]">Brought to you by</p>
+                <p className="mt-2 text-2xl font-black uppercase leading-tight tracking-wide">
+                  Gifted Grads<br />
+                  Westborn Collectives
+                </p>
+              </div>
+              <div className="space-y-3 text-base font-semibold text-[#F4F7FA]">
+                <p>Panel in Collaboration w/ Burgundy.XYZ @ 4pm</p>
+                <p>Art Exhibition Opening @ 5:30pm</p>
+              </div>
+            </div>
           </div>
-          <h1 className="mt-5 text-4xl font-bold leading-tight text-slate-950 sm:text-5xl lg:text-6xl">
-            {t('register.title.line1')}{' '}
-            <span className="accent-underline text-brand-500">
-              {t('register.title.line2')}
-            </span>
-          </h1>
-          <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-600">
-            {t('register.subtitle')}
-          </p>
-        </header>
+        </section>
 
-        <div className="mt-8 grid items-stretch gap-4 lg:grid-cols-[minmax(0,1.45fr)_minmax(340px,0.8fr)]">
-          <section className="flex flex-col rounded-3xl border border-slate-200 bg-white p-5 shadow-cardLg sm:p-7 lg:p-8">
-            <div className="mb-6 flex flex-col gap-4 border-b border-slate-100 pb-5 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex items-center gap-3">
-                <div className="grid h-11 w-11 place-items-center rounded-2xl bg-brand-50 text-brand-600">
-                  <UserIcon />
-                </div>
+        <section id="registration" className="relative mt-12 grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(360px,0.56fr)]">
+          <div className="absolute -right-24 top-12 h-80 w-80 rounded-full bg-[#6EC6E8]/10 blur-3xl" />
+          <div className="glass-card relative flex flex-col p-5 sm:p-7 lg:p-8">
+            <div className="mb-6 border-b border-white/10 pb-5">
+              <div className="flex flex-wrap items-start justify-between gap-4">
                 <div>
-                  <h2 className="text-xl font-bold text-slate-900">
+                  <p className="eyebrow">Registration</p>
+                  <h2 className="mt-2 text-3xl font-black uppercase leading-none tracking-normal text-white sm:text-5xl">
                     {t('register.formTitle')}
                   </h2>
-                  <p className="text-sm text-slate-500">{t('register.formSubtitle')}</p>
+                  <p className="mt-2 max-w-2xl text-sm leading-6 text-[#8FA9C4]">
+                    {t('register.formSubtitle')}
+                  </p>
                 </div>
-              </div>
-              <div className="inline-flex w-fit items-center gap-2 rounded-full bg-accent-50 px-3 py-1.5 text-xs font-semibold text-accent-800">
-                <GiftIcon className="h-4 w-4" />
-                {t('register.formPill')}
+                <div className="inline-flex w-fit items-center gap-2 rounded-full border border-accent-300/30 bg-accent-300/[0.12] px-3 py-1.5 text-xs font-semibold text-accent-200">
+                  <GiftIcon className="h-4 w-4" />
+                  {t('register.formPill')}
+                </div>
               </div>
             </div>
             <JotformEmbed />
             <div className="mt-auto pt-6">
-              <div className="rounded-2xl border border-brand-100 bg-brand-50 px-4 py-3 text-sm leading-6 text-brand-900">
-                <div className="mb-1 flex items-center gap-2 font-semibold">
+              <div className="rounded-2xl border border-[#6EC6E8]/[0.18] bg-[#6EC6E8]/[0.08] px-4 py-3 text-sm leading-6 text-slate-200">
+                <div className="mb-1 flex items-center gap-2 font-semibold text-white">
                   <InfoIcon />
                   {t('register.disclaimer.title')}
                 </div>
                 <p>{t('register.disclaimer.body')}</p>
               </div>
             </div>
-          </section>
+          </div>
 
-          <aside className="relative overflow-hidden rounded-3xl bg-brand-900 p-6 text-white shadow-cardLg sm:p-7 lg:p-8">
-            <div className="absolute -right-16 -top-16 h-52 w-52 rounded-full bg-accent-400/20 blur-3xl" />
-            <div className="absolute -bottom-20 left-10 h-56 w-56 rounded-full bg-brand-400/20 blur-3xl" />
-            <div className="relative flex h-full flex-col">
-              <div className="rounded-2xl border border-white/10 bg-white/8 p-5 shadow-sm">
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <p className="text-sm font-medium text-brand-100">
-                      {t('register.giveaway.lead')}
-                    </p>
-                    <p className="mt-2 text-xl font-bold leading-tight text-white">
-                      {t('register.giveaway.highlight')}
-                    </p>
-                  </div>
-                  <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-accent-400 text-brand-950">
-                    <GiftIcon className="h-6 w-6" />
-                  </div>
+          <aside className="relative overflow-hidden border-y border-white/[0.12] bg-black/[0.24] px-2 py-6 text-white lg:sticky lg:top-24">
+            <div className="absolute inset-0 bg-[linear-gradient(120deg,rgba(255,255,255,0.08),transparent_40%),radial-gradient(circle_at_70%_20%,rgba(247,201,72,0.16),transparent_24%)]" />
+            <div className="relative space-y-6">
+              <div className="px-4">
+                <p className="eyebrow">Raffle Pass</p>
+                <p className="mt-3 text-3xl font-black uppercase leading-tight">
+                  {t('register.giveaway.highlight')}
+                </p>
+                <p className="mt-3 text-sm leading-6 text-[#8FA9C4]">
+                  {t('register.sidebar.note')}
+                </p>
+              </div>
+              <div className="mx-4 rounded-[2rem] border border-white/[0.12] bg-white/[0.08] p-5 shadow-[0_24px_80px_rgba(0,0,0,0.28)]">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold uppercase tracking-[0.24em] text-accent-200">
+                    iPad raffle
+                  </span>
+                  <GiftIcon className="h-5 w-5 text-accent-300" />
                 </div>
-                <div className="mt-4 flex justify-end">
-                  <IpadIllustration className="h-20 w-auto" />
+                <div className="mt-8 flex justify-center">
+                  <IpadIllustration className="h-28 w-auto" />
                 </div>
               </div>
 
@@ -91,16 +131,22 @@ export function RegisterPage() {
                   {t('register.feature.team.body')}
                 </FeatureRow>
               </div>
-
-              <div className="mt-6">
-                <div className="rounded-2xl bg-white/10 p-4 text-sm leading-6 text-brand-50">
-                  {t('register.sidebar.note')}
-                </div>
-              </div>
             </div>
           </aside>
-        </div>
+        </section>
       </div>
+    </div>
+  );
+}
+
+function SilhouetteStrip() {
+  return (
+    <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] hidden h-64 items-end justify-center gap-4 opacity-70 sm:flex">
+      <div className="h-32 w-28 rounded-t-full bg-black/[0.72] blur-[0.5px]" />
+      <div className="mb-4 h-44 w-14 rotate-[-18deg] rounded-full bg-black/80 blur-[0.5px]" />
+      <div className="h-40 w-24 rounded-t-full bg-black/[0.76] blur-[0.5px]" />
+      <div className="mb-2 h-52 w-16 rotate-[16deg] rounded-full bg-black/[0.82] blur-[0.5px]" />
+      <div className="h-36 w-28 rounded-t-full bg-black/[0.74] blur-[0.5px]" />
     </div>
   );
 }
@@ -116,25 +162,17 @@ function FeatureRow({
 }) {
   return (
     <div className="flex items-start gap-3">
-      <div className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-white/10 text-accent-300 ring-1 ring-white/10">
+      <div className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-[#6EC6E8]/[0.12] text-[#BDEEFF] ring-1 ring-[#6EC6E8]/[0.18]">
         {icon}
       </div>
       <div>
         <div className="font-semibold text-white">{title}</div>
-        <p className="text-sm leading-6 text-brand-100">{children}</p>
+        <p className="text-sm leading-6 text-[#8FA9C4]">{children}</p>
       </div>
     </div>
   );
 }
 
-function UserIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-      <circle cx="12" cy="8" r="4" />
-      <path d="M4 21c0-4 4-7 8-7s8 3 8 7" />
-    </svg>
-  );
-}
 function InfoIcon() {
   return (
     <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="currentColor">

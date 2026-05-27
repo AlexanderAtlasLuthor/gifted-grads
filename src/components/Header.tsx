@@ -21,7 +21,7 @@ export function Header() {
     clsx('nav-link', isActive && 'nav-link-active');
 
   return (
-    <header className="border-b border-slate-100 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/70">
+    <header className="border-b border-white/10 bg-[#08111F]/[0.86] text-slate-50 backdrop-blur supports-[backdrop-filter]:bg-[#08111F]/[0.76]">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-3 py-3 sm:gap-6 sm:px-6 sm:py-4">
         <Link to="/" className="flex min-w-0 items-center" aria-label="Gifted Grads Events">
           <Logo />

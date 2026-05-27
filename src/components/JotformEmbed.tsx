@@ -74,7 +74,7 @@ export function JotformEmbed() {
               : 'El registro todavía no está disponible. Vuelve a intentarlo en unos minutos.'
           }
         />
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-[#8FA9C4]">
           {locale === 'en'
             ? 'The event team is finishing the form setup.'
             : 'El equipo del evento está terminando la configuración del formulario.'}
@@ -118,9 +118,9 @@ function JotformIframe({ formId, title }: { formId: string; title: string }) {
   }, [formId]);
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white">
+    <div className="relative overflow-hidden rounded-2xl border border-white/[0.14] bg-white">
       {status === 'loading' && (
-        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex items-center justify-center gap-2 bg-white/90 py-3 text-xs text-slate-500">
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex items-center justify-center gap-2 bg-[#08111F]/90 py-3 text-xs text-slate-200">
           <Spinner /> <span>Cargando formulario...</span>
         </div>
       )}
