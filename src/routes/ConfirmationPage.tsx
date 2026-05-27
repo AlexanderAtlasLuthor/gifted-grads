@@ -75,9 +75,8 @@ export function ConfirmationPage() {
   }
 
   return (
-    <div className="relative overflow-hidden">
-      {/* Atmospheric backdrop. */}
-      <div className="pointer-events-none absolute -top-40 left-1/2 h-[40rem] w-[40rem] -translate-x-1/2 rounded-full bg-sky-glow blur-[120px]" />
+    <div className="event-shell min-h-full">
+      <div className="event-sphere -right-32 top-16 h-80 w-80 opacity-50 lg:right-[8%] lg:h-[28rem] lg:w-[28rem]" />
       <div className="relative mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:py-20">
         {displayed ? (
           <Loaded participantNumber={displayed.participantNumber} attendee={displayed.attendee} />

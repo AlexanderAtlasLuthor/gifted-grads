@@ -7,9 +7,8 @@ import { Bolt } from '../components/decorations';
 export function ManagerDashboardPage() {
   const { t } = useTranslation();
   return (
-    <div className="relative">
-      {/* Soft sky glow behind the title. */}
-      <div className="pointer-events-none absolute -top-20 right-0 h-[28rem] w-[28rem] rounded-full bg-sky-glow blur-[120px]" />
+    <div className="event-shell min-h-full">
+      <div className="event-sphere -right-32 top-20 h-72 w-72 opacity-35 lg:right-[6%] lg:h-96 lg:w-96" />
 
       <div className="relative mx-auto max-w-7xl space-y-10 px-4 py-10 sm:px-6 lg:py-14">
         <header className="flex flex-col gap-3">
@@ -17,10 +16,10 @@ export function ManagerDashboardPage() {
             <Bolt className="h-3.5 w-3.5" />
             Born Gifted · Control Room
           </span>
-          <h1 className="headline text-[clamp(2.5rem,6vw,4.5rem)]">
+          <h1 className="event-title text-[clamp(2.5rem,6vw,4.5rem)]">
             {t('dashboard.title')}
           </h1>
-          <p className="max-w-2xl text-ink-100/75">{t('dashboard.subtitle')}</p>
+          <p className="max-w-2xl text-ink-100/80">{t('dashboard.subtitle')}</p>
         </header>
 
         <section>

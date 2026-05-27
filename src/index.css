@@ -176,6 +176,57 @@
     @apply pill border-accent-400/40 bg-accent-400/10 text-accent-200;
   }
 
+  /* ---------------- Event-page atmosphere (carried over from the prior
+     design pass — keeps the blue sphere + scrim look). ---------------- */
+  .event-shell {
+    @apply relative isolate overflow-hidden text-ink-50;
+    background:
+      radial-gradient(circle at 72% 8%, rgba(110, 198, 232, 0.18) 0, transparent 34%),
+      radial-gradient(circle at 8% 90%, rgba(31, 78, 137, 0.34) 0, transparent 36%),
+      linear-gradient(140deg, #08111f 0%, #0b1c34 48%, #102d52 100%);
+  }
+  .event-shell::before {
+    content: '';
+    @apply pointer-events-none absolute inset-0 -z-10 opacity-20;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+      radial-gradient(circle at 50% 34%, rgba(255, 255, 255, 0.3), transparent 2px);
+    background-size: 96px 96px, 96px 96px, 4px 4px;
+    mix-blend-mode: screen;
+  }
+  .event-shell::after {
+    content: '';
+    @apply pointer-events-none absolute inset-0 -z-10;
+    background:
+      radial-gradient(circle at 58% 30%, rgba(110, 198, 232, 0.32) 0, rgba(31, 78, 137, 0.24) 18%, transparent 36%),
+      radial-gradient(circle at 78% 86%, rgba(247, 201, 72, 0.10) 0, transparent 28%);
+  }
+
+  /* The luminous blue sphere — used as a decorative element behind hero
+     blocks. Pair with a w/h utility class and any opacity. */
+  .event-sphere {
+    @apply pointer-events-none absolute rounded-full;
+    background:
+      radial-gradient(circle at 32% 24%, rgba(198, 235, 244, 0.9) 0, rgba(110, 198, 232, 0.74) 18%, rgba(31, 78, 137, 0.86) 44%, rgba(6, 10, 18, 0.96) 78%),
+      #1f4e89;
+    box-shadow:
+      inset -34px -40px 58px rgba(0, 0, 0, 0.48),
+      inset 16px 14px 35px rgba(255, 255, 255, 0.18),
+      0 0 90px rgba(110, 198, 232, 0.28);
+  }
+
+  /* Frosted event card — same as .glass-lg but with a stronger shadow. */
+  .glass-card {
+    @apply relative rounded-2xl border border-white/[0.12] bg-white/[0.06] shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-xl;
+  }
+
+  /* Event-page title — big black uppercase with a faint cyan glow. */
+  .event-title {
+    @apply font-display uppercase leading-[0.85] tracking-tight text-white;
+    text-shadow: 0 0 34px rgba(110, 198, 232, 0.36);
+  }
+
   /* ---------------- Grain swatch (use on hero blocks for extra texture) -------- */
   .grain-on {
     position: relative;

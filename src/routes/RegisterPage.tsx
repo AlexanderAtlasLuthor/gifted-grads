@@ -1,230 +1,203 @@
 import { useTranslation } from '../i18n/I18nProvider';
 import { JotformEmbed } from '../components/JotformEmbed';
-import { Bolt, FlyerScene } from '../components/decorations';
+import { Bolt } from '../components/decorations';
 
 export function RegisterPage() {
   const { t } = useTranslation();
   return (
-    <div className="relative isolate">
-      {/* =============================================================
-          HERO — full-bleed flyer-style composition
-          ============================================================= */}
-      <section className="relative min-h-[760px] w-full overflow-hidden lg:min-h-[88vh]">
-        {/* The cinematic flyer scene (sky + globe + silhouettes). */}
-        <FlyerScene className="absolute inset-0" />
+    <div className="event-shell min-h-full">
+      {/* Glow overlays — top sky-glow and an off-screen cyan ember. */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-[46rem] bg-[radial-gradient(circle_at_50%_26%,rgba(31,78,137,0.5),transparent_42%)]" />
+      <div className="pointer-events-none absolute -left-24 top-[30rem] hidden h-72 w-72 rounded-full bg-[#6EC6E8]/10 blur-3xl lg:block" />
 
-        {/* Heavy grain layer over the whole hero. */}
-        <div className="pointer-events-none absolute inset-0 grain-on opacity-100" />
+      <div className="relative mx-auto max-w-7xl px-4 pb-12 pt-8 sm:px-6 lg:pb-16">
+        {/* =========================================================
+            HERO — sphere, flyer photo, big title
+            ========================================================= */}
+        <section className="relative min-h-[calc(100svh-7rem)] overflow-hidden rounded-2xl border-y border-white/10 py-6 sm:py-8 lg:min-h-[680px]">
+          {/* The actual flyer photograph — sets the mood with the real
+              kids-holding-the-globe imagery from the printed poster. */}
+          <img
+            src="/born-gifted-flyer.jpg"
+            alt=""
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-70"
+            style={{ objectPosition: '50% 60%' }}
+          />
+          {/* Grain overlay. */}
+          <div className="pointer-events-none absolute inset-0 grain-on opacity-90" />
+          {/* Bottom fade. */}
+          <div className="pointer-events-none absolute inset-x-[-10%] bottom-0 h-72 bg-gradient-to-t from-ink-950 via-ink-950/40 to-transparent" />
+          {/* Top fade. */}
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-ink-950/85 to-transparent" />
+          {/* The luminous blue sphere — sits over the flyer, off-centre,
+              echoing the printed poster's central globe. */}
+          <div className="event-sphere left-1/2 top-[24%] h-[18rem] w-[18rem] -translate-x-1/2 opacity-70 sm:h-[26rem] sm:w-[26rem] lg:top-[18%] lg:h-[32rem] lg:w-[32rem]" />
 
-        {/* Foreground content. */}
-        <div className="relative mx-auto flex h-full max-w-7xl flex-col px-5 pb-12 pt-8 sm:px-10 sm:pt-12 lg:min-h-[88vh] lg:pt-16">
-          {/* Top eyebrow row */}
-          <div className="flex flex-wrap items-start justify-between gap-4">
-            <div className="pill-accent">
-              <Bolt className="h-3.5 w-3.5" />
-              {t('hero.eyebrow')}
-            </div>
-            <div className="hidden text-right text-[10px] uppercase tracking-[0.35em] text-ink-100/75 sm:block">
-              {t('hero.brought.line1')}
-              <br />
-              <span className="font-display tracking-wider text-white">
-                {t('hero.brought.line2')}
-              </span>
-            </div>
-          </div>
-
-          {/* Centre title block — sits over the globe. */}
-          <div className="my-auto flex flex-col items-center pt-10 text-center lg:pt-0">
-            <span className="eyebrow text-sky-200/80">
-              Gifted Grads · Westborn Collectives
-            </span>
-            <h1 className="headline mt-3 text-[clamp(4rem,16vw,14rem)] drop-shadow-[0_12px_50px_rgba(0,0,0,0.7)]">
-              <span className="text-white">“BORN</span>
-              <br className="sm:hidden" />{' '}
-              <span className="text-white">GIFTED”</span>
-            </h1>
-            <div className="mt-2 font-editorial text-xs uppercase tracking-[0.45em] text-ink-100/85 sm:text-sm">
-              Fundraiser&nbsp;·&nbsp;Exhibition&nbsp;·&nbsp;Registration
-            </div>
-            <a
-              href="#register"
-              className="btn-primary mt-10 px-8 py-3 text-sm uppercase tracking-widest"
-            >
-              <Bolt className="h-4 w-4" />
-              {t('hero.cta')}
-            </a>
-          </div>
-
-          {/* Bottom row — date / venue (left), agenda (right), partners (across). */}
-          <div className="mt-auto pt-10">
-            <div className="grid items-end gap-8 lg:grid-cols-[1fr_auto]">
-              {/* Left — date + venue */}
-              <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:gap-10">
-                <div>
-                  <div className="flex items-end gap-3">
-                    <span className="font-display text-[clamp(4rem,11vw,9rem)] leading-[0.8] text-white drop-shadow-[0_6px_30px_rgba(0,0,0,0.75)]">
-                      MAY
-                    </span>
-                    <span className="font-display text-[clamp(2.5rem,6vw,5rem)] leading-[0.8] text-white drop-shadow-[0_6px_30px_rgba(0,0,0,0.75)]">
-                      31<sup className="text-[0.5em]">ST</sup>
-                    </span>
-                  </div>
-                  <div className="mt-3 font-editorial text-sm uppercase tracking-widest text-ink-100">
-                    4&nbsp;PM&nbsp;—&nbsp;UNTIL
-                  </div>
-                </div>
-
-                <div className="border-l-2 border-accent-400/70 pl-4 text-sm leading-relaxed text-ink-100">
-                  <div className="font-display text-xl tracking-wide text-white">
-                    Casa Nübe
-                  </div>
-                  <div className="text-ink-200/85">2060 NW 1st Ave</div>
-                  <div className="text-ink-200/85">Miami, FL 33127</div>
-                </div>
+          <div className="relative z-10 grid gap-6 text-white lg:grid-cols-[0.82fr_1fr_0.82fr]">
+            {/* Left rail */}
+            <div className="space-y-5">
+              <div>
+                <p className="font-display text-[clamp(3.2rem,8vw,5.8rem)] uppercase leading-[0.82] text-white drop-shadow-[0_4px_30px_rgba(0,0,0,0.65)]">
+                  May 31<span className="align-super text-[0.42em]">st</span>
+                </p>
+                <p className="mt-2 font-editorial text-2xl tracking-wider text-[#F4F7FA] sm:text-3xl">
+                  4PM&nbsp;—&nbsp;UNTIL
+                </p>
               </div>
+              <div className="border-l-2 border-accent-400/70 pl-4 leading-relaxed">
+                <p className="font-display text-xl tracking-wide text-white">Casa Nübe</p>
+                <p className="mt-1 max-w-[15rem] text-[#D9E7F4]">
+                  2060 NW 1st Ave<br />
+                  Miami, FL 33127
+                </p>
+              </div>
+            </div>
 
-              {/* Right — agenda */}
-              <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-end sm:gap-8 lg:flex-col lg:items-end lg:gap-5">
+            {/* Centre title */}
+            <div className="flex min-h-[24rem] flex-col items-center justify-center text-center sm:min-h-[30rem]">
+              <span className="pill-accent">
+                <Bolt className="h-3.5 w-3.5" />
+                {t('hero.eyebrow')}
+              </span>
+              <p className="eyebrow mt-8 text-sky-200/80">
+                Gifted Grads · Westborn Collectives
+              </p>
+              <h1 className="event-title mt-5 text-[clamp(3.4rem,12vw,8.5rem)]">
+                “BORN GIFTED”
+              </h1>
+              <p className="mt-4 font-editorial text-sm uppercase tracking-[0.45em] text-[#D8F3FF] sm:text-base">
+                Fundraiser&nbsp;·&nbsp;Exhibition&nbsp;·&nbsp;Registration
+              </p>
+              <a
+                href="#registration"
+                className="btn-primary mt-10 px-8 py-3 text-sm uppercase tracking-widest"
+              >
+                <Bolt className="h-4 w-4" />
+                {t('hero.cta')}
+              </a>
+            </div>
+
+            {/* Right rail */}
+            <div className="flex flex-col justify-between gap-10 text-left lg:text-right">
+              <div>
+                <p className="text-sm uppercase tracking-[0.35em] text-[#F4F7FA]/85">
+                  {t('hero.brought.line1')}
+                </p>
+                <p className="mt-2 font-display text-2xl uppercase leading-tight tracking-wide text-white">
+                  Gifted Grads<br />Westborn Collectives
+                </p>
+              </div>
+              <div className="space-y-3">
                 <AgendaLine time="4:00 PM" body={t('hero.agenda.panel')} />
                 <AgendaLine time="5:30 PM" body={t('hero.agenda.opening')} accent />
               </div>
             </div>
+          </div>
 
-            {/* Partner / source line. */}
-            <div className="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-4 text-[10px] uppercase tracking-[0.35em] text-ink-200/65">
-              <span>In partnership with</span>
-              <div className="flex flex-wrap items-center gap-x-6 gap-y-2 font-editorial text-ink-100/80">
-                <span>Influence Radio</span>
-                <span>Neighborhood</span>
-                <span>.XYZ</span>
-                <span>Filthy</span>
-              </div>
-              <span className="hidden sm:inline">giftedgrads.org/borngifted</span>
+          {/* Partner row */}
+          <div className="relative z-10 mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-4 text-[10px] uppercase tracking-[0.35em] text-ink-200/70">
+            <span>In partnership with</span>
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 font-editorial text-ink-100/80">
+              <span>Influence Radio</span>
+              <span>Neighborhood</span>
+              <span>.XYZ</span>
+              <span>Filthy</span>
             </div>
+            <span className="hidden sm:inline">giftedgrads.org/borngifted</span>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* =============================================================
-          REGISTRATION SECTION
-          ============================================================= */}
-      <section
-        id="register"
-        className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-20"
-      >
-        <div className="pointer-events-none absolute -top-32 left-1/2 h-[40rem] w-[40rem] -translate-x-1/2 rounded-full bg-sky-glow blur-[120px]" />
+        {/* =========================================================
+            REGISTRATION SECTION
+            ========================================================= */}
+        <section
+          id="registration"
+          className="relative mt-12 grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(360px,0.56fr)]"
+        >
+          <div className="pointer-events-none absolute -right-24 top-12 h-80 w-80 rounded-full bg-[#6EC6E8]/10 blur-3xl" />
 
-        <div className="relative">
-          <div className="flex flex-col items-center text-center">
-            <span className="eyebrow">{t('register.eyebrow')}</span>
-            <h2 className="headline mt-4 text-[clamp(2.5rem,6vw,5rem)]">
-              {t('register.title.line1')}{' '}
-              <span className="text-accent-300">{t('register.title.line2')}</span>
-            </h2>
-            <p className="mt-5 max-w-2xl text-base leading-7 text-ink-100/80">
-              {t('register.subtitle')}
-            </p>
-          </div>
-
-          <div className="mt-12 grid items-stretch gap-6 lg:grid-cols-[minmax(0,1.45fr)_minmax(320px,0.8fr)]">
-            {/* ----- Form card ----- */}
-            <section className="card-lg grain-on flex flex-col p-5 sm:p-7 lg:p-8">
-              <div className="mb-6 flex flex-col gap-4 border-b border-white/10 pb-5 sm:flex-row sm:items-center sm:justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="grid h-11 w-11 place-items-center rounded-2xl border border-white/10 bg-white/5 text-sky-300">
-                    <UserIcon />
-                  </div>
-                  <div>
-                    <h3 className="font-display text-xl uppercase tracking-wide text-white">
-                      {t('register.formTitle')}
-                    </h3>
-                    <p className="text-xs uppercase tracking-widest text-ink-200/70">
-                      {t('register.formSubtitle')}
-                    </p>
-                  </div>
+          <div className="glass-card grain-on relative flex flex-col p-5 sm:p-7 lg:p-8">
+            <div className="mb-6 border-b border-white/10 pb-5">
+              <div className="flex flex-wrap items-start justify-between gap-4">
+                <div>
+                  <p className="eyebrow">{t('register.eyebrow')}</p>
+                  <h2 className="mt-2 font-display text-3xl uppercase tracking-wide text-white sm:text-5xl">
+                    {t('register.formTitle')}
+                  </h2>
+                  <p className="mt-2 max-w-2xl text-sm leading-6 text-[#8FA9C4]">
+                    {t('register.formSubtitle')}
+                  </p>
                 </div>
                 <div className="pill-accent">
                   <GiftIcon className="h-4 w-4" />
                   {t('register.formPill')}
                 </div>
               </div>
+            </div>
 
-              <JotformEmbed />
+            <JotformEmbed />
 
-              <div className="mt-auto pt-6">
-                <div className="rounded-2xl border border-white/10 bg-ink-900/60 px-4 py-3 text-sm leading-6 text-ink-100/90">
-                  <div className="mb-1 flex items-center gap-2 font-display text-base uppercase tracking-wider text-sky-300">
-                    <InfoIcon />
-                    {t('register.disclaimer.title')}
-                  </div>
-                  <p className="text-ink-100/80">{t('register.disclaimer.body')}</p>
+            <div className="mt-auto pt-6">
+              <div className="rounded-2xl border border-white/10 bg-ink-900/60 px-4 py-3 text-sm leading-6 text-ink-100/90">
+                <div className="mb-1 flex items-center gap-2 font-display text-base uppercase tracking-wider text-sky-300">
+                  <InfoIcon />
+                  {t('register.disclaimer.title')}
                 </div>
+                <p className="text-ink-100/80">{t('register.disclaimer.body')}</p>
               </div>
-            </section>
-
-            {/* ----- Raffle / details aside ----- */}
-            <aside className="card-lg grain-on relative flex flex-col overflow-hidden p-6 sm:p-7 lg:p-8">
-              <div className="pointer-events-none absolute -right-16 -top-16 h-52 w-52 rounded-full bg-accent-400/15 blur-3xl" />
-              <div className="pointer-events-none absolute -bottom-24 left-6 h-60 w-60 rounded-full bg-sky-400/15 blur-3xl" />
-
-              <div className="relative">
-                <span className="eyebrow text-accent-300">{t('register.giveaway.lead')}</span>
-                <h3 className="headline mt-3 text-3xl sm:text-4xl">
-                  {t('register.giveaway.highlight')}
-                </h3>
-                <div className="mt-6 flex justify-center">
-                  <IpadIllustration className="h-24 w-auto" />
-                </div>
-              </div>
-
-              <div className="relative mt-8 space-y-4">
-                <FeatureRow icon={<BoltIcon />} title={t('register.feature.instant.title')}>
-                  {t('register.feature.instant.body')}
-                </FeatureRow>
-                <FeatureRow icon={<LockIcon />} title={t('register.feature.secure.title')}>
-                  {t('register.feature.secure.body')}
-                </FeatureRow>
-                <FeatureRow icon={<TeamIcon />} title={t('register.feature.team.title')}>
-                  {t('register.feature.team.body')}
-                </FeatureRow>
-              </div>
-
-              <div className="relative mt-6">
-                <div className="rounded-2xl border border-white/10 bg-ink-900/60 p-4 text-sm leading-6 text-ink-100/85">
-                  {t('register.sidebar.note')}
-                </div>
-              </div>
-            </aside>
+            </div>
           </div>
-        </div>
-      </section>
+
+          <aside className="glass-card grain-on relative flex flex-col overflow-hidden p-6 sm:p-7 lg:p-8">
+            <div className="pointer-events-none absolute -right-16 -top-16 h-52 w-52 rounded-full bg-accent-400/15 blur-3xl" />
+            <div className="pointer-events-none absolute -bottom-24 left-6 h-60 w-60 rounded-full bg-sky-400/15 blur-3xl" />
+
+            <div className="relative">
+              <span className="eyebrow text-accent-300">{t('register.giveaway.lead')}</span>
+              <h3 className="event-title mt-3 text-3xl sm:text-4xl">
+                {t('register.giveaway.highlight')}
+              </h3>
+              <div className="mt-6 flex justify-center">
+                <IpadIllustration className="h-24 w-auto" />
+              </div>
+            </div>
+
+            <div className="relative mt-8 space-y-4">
+              <FeatureRow icon={<BoltIcon />} title={t('register.feature.instant.title')}>
+                {t('register.feature.instant.body')}
+              </FeatureRow>
+              <FeatureRow icon={<LockIcon />} title={t('register.feature.secure.title')}>
+                {t('register.feature.secure.body')}
+              </FeatureRow>
+              <FeatureRow icon={<TeamIcon />} title={t('register.feature.team.title')}>
+                {t('register.feature.team.body')}
+              </FeatureRow>
+            </div>
+
+            <div className="relative mt-6">
+              <div className="rounded-2xl border border-white/10 bg-ink-900/60 p-4 text-sm leading-6 text-ink-100/85">
+                {t('register.sidebar.note')}
+              </div>
+            </div>
+          </aside>
+        </section>
+      </div>
     </div>
   );
 }
 
-function AgendaLine({
-  time,
-  body,
-  accent,
-}: {
-  time: string;
-  body: string;
-  accent?: boolean;
-}) {
+function AgendaLine({ time, body, accent }: { time: string; body: string; accent?: boolean }) {
   return (
-    <div className="flex flex-col items-start lg:items-end">
+    <div className="flex flex-col lg:items-end">
       <span
         className={
-          accent
-            ? 'font-display text-2xl text-accent-300'
-            : 'font-display text-2xl text-white'
+          accent ? 'font-display text-2xl text-accent-300' : 'font-display text-2xl text-white'
         }
       >
         {time}
       </span>
-      <span className="text-[11px] uppercase tracking-[0.3em] text-ink-100/80">
-        {body}
-      </span>
+      <span className="text-[11px] uppercase tracking-[0.3em] text-ink-100/80">{body}</span>
     </div>
   );
 }
@@ -244,23 +217,13 @@ function FeatureRow({
         {icon}
       </div>
       <div>
-        <div className="font-display text-base uppercase tracking-wider text-white">
-          {title}
-        </div>
+        <div className="font-display text-base uppercase tracking-wider text-white">{title}</div>
         <p className="text-sm leading-6 text-ink-100/80">{children}</p>
       </div>
     </div>
   );
 }
 
-function UserIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-      <circle cx="12" cy="8" r="4" />
-      <path d="M4 21c0-4 4-7 8-7s8 3 8 7" />
-    </svg>
-  );
-}
 function InfoIcon() {
   return (
     <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="currentColor">
