@@ -40,7 +40,14 @@ export function ManagerLoginPage() {
 
   return (
     <div className="event-shell min-h-full">
-      <div className="event-sphere -right-32 top-14 h-80 w-80 opacity-45" />
+      <img
+        src="/manager-bg.png"
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[26rem] w-full object-cover opacity-40"
+        style={{ objectPosition: '50% 40%' }}
+      />
+      <div className="pointer-events-none absolute inset-x-0 top-[22rem] h-32 bg-gradient-to-b from-transparent to-ink-950" />
       <div className="relative mx-auto max-w-md px-4 py-20 sm:px-6">
       <div className="glass-card grain-on relative p-8">
         <span className="eyebrow">Manager access</span>

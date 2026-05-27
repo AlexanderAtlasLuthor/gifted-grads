@@ -15,24 +15,24 @@ export function RegisterPage() {
             HERO — sphere, flyer photo, big title
             ========================================================= */}
         <section className="relative min-h-[calc(100svh-7rem)] overflow-hidden rounded-2xl border-y border-white/10 py-6 sm:py-8 lg:min-h-[680px]">
-          {/* The actual flyer photograph — sets the mood with the real
-              kids-holding-the-globe imagery from the printed poster. */}
+          {/* The supplied flyer-style background — kids holding the globe
+              over clouds. */}
           <img
-            src="/born-gifted-flyer.jpg"
+            src="/register-bg.png"
             alt=""
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-70"
-            style={{ objectPosition: '50% 60%' }}
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+            style={{ objectPosition: '50% 50%' }}
           />
           {/* Grain overlay. */}
-          <div className="pointer-events-none absolute inset-0 grain-on opacity-90" />
-          {/* Bottom fade. */}
-          <div className="pointer-events-none absolute inset-x-[-10%] bottom-0 h-72 bg-gradient-to-t from-ink-950 via-ink-950/40 to-transparent" />
-          {/* Top fade. */}
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-ink-950/85 to-transparent" />
-          {/* The luminous blue sphere — sits over the flyer, off-centre,
-              echoing the printed poster's central globe. */}
-          <div className="event-sphere left-1/2 top-[24%] h-[18rem] w-[18rem] -translate-x-1/2 opacity-70 sm:h-[26rem] sm:w-[26rem] lg:top-[18%] lg:h-[32rem] lg:w-[32rem]" />
+          <div className="pointer-events-none absolute inset-0 grain-on opacity-70" />
+          {/* Bottom fade — pulls into the registration section below. */}
+          <div className="pointer-events-none absolute inset-x-[-10%] bottom-0 h-80 bg-gradient-to-t from-ink-950 via-ink-950/55 to-transparent" />
+          {/* Top fade — keeps header navigation legible. */}
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-ink-950/70 to-transparent" />
+          {/* Centre vertical scrim — so the BORN GIFTED title reads cleanly
+              over the bright globe in the supplied background image. */}
+          <div className="pointer-events-none absolute inset-y-0 left-1/2 w-[60%] -translate-x-1/2 bg-[radial-gradient(60%_60%_at_50%_50%,rgba(4,8,19,0.55),transparent_70%)]" />
 
           <div className="relative z-10 grid gap-6 text-white lg:grid-cols-[0.82fr_1fr_0.82fr]">
             {/* Left rail */}

@@ -8,7 +8,15 @@ export function ManagerDashboardPage() {
   const { t } = useTranslation();
   return (
     <div className="event-shell min-h-full">
-      <div className="event-sphere -right-32 top-20 h-72 w-72 opacity-35 lg:right-[6%] lg:h-96 lg:w-96" />
+      {/* Supplied dashboard background — silhouettes against clouds. */}
+      <img
+        src="/manager-bg.png"
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[28rem] w-full object-cover opacity-35"
+        style={{ objectPosition: '50% 35%' }}
+      />
+      <div className="pointer-events-none absolute inset-x-0 top-[24rem] h-32 bg-gradient-to-b from-transparent to-ink-950" />
 
       <div className="relative mx-auto max-w-7xl space-y-10 px-4 py-10 sm:px-6 lg:py-14">
         <header className="flex flex-col gap-3">

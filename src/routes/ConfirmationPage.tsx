@@ -76,7 +76,14 @@ export function ConfirmationPage() {
 
   return (
     <div className="event-shell min-h-full">
-      <div className="event-sphere -right-32 top-16 h-80 w-80 opacity-50 lg:right-[8%] lg:h-[28rem] lg:w-[28rem]" />
+      <img
+        src="/register-bg.png"
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[24rem] w-full object-cover opacity-30"
+        style={{ objectPosition: '50% 50%' }}
+      />
+      <div className="pointer-events-none absolute inset-x-0 top-[20rem] h-32 bg-gradient-to-b from-transparent to-ink-950" />
       <div className="relative mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:py-20">
         {displayed ? (
           <Loaded participantNumber={displayed.participantNumber} attendee={displayed.attendee} />
