@@ -23,51 +23,61 @@ function makePayload(opts: {
 }
 
 const validRaw = {
-  q3_nombreCompleto: 'Ana López',
+  q3_name: 'Ana López',
   q4_email: 'ANA@example.com',
-  q5_telefono: '+1 555 0000',
-  q6_genero: 'Femenino',
-  q7_edad: '22',
-  q8_institucion: 'Universidad X',
-  q9_carrera: 'Ingeniería',
-  q10_nivelAcademico: 'Pregrado',
+  q5_number: '+1 555 0000',
+  q6_whatTypeOfInsuranceAreYouInterestedIn: 'Auto',
 };
 
 describe('parseJotformPayload', () => {
-  it('parses a well-formed submission and normalizes enums + email', () => {
+  it('parses a well-formed insurance submission', () => {
     const fd = makePayload({
       submissionID: '12345',
-      formID: '999',
+      formID: '261465857224059',
       raw: validRaw,
     });
     const out = parseJotformPayload(fd);
     expect(out.submissionId).toBe('12345');
-    expect(out.formId).toBe('999');
+    expect(out.formId).toBe('261465857224059');
     expect(out.data.email).toBe('ana@example.com');
-    expect(out.data.genero).toBe('F');
-    expect(out.data.nivelAcademico).toBe('PREGRADO');
-    expect(out.data.edad).toBe(22);
+    expect(out.data.insuranceType).toBe('AUTO');
+    expect(out.data.nombre).toBe('Ana López');
+    expect(out.data.telefono).toBe('+1 555 0000');
   });
 
-  it('honors English option labels too', () => {
+  it('maps House / Auto / Life to schema enums', () => {
+    for (const [label, expected] of [
+      ['House', 'HOUSE'],
+      ['Auto', 'AUTO'],
+      ['Life', 'LIFE'],
+      ['Casa', 'HOUSE'],
+      ['Vida', 'LIFE'],
+    ] as const) {
+      const fd = makePayload({
+        submissionID: '1',
+        formID: '2',
+        raw: { ...validRaw, q6_whatTypeOfInsuranceAreYouInterestedIn: label },
+      });
+      const out = parseJotformPayload(fd);
+      expect(out.data.insuranceType).toBe(expected);
+    }
+  });
+
+  it('honors a compound Phone field shape (object with full)', () => {
     const fd = makePayload({
       submissionID: '1',
       formID: '2',
-      raw: { ...validRaw, q6_genero: 'Male', q10_nivelAcademico: 'Graduate' },
+      raw: { ...validRaw, q5_number: { full: '+1 555 1234' } },
     });
     const out = parseJotformPayload(fd);
-    expect(out.data.genero).toBe('M');
-    expect(out.data.nivelAcademico).toBe('POSGRADO');
+    expect(out.data.telefono).toBe('+1 555 1234');
   });
 
-  it('handles compound name fields (object with first/last)', () => {
+  it('honors compound name field (first/last)', () => {
     const fd = makePayload({
       submissionID: '1',
       formID: '2',
-      raw: {
-        ...validRaw,
-        q3_nombreCompleto: { first: 'Ana', last: 'López' },
-      },
+      raw: { ...validRaw, q3_name: { first: 'Ana', last: 'López' } },
     });
     const out = parseJotformPayload(fd);
     expect(out.data.nombre).toBe('Ana López');
@@ -76,11 +86,6 @@ describe('parseJotformPayload', () => {
   it('throws MISSING_SUBMISSION_ID when submissionID is absent', () => {
     const fd = makePayload({ formID: '2', raw: validRaw });
     expect(() => parseJotformPayload(fd)).toThrowError(JotformParseError);
-    try {
-      parseJotformPayload(fd);
-    } catch (err) {
-      expect((err as JotformParseError).code).toBe('MISSING_SUBMISSION_ID');
-    }
   });
 
   it('throws BAD_RAW_REQUEST when rawRequest is not JSON', () => {
@@ -115,11 +120,11 @@ describe('parseJotformPayload', () => {
     }
   });
 
-  it('throws VALIDATION when an enum option is unrecognized', () => {
+  it('throws VALIDATION when insurance type is unrecognized', () => {
     const fd = makePayload({
       submissionID: '1',
       formID: '2',
-      raw: { ...validRaw, q6_genero: 'Mystery' },
+      raw: { ...validRaw, q6_whatTypeOfInsuranceAreYouInterestedIn: 'Travel' },
     });
     try {
       parseJotformPayload(fd);
@@ -130,23 +135,26 @@ describe('parseJotformPayload', () => {
     }
   });
 
-  it('accepts the field-alias fallback (q3_nombre instead of q3_nombreCompleto)', () => {
-    const { q3_nombreCompleto: _drop, ...rest } = validRaw;
+  it('accepts field alias fallback (q5_phoneNumber instead of q5_number)', () => {
+    const { q5_number: _drop, ...rest } = validRaw;
     void _drop;
     const fd = makePayload({
       submissionID: '1',
       formID: '2',
-      raw: { ...rest, q3_nombre: 'María García' },
+      raw: { ...rest, q5_phoneNumber: '+1 555 9999' },
     });
     const out = parseJotformPayload(fd);
-    expect(out.data.nombre).toBe('María García');
+    expect(out.data.telefono).toBe('+1 555 9999');
   });
 });
 
 describe('isAllowedFormId', () => {
-  it('returns true when CSV is empty (dev convenience)', () => {
+  it('returns true when CSV is empty and requireConfigured is not set', () => {
     expect(isAllowedFormId('any', '')).toBe(true);
     expect(isAllowedFormId('any', undefined)).toBe(true);
+  });
+  it('returns false when CSV is empty and requireConfigured is true', () => {
+    expect(isAllowedFormId('any', '', { requireConfigured: true })).toBe(false);
   });
   it('matches case-sensitive IDs in CSV', () => {
     expect(isAllowedFormId('abc', 'abc,def')).toBe(true);

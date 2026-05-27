@@ -1,9 +1,9 @@
 // POST /api/register — public legacy endpoint.
 //
-// The production registration flow goes through Jotform → webhook now, so
-// this endpoint is kept as a fallback for tests, mock dev mode, and any
-// direct API client. It shares the same insertAttendee() helper that the
-// webhook uses, so participant-number assignment is consistent.
+// The production lead flow goes through Jotform → webhook now, so this
+// endpoint is kept as a fallback for tests, mock dev mode, and any direct
+// API client. It shares the same insertAttendee() helper that the webhook
+// uses, so participant-number assignment is consistent.
 
 import { registerSchema } from '@shared/schemas';
 import { error, json } from '../_shared/responses';

@@ -18,11 +18,11 @@ pages_build_output_dir = "dist"
 
 # Plain vars (NOT secrets — these are committed)
 [vars]
-RESEND_FROM = "Gifted Grads <noreply@aaservices.com>"
-ORGANIZER_EMAIL = "onelio@aaservices.com"
+RESEND_FROM = "Gifted Grads <noreply@aainsurances.com>"
+ORGANIZER_EMAIL = "info@aainsurances.com"
 
-# CSV of Jotform Form IDs accepted by the webhook (ES, EN).
-JOTFORM_ALLOWED_FORM_IDS = "261466146136154,261466352850055"
+# CSV of Jotform Form IDs accepted by the webhook (insurance form).
+JOTFORM_ALLOWED_FORM_IDS = "261465857224059"
 
 # D1 binding. Replace `database_id` with the id printed by:
 #   npx wrangler d1 create gifted-grads

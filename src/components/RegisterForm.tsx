@@ -7,15 +7,9 @@ import { useRegister } from '../hooks/useRegister';
 import { ErrorBanner } from './ErrorBanner';
 import { Spinner } from './Spinner';
 import { ApiError } from '../lib/api';
-import type { Genero, NivelAcademico } from '@shared/types';
+import type { InsuranceType } from '@shared/types';
 
-const generos: Genero[] = ['M', 'F', 'OTRO', 'PREFIERO_NO_DECIR'];
-const niveles: NivelAcademico[] = [
-  'SECUNDARIA',
-  'PREGRADO',
-  'POSGRADO',
-  'OTRO',
-];
+const insuranceTypes: InsuranceType[] = ['HOUSE', 'AUTO', 'LIFE'];
 
 export function RegisterForm() {
   const { t } = useTranslation();
@@ -33,11 +27,7 @@ export function RegisterForm() {
       nombre: '',
       email: '',
       telefono: '',
-      genero: 'F',
-      edad: 18,
-      institucion: '',
-      carrera: '',
-      nivelAcademico: 'PREGRADO',
+      insuranceType: 'AUTO',
     },
   });
 
@@ -108,48 +98,11 @@ export function RegisterForm() {
             {...register('telefono')}
           />
         </Field>
-        <Field label={t('register.field.genero')} htmlFor="genero">
-          <select id="genero" className="input h-11 rounded-lg" {...register('genero')}>
-            {generos.map((g) => (
-              <option key={g} value={g}>
-                {t(`genero.${g}`)}
-              </option>
-            ))}
-          </select>
-        </Field>
-
-        <Field label={t('register.field.edad')} error={errors.edad?.message} htmlFor="edad">
-          <input
-            id="edad"
-            type="number"
-            min={13}
-            max={99}
-            className="input h-11 rounded-lg"
-            {...register('edad', { valueAsNumber: true })}
-          />
-        </Field>
-        <Field label={t('register.field.institucion')} error={errors.institucion?.message} htmlFor="institucion">
-          <input
-            id="institucion"
-            className="input h-11 rounded-lg"
-            placeholder={t('register.placeholder.institucion')}
-            {...register('institucion')}
-          />
-        </Field>
-
-        <Field label={t('register.field.carrera')} error={errors.carrera?.message} htmlFor="carrera">
-          <input
-            id="carrera"
-            className="input h-11 rounded-lg"
-            placeholder={t('register.placeholder.carrera')}
-            {...register('carrera')}
-          />
-        </Field>
-        <Field label={t('register.field.nivel')} htmlFor="nivelAcademico">
-          <select id="nivelAcademico" className="input h-11 rounded-lg" {...register('nivelAcademico')}>
-            {niveles.map((n) => (
-              <option key={n} value={n}>
-                {t(`nivel.${n}`)}
+        <Field label={t('register.field.insuranceType')} htmlFor="insuranceType">
+          <select id="insuranceType" className="input h-11 rounded-lg" {...register('insuranceType')}>
+            {insuranceTypes.map((it) => (
+              <option key={it} value={it}>
+                {t(`insurance.${it}`)}
               </option>
             ))}
           </select>
@@ -158,7 +111,7 @@ export function RegisterForm() {
 
       <button
         type="submit"
-        className="btn-primary mt-1 w-full rounded-lg py-3 text-base"
+        className="btn-primary w-full mt-2 py-3 text-base"
         disabled={isSubmitting || mutation.isPending}
       >
         {mutation.isPending || isSubmitting ? (
@@ -192,7 +145,7 @@ function Field({
 }) {
   return (
     <div>
-      <label className="mb-1.5 block text-sm font-semibold text-slate-700" htmlFor={htmlFor}>
+      <label className="label" htmlFor={htmlFor}>
         {label}
       </label>
       {children}

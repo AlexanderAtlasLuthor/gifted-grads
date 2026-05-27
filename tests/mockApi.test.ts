@@ -1,8 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-// The mockApi module keeps state in module-level variables. We reset the
-// module cache and re-import everything (including ApiError) so each test
-// starts with a fresh store and a single shared ApiError class.
 async function freshMockApi() {
   const mockMod = await import('../src/lib/mockApi');
   const apiMod = await import('../src/lib/api');
@@ -17,11 +14,7 @@ const sampleRegister = {
   nombre: 'Carla Pérez',
   email: 'carla@example.com',
   telefono: '555-1234',
-  genero: 'F' as const,
-  edad: 24,
-  institucion: 'Universidad X',
-  carrera: 'Ingeniería',
-  nivelAcademico: 'PREGRADO' as const,
+  insuranceType: 'AUTO' as const,
 };
 
 describe('mockApi', () => {
@@ -67,6 +60,14 @@ describe('mockApi', () => {
     expect(after.total).toBe(before.total + 1);
   });
 
+  it('metrics breakdown counts by insurance type', async () => {
+    const { mockApi } = await freshMockApi();
+    await mockApi.login('admin');
+    const m = await mockApi.metrics();
+    expect(m.byInsuranceType.HOUSE + m.byInsuranceType.AUTO + m.byInsuranceType.LIFE)
+      .toBe(m.total);
+  });
+
   it('drawRaffle manual mode finds participant by number', async () => {
     const { mockApi } = await freshMockApi();
     await mockApi.login('admin');
@@ -76,13 +77,13 @@ describe('mockApi', () => {
       participantNumber: reg.participantNumber,
     });
     expect(result.winner.email).toBe('winner@example.com');
+    expect(result.winner.insuranceType).toBe('AUTO');
     expect(result.emailSent).toBe(true);
   });
 
   it('drawRaffle manual mode 404s on a missing number when the store has attendees', async () => {
     const { mockApi } = await freshMockApi();
     await mockApi.login('admin');
-    // Trigger seed by listing — otherwise the store is empty and we'd hit NO_ATTENDEES.
     await mockApi.listAttendees({});
     await expect(
       mockApi.drawRaffle({ mode: 'manual', participantNumber: 99999 }),

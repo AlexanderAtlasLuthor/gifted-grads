@@ -1,13 +1,11 @@
 import type {
   Attendee,
   AttendeeListResponse,
-  CategoryCount,
   CurrentRaffleResponse,
-  GeneroBreakdown,
-  Genero,
+  InsuranceType,
+  InsuranceTypeBreakdown,
   LoginResponse,
   Metrics,
-  NivelAcademico,
   RaffleDrawRequest,
   RaffleDrawResponse,
   RegisterRequest,
@@ -19,28 +17,7 @@ import { ApiError } from './api';
 const MOCK_PASSWORD = 'admin';
 const TOKEN_TTL_MS = 12 * 60 * 60 * 1000;
 
-const generos: Genero[] = ['M', 'F', 'OTRO', 'PREFIERO_NO_DECIR'];
-const niveles: NivelAcademico[] = [
-  'SECUNDARIA',
-  'PREGRADO',
-  'POSGRADO',
-  'OTRO',
-];
-const institucionesSeed = [
-  'Universidad Nacional',
-  'Tecnológico de Monterrey',
-  'PUCP',
-  'Universidad de los Andes',
-  'UNAM',
-];
-const carrerasSeed = [
-  'Ingeniería de Sistemas',
-  'Diseño Gráfico',
-  'Administración',
-  'Medicina',
-  'Derecho',
-  'Psicología',
-];
+const insuranceTypes: InsuranceType[] = ['HOUSE', 'AUTO', 'LIFE'];
 const nombresSeed = [
   'Ana López',
   'Carlos Pérez',
@@ -57,11 +34,6 @@ const nombresSeed = [
   'Isabella Ruiz',
   'Sebastián Mendoza',
   'Daniela Rojas',
-  'Felipe Silva',
-  'Gabriela Cruz',
-  'Nicolás Ortiz',
-  'Paula Jiménez',
-  'Tomás Aguirre',
 ];
 
 const attendees: Attendee[] = [];
@@ -81,11 +53,7 @@ function seed() {
       nombre,
       email: `${first}${i}@example.com`,
       telefono: `+1 555 000 ${(1000 + i).toString().slice(-4)}`,
-      genero: generos[i % generos.length],
-      edad: 18 + (i % 25),
-      institucion: institucionesSeed[i % institucionesSeed.length],
-      carrera: carrerasSeed[i % carrerasSeed.length],
-      nivelAcademico: niveles[i % niveles.length],
+      insuranceType: insuranceTypes[i % insuranceTypes.length],
       createdAt: new Date(now - (nombresSeed.length - i) * 60_000).toISOString(),
     });
   });
@@ -97,48 +65,22 @@ function delay<T>(value: T, ms = 150): Promise<T> {
 
 function computeMetrics(): Metrics {
   const total = attendees.length;
-  const byGenero: GeneroBreakdown = {
-    M: 0,
-    F: 0,
-    OTRO: 0,
-    PREFIERO_NO_DECIR: 0,
+  const byInsuranceType: InsuranceTypeBreakdown = { HOUSE: 0, AUTO: 0, LIFE: 0 };
+  for (const a of attendees) byInsuranceType[a.insuranceType]++;
+  const insuranceTypePercent: InsuranceTypeBreakdown = {
+    HOUSE: total ? (byInsuranceType.HOUSE / total) * 100 : 0,
+    AUTO: total ? (byInsuranceType.AUTO / total) * 100 : 0,
+    LIFE: total ? (byInsuranceType.LIFE / total) * 100 : 0,
   };
-  for (const a of attendees) byGenero[a.genero]++;
-  const generoPercent: GeneroBreakdown = {
-    M: total ? (byGenero.M / total) * 100 : 0,
-    F: total ? (byGenero.F / total) * 100 : 0,
-    OTRO: total ? (byGenero.OTRO / total) * 100 : 0,
-    PREFIERO_NO_DECIR: total ? (byGenero.PREFIERO_NO_DECIR / total) * 100 : 0,
-  };
-  const tallyBy = (key: keyof Attendee): CategoryCount[] => {
-    const counts = new Map<string, number>();
-    for (const a of attendees) {
-      const v = String(a[key]);
-      counts.set(v, (counts.get(v) ?? 0) + 1);
-    }
-    return Array.from(counts.entries())
-      .map(([k, count]) => ({
-        key: k,
-        count,
-        percent: total ? (count / total) * 100 : 0,
-      }))
-      .sort((a, b) => b.count - a.count)
-      .slice(0, 10);
-  };
-  const promedioEdad =
-    total > 0
-      ? Math.round(
-          (attendees.reduce((acc, a) => acc + a.edad, 0) / total) * 10,
-        ) / 10
-      : 0;
+  const todayPrefix = new Date().toISOString().slice(0, 10);
+  const leadsToday = attendees.filter((a) =>
+    a.createdAt.startsWith(todayPrefix),
+  ).length;
   return {
     total,
-    byGenero,
-    generoPercent,
-    byCarrera: tallyBy('carrera'),
-    byInstitucion: tallyBy('institucion'),
-    byNivel: tallyBy('nivelAcademico'),
-    promedioEdad,
+    leadsToday,
+    byInsuranceType,
+    insuranceTypePercent,
     updatedAt: new Date().toISOString(),
   };
 }
@@ -162,11 +104,7 @@ export const mockApi = {
       nombre: body.nombre,
       email: emailLower,
       telefono: body.telefono,
-      genero: body.genero,
-      edad: body.edad,
-      institucion: body.institucion,
-      carrera: body.carrera,
-      nivelAcademico: body.nivelAcademico,
+      insuranceType: body.insuranceType,
       createdAt: new Date().toISOString(),
     };
     attendees.push(attendee);
@@ -227,7 +165,7 @@ export const mockApi = {
   async getAttendee(id: string): Promise<Attendee> {
     requireAuth();
     const found = attendees.find((a) => a.id === id);
-    if (!found) throw new ApiError(404, 'NOT_FOUND', 'Asistente no encontrado');
+    if (!found) throw new ApiError(404, 'NOT_FOUND', 'Lead no encontrado');
     return delay(found);
   },
 
@@ -240,7 +178,7 @@ export const mockApi = {
   async drawRaffle(body: RaffleDrawRequest): Promise<RaffleDrawResponse> {
     requireAuth();
     if (attendees.length === 0) {
-      throw new ApiError(400, 'NO_ATTENDEES', 'No hay asistentes registrados');
+      throw new ApiError(400, 'NO_ATTENDEES', 'No hay leads registrados');
     }
     let winner: Attendee;
     if (body.mode === 'manual') {
@@ -263,18 +201,18 @@ export const mockApi = {
       }
       winner = found;
     } else {
-      const eligible = attendees.filter((a) => !drawnAttendeeIds.has(a.id));
-      if (eligible.length === 0) {
+      const available = attendees.filter((a) => !drawnAttendeeIds.has(a.id));
+      if (available.length === 0) {
         throw new ApiError(
           409,
           'RAFFLE_ALREADY_DRAWN',
-          'Ya no quedan participantes disponibles',
+          'Todos los participantes ya fueron sorteados',
         );
       }
-      winner = eligible[Math.floor(Math.random() * eligible.length)];
+      winner = available[Math.floor(Math.random() * available.length)];
     }
-    const drawnAt = new Date().toISOString();
     drawnAttendeeIds.add(winner.id);
+    const drawnAt = new Date().toISOString();
     currentWinner = { winner, drawnAt };
     return delay({ winner, drawnAt, emailSent: true });
   },
@@ -285,8 +223,6 @@ export const mockApi = {
   },
 
   async getRegistrationBySubmission(id: string): Promise<RegistrationLookup> {
-    // Mock mode doesn't have Jotform — fall back to "newest attendee" so
-    // /confirmacion?submission=anything resolves to something for testing.
     seed();
     const found = attendees[attendees.length - 1];
     if (!found) {

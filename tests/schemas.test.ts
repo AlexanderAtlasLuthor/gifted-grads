@@ -9,31 +9,20 @@ const validRegister = {
   nombre: 'Ana López',
   email: 'ANA@example.com',
   telefono: '+1 555 123 4567',
-  genero: 'F',
-  edad: 22,
-  institucion: 'Universidad Nacional',
-  carrera: 'Ingeniería de Sistemas',
-  nivelAcademico: 'PREGRADO',
+  insuranceType: 'AUTO',
 };
 
 describe('registerSchema', () => {
   it('accepts a valid payload and normalizes email to lowercase', () => {
     const parsed = registerSchema.parse(validRegister);
     expect(parsed.email).toBe('ana@example.com');
-    expect(parsed.edad).toBe(22);
-  });
-
-  it('coerces age strings to numbers', () => {
-    const parsed = registerSchema.parse({ ...validRegister, edad: '30' });
-    expect(parsed.edad).toBe(30);
-  });
-
-  it('rejects under-13 ages', () => {
-    expect(() => registerSchema.parse({ ...validRegister, edad: 10 })).toThrow();
+    expect(parsed.insuranceType).toBe('AUTO');
   });
 
   it('rejects malformed emails', () => {
-    expect(() => registerSchema.parse({ ...validRegister, email: 'not-an-email' })).toThrow();
+    expect(() =>
+      registerSchema.parse({ ...validRegister, email: 'not-an-email' }),
+    ).toThrow();
   });
 
   it('rejects phone numbers with letters', () => {
@@ -42,9 +31,22 @@ describe('registerSchema', () => {
     ).toThrow();
   });
 
-  it('rejects unknown gender values', () => {
+  it('rejects unknown insurance types', () => {
     expect(() =>
-      registerSchema.parse({ ...validRegister, genero: 'X' }),
+      registerSchema.parse({ ...validRegister, insuranceType: 'TRAVEL' }),
+    ).toThrow();
+  });
+
+  it('accepts HOUSE, AUTO and LIFE', () => {
+    for (const t of ['HOUSE', 'AUTO', 'LIFE'] as const) {
+      const parsed = registerSchema.parse({ ...validRegister, insuranceType: t });
+      expect(parsed.insuranceType).toBe(t);
+    }
+  });
+
+  it('rejects names that are too short', () => {
+    expect(() =>
+      registerSchema.parse({ ...validRegister, nombre: 'A' }),
     ).toThrow();
   });
 });

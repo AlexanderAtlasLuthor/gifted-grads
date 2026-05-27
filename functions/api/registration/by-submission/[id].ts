@@ -1,8 +1,6 @@
 // GET /api/registration/by-submission/[id] — public.
 //
-// Looks up an attendee by their Jotform submission ID. Used by the
-// confirmation page right after the Jotform thank-you redirect: the React
-// client polls this until the webhook has populated the row.
+// Used by the confirmation page right after Jotform's thank-you redirect.
 
 import { error, json } from '../../../_shared/responses';
 import { rowToAttendeeIso, type AttendeeRow } from '../../../_shared/db';
@@ -16,8 +14,7 @@ export const onRequestGet: PagesFunction<Env, 'id'> = async (ctx) => {
   }
 
   const row = await ctx.env.DB.prepare(
-    `SELECT id, participant_number, nombre, email, telefono, genero, edad,
-            institucion, carrera, nivel_academico, created_at
+    `SELECT id, participant_number, nombre, email, telefono, insurance_type, created_at
      FROM attendees
      WHERE jotform_submission_id = ?
      LIMIT 1`,

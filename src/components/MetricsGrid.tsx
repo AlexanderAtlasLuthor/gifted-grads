@@ -4,7 +4,7 @@ import { MetricCard } from './MetricCard';
 import { Spinner } from './Spinner';
 import { ErrorBanner } from './ErrorBanner';
 import { formatPercent } from '../lib/format';
-import type { CategoryCount } from '@shared/types';
+import type { InsuranceType } from '@shared/types';
 
 function BarRow({
   label,
@@ -33,29 +33,10 @@ function BarRow({
   );
 }
 
-function CategoryList({
-  items,
-  emptyLabel,
-  labelFor = (key) => key,
-}: {
-  items: CategoryCount[];
-  emptyLabel: string;
-  labelFor?: (key: string) => string;
-}) {
-  if (items.length === 0) {
-    return <div className="text-xs text-slate-500">{emptyLabel}</div>;
-  }
-  return (
-    <div className="space-y-2">
-      {items.slice(0, 5).map((c) => (
-        <BarRow key={c.key} label={labelFor(c.key)} count={c.count} percent={c.percent} />
-      ))}
-    </div>
-  );
-}
+const INSURANCE_TYPES: InsuranceType[] = ['HOUSE', 'AUTO', 'LIFE'];
 
 export function MetricsGrid() {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const { data, isLoading, isError } = useMetrics();
 
   if (isLoading) {
@@ -70,55 +51,38 @@ export function MetricsGrid() {
     return <ErrorBanner message={t('common.error')} />;
   }
 
-  const generos = (['M', 'F', 'OTRO', 'PREFIERO_NO_DECIR'] as const).filter(
-    (k) => data.byGenero[k] > 0,
-  );
-  const updatedTime = new Date(data.updatedAt).toLocaleTimeString();
+  const updatedAtTime = new Date(data.updatedAt).toLocaleTimeString(locale);
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       <MetricCard
         label={t('dashboard.metric.total')}
         value={data.total}
-        hint={t('dashboard.metric.updatedAt', { time: updatedTime })}
+        hint={t('dashboard.metric.updatedAt', { time: updatedAtTime })}
       />
       <MetricCard
-        label={t('dashboard.metric.promedioEdad')}
-        value={data.promedioEdad.toFixed(1)}
+        label={t('dashboard.metric.leadsToday')}
+        value={data.leadsToday}
       />
-      <MetricCard label={t('dashboard.metric.genero')}>
+      <MetricCard
+        className="sm:col-span-2"
+        label={t('dashboard.metric.insuranceType')}
+      >
         <div className="space-y-2">
-          {generos.length === 0 && (
+          {INSURANCE_TYPES.every((k) => data.byInsuranceType[k] === 0) && (
             <div className="text-xs text-slate-500">—</div>
           )}
-          {generos.map((g) => (
-            <BarRow
-              key={g}
-              label={t(`genero.${g}`)}
-              count={data.byGenero[g]}
-              percent={data.generoPercent[g]}
-            />
-          ))}
+          {INSURANCE_TYPES.map((k) =>
+            data.byInsuranceType[k] > 0 ? (
+              <BarRow
+                key={k}
+                label={t(`insurance.${k}`)}
+                count={data.byInsuranceType[k]}
+                percent={data.insuranceTypePercent[k]}
+              />
+            ) : null,
+          )}
         </div>
-      </MetricCard>
-      <MetricCard label={t('dashboard.metric.nivel')}>
-        <CategoryList
-          items={data.byNivel}
-          emptyLabel="—"
-          labelFor={(key) => t(`nivel.${key}`)}
-        />
-      </MetricCard>
-      <MetricCard
-        className="md:col-span-2"
-        label={t('dashboard.metric.carrera')}
-      >
-        <CategoryList items={data.byCarrera} emptyLabel="—" />
-      </MetricCard>
-      <MetricCard
-        className="md:col-span-2"
-        label={t('dashboard.metric.institucion')}
-      >
-        <CategoryList items={data.byInstitucion} emptyLabel="—" />
       </MetricCard>
     </div>
   );

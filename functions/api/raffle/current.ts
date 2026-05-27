@@ -9,8 +9,8 @@ interface JoinedRow extends AttendeeRow {
 
 export const onRequestGet: PagesFunction<Env> = async (ctx) => {
   const row = await ctx.env.DB.prepare(
-    `SELECT a.id, a.participant_number, a.nombre, a.email, a.telefono, a.genero, a.edad,
-            a.institucion, a.carrera, a.nivel_academico, a.created_at,
+    `SELECT a.id, a.participant_number, a.nombre, a.email, a.telefono,
+            a.insurance_type, a.created_at,
             r.drawn_at AS drawn_at
      FROM raffle_draws r
      JOIN attendees a ON a.id = r.attendee_id

@@ -1,16 +1,10 @@
-export type Genero = 'M' | 'F' | 'OTRO' | 'PREFIERO_NO_DECIR';
-
-export type NivelAcademico = 'SECUNDARIA' | 'PREGRADO' | 'POSGRADO' | 'OTRO';
+export type InsuranceType = 'HOUSE' | 'AUTO' | 'LIFE';
 
 export interface RegisterRequest {
   nombre: string;
   email: string;
   telefono: string;
-  genero: Genero;
-  edad: number;
-  institucion: string;
-  carrera: string;
-  nivelAcademico: NivelAcademico;
+  insuranceType: InsuranceType;
 }
 
 export interface RegisterResponse {
@@ -25,11 +19,7 @@ export interface Attendee {
   nombre: string;
   email: string;
   telefono: string;
-  genero: Genero;
-  edad: number;
-  institucion: string;
-  carrera: string;
-  nivelAcademico: NivelAcademico;
+  insuranceType: InsuranceType;
   createdAt: string;
 }
 
@@ -40,27 +30,17 @@ export interface AttendeeListResponse {
   pageSize: number;
 }
 
-export interface GeneroBreakdown {
-  M: number;
-  F: number;
-  OTRO: number;
-  PREFIERO_NO_DECIR: number;
-}
-
-export interface CategoryCount {
-  key: string;
-  count: number;
-  percent: number;
+export interface InsuranceTypeBreakdown {
+  HOUSE: number;
+  AUTO: number;
+  LIFE: number;
 }
 
 export interface Metrics {
   total: number;
-  byGenero: GeneroBreakdown;
-  generoPercent: GeneroBreakdown;
-  byCarrera: CategoryCount[];
-  byInstitucion: CategoryCount[];
-  byNivel: CategoryCount[];
-  promedioEdad: number;
+  leadsToday: number;
+  byInsuranceType: InsuranceTypeBreakdown;
+  insuranceTypePercent: InsuranceTypeBreakdown;
   updatedAt: string;
 }
 

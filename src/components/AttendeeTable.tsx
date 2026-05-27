@@ -50,7 +50,7 @@ export function AttendeeTable() {
         });
         rows.push(...next.items);
       }
-      downloadCsv(rows, locale);
+      downloadCsv(rows, locale, t);
     } catch {
       setExportError(true);
     } finally {
@@ -119,8 +119,8 @@ export function AttendeeTable() {
                 <th className="px-4 py-2 text-left">{t('dashboard.table.number')}</th>
                 <th className="px-4 py-2 text-left">{t('dashboard.table.nombre')}</th>
                 <th className="px-4 py-2 text-left">{t('dashboard.table.email')}</th>
-                <th className="px-4 py-2 text-left">{t('dashboard.table.institucion')}</th>
-                <th className="px-4 py-2 text-left">{t('dashboard.table.carrera')}</th>
+                <th className="px-4 py-2 text-left">{t('dashboard.table.telefono')}</th>
+                <th className="px-4 py-2 text-left">{t('dashboard.table.insuranceType')}</th>
                 <th className="px-4 py-2 text-left">{t('dashboard.table.createdAt')}</th>
               </tr>
             </thead>
@@ -136,8 +136,10 @@ export function AttendeeTable() {
                   </td>
                   <td className="px-4 py-2 font-medium text-slate-900">{a.nombre}</td>
                   <td className="px-4 py-2 text-slate-600">{a.email}</td>
-                  <td className="px-4 py-2 text-slate-600">{a.institucion}</td>
-                  <td className="px-4 py-2 text-slate-600">{a.carrera}</td>
+                  <td className="px-4 py-2 text-slate-600">{a.telefono}</td>
+                  <td className="px-4 py-2 text-slate-600">
+                    {t(`insurance.${a.insuranceType}`)}
+                  </td>
                   <td className="px-4 py-2 text-slate-500">
                     {formatDateTime(a.createdAt, locale)}
                   </td>
@@ -188,37 +190,33 @@ export function AttendeeTable() {
   );
 }
 
-function downloadCsv(rows: Attendee[], locale: string) {
+function downloadCsv(
+  rows: Attendee[],
+  locale: string,
+  t: (key: string) => string,
+) {
   const headers = [
     '#',
-    'Nombre',
-    'Email',
-    'Telefono',
-    'Genero',
-    'Edad',
-    'Institucion',
-    'Carrera',
-    'Nivel academico',
-    'Registrado',
+    t('register.field.nombre'),
+    t('register.field.email'),
+    t('register.field.telefono'),
+    t('register.field.insuranceType'),
+    t('dashboard.table.createdAt'),
   ];
   const body = rows.map((a) => [
     formatParticipantNumber(a.participantNumber),
     a.nombre,
     a.email,
     a.telefono,
-    a.genero,
-    String(a.edad),
-    a.institucion,
-    a.carrera,
-    a.nivelAcademico,
+    t(`insurance.${a.insuranceType}`),
     formatDateTime(a.createdAt, locale),
   ]);
   const csv = [headers, ...body].map((row) => row.map(csvCell).join(',')).join('\n');
-  const blob = new Blob([`\uFEFF${csv}`], { type: 'text/csv;charset=utf-8' });
+  const blob = new Blob([`﻿${csv}`], { type: 'text/csv;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `gifted-grads-attendees-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.download = `gifted-grads-leads-${new Date().toISOString().slice(0, 10)}.csv`;
   document.body.appendChild(a);
   a.click();
   a.remove();

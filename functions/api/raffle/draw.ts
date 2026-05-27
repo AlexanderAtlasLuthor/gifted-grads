@@ -21,26 +21,13 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
     'SELECT COUNT(*) AS total FROM attendees',
   ).first<{ total: number }>();
   if (!countRow || countRow.total === 0) {
-    return error(400, 'NO_ATTENDEES', 'No hay asistentes registrados');
+    return error(400, 'NO_ATTENDEES', 'No hay leads registrados');
   }
 
   let winnerRow: AttendeeRow | null = null;
   if (body.mode === 'manual') {
-    const alreadyDrawn = await ctx.env.DB.prepare(
-      `SELECT r.id
-       FROM raffle_draws r
-       JOIN attendees a ON a.id = r.attendee_id
-       WHERE a.participant_number = ?
-       LIMIT 1`,
-    )
-      .bind(body.participantNumber)
-      .first<{ id: string }>();
-    if (alreadyDrawn) {
-      return error(409, 'RAFFLE_ALREADY_DRAWN', 'Ese participante ya fue seleccionado');
-    }
-
     winnerRow = await ctx.env.DB.prepare(
-      `SELECT id, participant_number, nombre, email, telefono, genero, edad, institucion, carrera, nivel_academico, created_at
+      `SELECT id, participant_number, nombre, email, telefono, insurance_type, created_at
        FROM attendees WHERE participant_number = ? LIMIT 1`,
     )
       .bind(body.participantNumber)
@@ -48,16 +35,23 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
     if (!winnerRow) {
       return error(404, 'WINNER_NOT_FOUND', 'Número de participante no encontrado');
     }
+    const alreadyDrawn = await ctx.env.DB.prepare(
+      'SELECT 1 FROM raffle_draws WHERE attendee_id = ? LIMIT 1',
+    )
+      .bind(winnerRow.id)
+      .first<{ 1: number }>();
+    if (alreadyDrawn) {
+      return error(409, 'RAFFLE_ALREADY_DRAWN', 'Ese participante ya fue seleccionado');
+    }
   } else {
     winnerRow = await ctx.env.DB.prepare(
-      `SELECT id, participant_number, nombre, email, telefono, genero, edad, institucion, carrera, nivel_academico, created_at
-       FROM attendees
-       WHERE id NOT IN (SELECT attendee_id FROM raffle_draws)
-       ORDER BY RANDOM()
-       LIMIT 1`,
+      `SELECT a.id, a.participant_number, a.nombre, a.email, a.telefono, a.insurance_type, a.created_at
+       FROM attendees a
+       WHERE NOT EXISTS (SELECT 1 FROM raffle_draws r WHERE r.attendee_id = a.id)
+       ORDER BY RANDOM() LIMIT 1`,
     ).first<AttendeeRow>();
     if (!winnerRow) {
-      return error(409, 'RAFFLE_ALREADY_DRAWN', 'Ya no quedan participantes disponibles');
+      return error(409, 'RAFFLE_ALREADY_DRAWN', 'Todos los participantes ya fueron sorteados');
     }
   }
 

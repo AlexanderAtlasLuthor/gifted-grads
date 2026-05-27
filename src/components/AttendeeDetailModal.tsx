@@ -24,11 +24,7 @@ export function AttendeeDetailModal({
     [t('register.field.nombre'), attendee.nombre],
     [t('register.field.email'), attendee.email],
     [t('register.field.telefono'), attendee.telefono],
-    [t('register.field.genero'), t(`genero.${attendee.genero}`)],
-    [t('register.field.edad'), String(attendee.edad)],
-    [t('register.field.institucion'), attendee.institucion],
-    [t('register.field.carrera'), attendee.carrera],
-    [t('register.field.nivel'), t(`nivel.${attendee.nivelAcademico}`)],
+    [t('register.field.insuranceType'), t(`insurance.${attendee.insuranceType}`)],
     [t('dashboard.table.createdAt'), formatDateTime(attendee.createdAt, locale)],
   ];
 

@@ -6,7 +6,7 @@ import { formatDateTime, formatParticipantNumber } from '../lib/format';
 import { PaperPlane, Sparkle } from '../components/decorations';
 import { Spinner } from '../components/Spinner';
 import { ApiError, api } from '../lib/api';
-import type { Attendee, Genero, NivelAcademico } from '@shared/types';
+import type { Attendee, InsuranceType } from '@shared/types';
 
 interface ConfirmationState {
   participantNumber?: number;
@@ -14,11 +14,7 @@ interface ConfirmationState {
     nombre?: string;
     email?: string;
     telefono?: string;
-    genero?: Genero;
-    edad?: number;
-    institucion?: string;
-    carrera?: string;
-    nivelAcademico?: NivelAcademico;
+    insuranceType?: InsuranceType;
     createdAt?: string;
   };
 }
@@ -43,8 +39,6 @@ export function ConfirmationPage() {
     state.participantNumber ??
     (numberFromQuery ? Number(numberFromQuery) : null);
 
-  // Track elapsed time to cap the polling. The query is disabled once we
-  // either have data or exceed the timeout.
   const [timedOut, setTimedOut] = useState(false);
   useEffect(() => {
     if (!submissionId || eagerNumber) return;
@@ -58,7 +52,6 @@ export function ConfirmationPage() {
     enabled: !!submissionId && !eagerNumber && !timedOut,
     refetchInterval: (q) => (q.state.data ? false : POLL_INTERVAL_MS),
     retry: (failureCount, err) => {
-      // PENDING means the webhook hasn't arrived yet — keep polling.
       if (err instanceof ApiError && err.code === 'PENDING') return true;
       return failureCount < 2;
     },
@@ -77,7 +70,6 @@ export function ConfirmationPage() {
     return null;
   }, [eagerNumber, state.attendee, lookup.data]);
 
-  // No way to render anything useful and no submission to poll → bounce.
   if (!displayed && !submissionId) {
     return <Navigate to="/" replace />;
   }
@@ -165,32 +157,15 @@ function Loaded({
           </div>
           <dl className="grid gap-4 sm:grid-cols-2">
             <SummaryItem label={t('register.field.nombre')} value={a?.nombre} />
-            <SummaryItem label={t('register.field.carrera')} value={a?.carrera} />
             <SummaryItem label={t('register.field.email')} value={a?.email} />
-            <SummaryItem
-              label={t('register.field.genero')}
-              value={a?.genero ? t(`genero.${a.genero}`) : undefined}
-            />
             <SummaryItem label={t('register.field.telefono')} value={a?.telefono} />
             <SummaryItem
-              label={t('register.field.edad')}
-              value={
-                a?.edad !== undefined
-                  ? `${a.edad} ${t('confirmation.yearsOld')}`
-                  : undefined
-              }
-            />
-            <SummaryItem
-              label={t('register.field.institucion')}
-              value={a?.institucion}
+              label={t('register.field.insuranceType')}
+              value={a?.insuranceType ? t(`insurance.${a.insuranceType}`) : undefined}
             />
             <SummaryItem
               label={t('confirmation.registeredAt')}
               value={a?.createdAt ? formatDateTime(a.createdAt, locale) : undefined}
-            />
-            <SummaryItem
-              label={t('register.field.nivel')}
-              value={a?.nivelAcademico ? t(`nivel.${a.nivelAcademico}`) : undefined}
             />
           </dl>
         </section>

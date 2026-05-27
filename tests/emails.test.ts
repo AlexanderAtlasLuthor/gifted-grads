@@ -8,20 +8,18 @@ const sample: Attendee = {
   nombre: 'Lucía <admin>',
   email: 'lucia@example.com',
   telefono: '+1 555 0000',
-  genero: 'F',
-  edad: 22,
-  institucion: 'Universidad X',
-  carrera: 'Ingeniería',
-  nivelAcademico: 'PREGRADO',
+  insuranceType: 'AUTO',
   createdAt: '2026-05-27T18:00:00.000Z',
 };
 
 describe('email templates', () => {
-  it('organizerEmail includes the padded participant number and escaped HTML', () => {
+  it('organizerEmail includes the padded participant number, insurance label and escaped HTML', () => {
     const out = organizerEmail(sample);
     expect(out.subject).toContain('#007');
     expect(out.html).toContain('Lucía &lt;admin&gt;');
+    expect(out.html).toContain('Auto');
     expect(out.text).toContain('Lucía <admin>');
+    expect(out.text).toContain('Auto');
     expect(out.text).toContain('lucia@example.com');
   });
 

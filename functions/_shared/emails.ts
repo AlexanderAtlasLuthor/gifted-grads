@@ -1,4 +1,4 @@
-import type { Attendee } from '@shared/types';
+import type { Attendee, InsuranceType } from '@shared/types';
 
 interface SendArgs {
   apiKey: string;
@@ -37,29 +37,14 @@ function pad(n: number): string {
   return n.toString().padStart(3, '0');
 }
 
-function generoLabel(g: Attendee['genero']): string {
-  switch (g) {
-    case 'M':
-      return 'Masculino';
-    case 'F':
-      return 'Femenino';
-    case 'OTRO':
-      return 'Otro';
-    case 'PREFIERO_NO_DECIR':
-      return 'Prefiere no decir';
-  }
-}
-
-function nivelLabel(n: Attendee['nivelAcademico']): string {
-  switch (n) {
-    case 'SECUNDARIA':
-      return 'Secundaria';
-    case 'PREGRADO':
-      return 'Pregrado';
-    case 'POSGRADO':
-      return 'Posgrado';
-    case 'OTRO':
-      return 'Otro';
+function insuranceLabel(t: InsuranceType): string {
+  switch (t) {
+    case 'HOUSE':
+      return 'House';
+    case 'AUTO':
+      return 'Auto';
+    case 'LIFE':
+      return 'Life';
   }
 }
 
@@ -87,7 +72,7 @@ function shellHtml(title: string, body: string): string {
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border-radius:14px;box-shadow:0 1px 3px rgba(15,23,42,0.06);overflow:hidden;">
             <tr>
               <td style="background:#1f4fdb;padding:20px 24px;color:#ffffff;font-weight:700;font-size:18px;">
-                Gifted Grads Events
+                Gifted Grads Insurance
               </td>
             </tr>
             <tr>
@@ -97,7 +82,7 @@ function shellHtml(title: string, body: string): string {
             </tr>
             <tr>
               <td style="padding:16px 24px;background:#f8fafc;color:#64748b;font-size:12px;text-align:center;">
-                Este mensaje fue generado automáticamente por la plataforma de registro.
+                Este mensaje fue generado automáticamente por la plataforma de leads.
               </td>
             </tr>
           </table>
@@ -113,18 +98,14 @@ export function organizerEmail(attendee: Attendee): {
   html: string;
   text: string;
 } {
-  const subject = `Nuevo registro #${pad(attendee.participantNumber)} — ${attendee.nombre}`;
+  const subject = `Nuevo lead de seguro #${pad(attendee.participantNumber)} — ${attendee.nombre}`;
   const rows: Array<[string, string]> = [
     ['Número', `#${pad(attendee.participantNumber)}`],
     ['Nombre', attendee.nombre],
     ['Email', attendee.email],
     ['Teléfono', attendee.telefono],
-    ['Género', generoLabel(attendee.genero)],
-    ['Edad', String(attendee.edad)],
-    ['Institución', attendee.institucion],
-    ['Carrera', attendee.carrera],
-    ['Nivel académico', nivelLabel(attendee.nivelAcademico)],
-    ['Registrado', new Date(attendee.createdAt).toLocaleString('es', { timeZone: 'UTC' })],
+    ['Tipo de seguro', insuranceLabel(attendee.insuranceType)],
+    ['Recibido', new Date(attendee.createdAt).toLocaleString('es', { timeZone: 'UTC' })],
   ];
   const tableRows = rows
     .map(
@@ -134,12 +115,13 @@ export function organizerEmail(attendee: Attendee): {
     .join('');
   const html = shellHtml(
     subject,
-    `<p style="margin:0 0 8px;font-size:14px;color:#475569;">Se completó un nuevo registro en el evento:</p>
+    `<p style="margin:0 0 8px;font-size:14px;color:#475569;">Llegó un nuevo lead de seguro:</p>
      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #e2e8f0;margin-top:12px;">
        ${tableRows}
-     </table>`,
+     </table>
+     <p style="margin:24px 0 0;font-size:13px;color:#475569;">Puedes responder este correo directamente para contactar al lead.</p>`,
   );
-  const text = `Nuevo registro — Gifted Grads Events\n\n${rows.map(([k, v]) => `${k}: ${v}`).join('\n')}\n`;
+  const text = `Nuevo lead de seguro — Gifted Grads Insurance\n\n${rows.map(([k, v]) => `${k}: ${v}`).join('\n')}\n`;
   return { subject, html, text };
 }
 
@@ -149,13 +131,13 @@ export function winnerEmail(attendee: Attendee): {
   text: string;
 } {
   const number = `#${pad(attendee.participantNumber)}`;
-  const subject = `🎉 ¡Ganaste el iPad! — Gifted Grads Events`;
+  const subject = `🎉 ¡Ganaste el iPad! — Gifted Grads`;
   const html = shellHtml(
     subject,
     `<p style="margin:0 0 12px;font-size:16px;">¡Felicidades <strong>${escapeHtml(attendee.nombre)}</strong>!</p>
      <p style="margin:0 0 16px;font-size:14px;color:#475569;">
-       Tu número de participante <strong style="color:#1f4fdb;font-family:monospace;">${number}</strong> fue el seleccionado en la rifa
-       del evento Gifted Grads Events. Has ganado un <strong>iPad</strong>.
+       Tu número de participante <strong style="color:#1f4fdb;font-family:monospace;">${number}</strong> fue el seleccionado en la rifa.
+       Has ganado un <strong>iPad</strong>.
      </p>
      <div style="border:2px dashed #93c5fd;background:#eff6ff;padding:16px;border-radius:10px;text-align:center;margin:16px 0;">
        <div style="font-size:12px;color:#1d4ed8;text-transform:uppercase;letter-spacing:0.08em;">Número ganador</div>
@@ -164,15 +146,15 @@ export function winnerEmail(attendee: Attendee): {
      <p style="margin:16px 0 0;font-size:14px;color:#475569;">
        Para reclamar tu premio, responde a este correo con tu nombre completo y un horario disponible para coordinar la entrega.
      </p>
-     <p style="margin:24px 0 0;font-size:14px;">¡Nos vemos pronto!<br/><span style="color:#64748b;">Equipo Gifted Grads Events</span></p>`,
+     <p style="margin:24px 0 0;font-size:14px;">¡Nos vemos pronto!<br/><span style="color:#64748b;">Equipo Gifted Grads</span></p>`,
   );
   const text = `¡Felicidades ${attendee.nombre}!
 
-Tu número de participante ${number} fue el seleccionado en la rifa del evento Gifted Grads Events. Has ganado un iPad.
+Tu número de participante ${number} fue el seleccionado en la rifa. Has ganado un iPad.
 
 Para reclamar tu premio, responde a este correo con tu nombre completo y un horario disponible para coordinar la entrega.
 
 ¡Nos vemos pronto!
-Equipo Gifted Grads Events`;
+Equipo Gifted Grads`;
   return { subject, html, text };
 }

@@ -7,9 +7,9 @@ export type InsertAttendeeResult =
   | { kind: 'idempotent'; attendee: Attendee };
 
 /**
- * Atomically assigns the next participant_number and inserts an attendee.
- * Handles UNIQUE collisions on participant_number with a small retry loop,
- * which is enough for the ~200-attendee scale.
+ * Atomically assigns the next participant_number and inserts an attendee
+ * (now an insurance lead). Handles UNIQUE collisions on participant_number
+ * with a small retry loop.
  *
  * If `jotformSubmissionId` is provided and a row already exists for it,
  * returns `{ kind: 'idempotent' }` without inserting — this lets the
@@ -23,8 +23,7 @@ export async function insertAttendee(
   if (jotformSubmissionId) {
     const existing = await db
       .prepare(
-        `SELECT id, participant_number, nombre, email, telefono, genero, edad,
-                institucion, carrera, nivel_academico, created_at
+        `SELECT id, participant_number, nombre, email, telefono, insurance_type, created_at
          FROM attendees WHERE jotform_submission_id = ? LIMIT 1`,
       )
       .bind(jotformSubmissionId)
@@ -53,11 +52,10 @@ export async function insertAttendee(
     try {
       const insert = await db
         .prepare(
-          `INSERT INTO attendees (id, participant_number, nombre, email, telefono, genero, edad,
-                                  institucion, carrera, nivel_academico, jotform_submission_id)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-           RETURNING id, participant_number, nombre, email, telefono, genero, edad, institucion,
-                     carrera, nivel_academico, created_at`,
+          `INSERT INTO attendees (id, participant_number, nombre, email, telefono,
+                                  insurance_type, jotform_submission_id)
+           VALUES (?, ?, ?, ?, ?, ?, ?)
+           RETURNING id, participant_number, nombre, email, telefono, insurance_type, created_at`,
         )
         .bind(
           id,
@@ -65,11 +63,7 @@ export async function insertAttendee(
           data.nombre,
           data.email,
           data.telefono,
-          data.genero,
-          data.edad,
-          data.institucion,
-          data.carrera,
-          data.nivelAcademico,
+          data.insuranceType,
           jotformSubmissionId ?? null,
         )
         .first<AttendeeRow>();
@@ -83,13 +77,10 @@ export async function insertAttendee(
         return { kind: 'email_exists' };
       }
       if (/UNIQUE/i.test(msg) && /jotform_submission/i.test(msg)) {
-        // Race: another worker inserted the same submission between our
-        // SELECT and our INSERT. Re-read and return as idempotent.
         if (jotformSubmissionId) {
           const existing = await db
             .prepare(
-              `SELECT id, participant_number, nombre, email, telefono, genero, edad,
-                      institucion, carrera, nivel_academico, created_at
+              `SELECT id, participant_number, nombre, email, telefono, insurance_type, created_at
                FROM attendees WHERE jotform_submission_id = ? LIMIT 1`,
             )
             .bind(jotformSubmissionId)

@@ -1,7 +1,11 @@
-# Gifted Grads Events
+# Gifted Grads Insurance
 
+> Captura de leads de seguros con formulario Jotform embebido, webhook a
+> Cloudflare Workers, asignación de número de participante para rifa de
+> iPad y dashboard del manager.
+>
 > **Stack:** React 18 + TypeScript + Vite + TailwindCSS · Cloudflare Pages + Pages Functions + D1 + Resend.
-> **API contract:** [`API.md`](./API.md) · **DB schema:** [`migrations/0001_init.sql`](./migrations/0001_init.sql)
+> **API contract:** [`API.md`](./API.md) · **Migrations:** [`migrations/`](./migrations/)
 
 ## Inicio rápido
 
@@ -28,28 +32,22 @@ Compilación de producción: `npm run build` (sale a `dist/`). Tests: `npm test`
 
 ## Configuración de Jotform
 
-El formulario de registro vive en **dos formularios de Jotform** (uno ES, uno EN). Cloudflare Workers solo procesa el webhook que dispara Jotform al recibir cada submission.
+El formulario de registro vive en un Jotform (el toggle ES/EN del header cambia la UI alrededor, pero ambos idiomas embedean el mismo form). Cloudflare Workers solo procesa el webhook que dispara Jotform al recibir cada submission.
 
-### 1. Crear los dos formularios
+### 1. Estructura del formulario
 
-- Crea dos formularios en Jotform con **exactamente los mismos campos en el mismo orden** (así comparten los mismos `qN` internos). Campos requeridos:
+Los 4 campos requeridos. El matcher del webhook strips el prefijo `qN_` y matchea por slug, así que el número de pregunta no importa — solo que el slug/etiqueta del campo coincida con alguno de los aliases definidos en `functions/_shared/jotform.ts`.
 
-  | Orden | Etiqueta sugerida | Tipo Jotform | Mapea a |
-  |-------|-------------------|--------------|---------|
-  | q3 | Nombre completo | Short Text / Full Name | `nombre` |
-  | q4 | Email | Email | `email` |
-  | q5 | Teléfono | Phone | `telefono` |
-  | q6 | Género | Dropdown / Radio (Masculino, Femenino, Otro, Prefiero no decir) | `genero` |
-  | q7 | Edad | Number (13–99) | `edad` |
-  | q8 | Institución o universidad | Short Text | `institucion` |
-  | q9 | Carrera o área de estudio | Short Text | `carrera` |
-  | q10 | Nivel académico | Dropdown / Radio (Secundaria, Pregrado, Posgrado, Otro) | `nivelAcademico` |
+| Etiqueta sugerida | Tipo Jotform | Mapea a |
+|-------------------|--------------|---------|
+| Name | Full Name / Short Text | `nombre` |
+| Number | Phone | `telefono` |
+| Email | Email | `email` |
+| What type of insurance are you interested in? | Dropdown / Radio (`House`, `Auto`, `Life`) | `insuranceType` |
 
-- Después de crear los forms, copia los Form IDs (el número que aparece en `https://form.jotform.com/{ID}`).
+Después de crear el form, copia el Form ID (el número que aparece en `https://form.jotform.com/{ID}`).
 
-### 2. Configurar cada formulario
-
-Para **ambos** formularios:
+### 2. Configurar el formulario
 
 1. **Settings → Thank You Page → Redirect to external link**
 
@@ -67,24 +65,28 @@ Para **ambos** formularios:
 
    Reemplaza `{JOTFORM_WEBHOOK_SECRET}` con el valor real (genera uno con `openssl rand -hex 32`).
 
-### 3. Ajustar el mapping en el código
+### 3. Ajustar el mapping (si los slugs no coinciden)
 
-Una vez creados los formularios, edita `functions/_shared/jotform.ts` con los `qN_label` exactos de Jotform (las claves del JSON `rawRequest` que envía cada submission). Los valores por defecto siguen un patrón típico — confirma cada uno con un submission de prueba mirando `rawRequest` en el panel de Jotform.
+El matcher en `functions/_shared/jotform.ts` busca por slug. Si Jotform usó otro slug para algún campo, agrégalo a `FIELD_ALIASES` (lista ordenada de candidatos por campo). Los aliases de opciones de tipo de seguro (House/Auto/Life en ES e EN) están en `INSURANCE_TYPE_MAP`.
+
+Para ver el `rawRequest` real que envía tu form: haz un submission de prueba y revisa el log del worker (`wrangler pages dev` o Cloudflare dashboard → Pages → Functions → Logs). Si la validación falla, el log incluye `rawKeys` con todas las claves que llegaron.
 
 ### 4. Configurar variables de entorno
 
-Frontend (`.env`):
+Frontend (`.env`, los defaults en `.env.example` apuntan al form en producción):
 
 ```
-VITE_JOTFORM_FORM_ID_ES="123456789012345"
-VITE_JOTFORM_FORM_ID_EN="987654321098765"
+VITE_JOTFORM_FORM_ID_ES="261465857224059"
+VITE_JOTFORM_FORM_ID_EN="261465857224059"
 ```
 
 Worker (`wrangler.toml` para vars + Cloudflare dashboard para secrets):
 
 ```toml
 [vars]
-JOTFORM_ALLOWED_FORM_IDS = "123456789012345,987654321098765"
+JOTFORM_ALLOWED_FORM_IDS = "261465857224059"
+RESEND_FROM = "Gifted Grads <noreply@aainsurances.com>"
+ORGANIZER_EMAIL = "info@aainsurances.com"
 ```
 
 ```bash

@@ -1,72 +1,52 @@
 import { registerSchema } from '@shared/schemas';
-import type { Genero, NivelAcademico, RegisterRequest } from '@shared/types';
+import type { InsuranceType, RegisterRequest } from '@shared/types';
 
 /**
  * Field aliases used to find each form field inside Jotform's `rawRequest`
  * JSON payload. Jotform keys are typically `q{N}_{slug}` — we strip the
  * `qN_` prefix and match the remaining slug against these aliases, so the
  * mapping works no matter which slot number Jotform assigned to the field.
- *
- * Order matters: an exact slug match wins over a substring match, and
- * earlier aliases win over later ones.
  */
 export const FIELD_ALIASES = {
-  nombre: ['nombreCompleto', 'fullName', 'nombre', 'name'],
-  email: ['email', 'correoElectronico', 'correo'],
-  telefono: ['telefono', 'telephoneNumber', 'phoneNumber', 'phone'],
-  genero: ['genero', 'gender'],
-  edad: ['edad', 'age'],
-  institucion: [
-    'institucionOUniversidad',
-    'institutionOrUniversity',
-    'institucion',
-    'institution',
-    'universidad',
-    'university',
-  ],
-  carrera: [
-    'carreraOAreaDe',
-    'carreraOAreaDeEstudio',
-    'majorOrFieldOf',
-    'majorOrFieldOfStudy',
-    'carrera',
-    'major',
-  ],
-  nivelAcademico: [
-    'nivelAcademico',
-    'academicLevel',
-    'nivel',
-    'level',
+  nombre: ['name', 'fullName', 'nombreCompleto', 'nombre'],
+  email: ['email', 'correoElectronico', 'correo', 'emailAddress'],
+  telefono: ['number', 'phoneNumber', 'phone', 'telephoneNumber', 'telefono'],
+  insuranceType: [
+    'whatTypeOfInsuranceAreYouInterestedIn',
+    'whatTypeOfInsurance',
+    'typeOfInsurance',
+    'insuranceType',
+    'insurance',
+    'tipoDeSeguro',
+    'tipoSeguro',
   ],
 } satisfies Record<keyof RegisterRequest, string[]>;
 
 /**
  * Maps the human-readable option text Jotform sends to our schema enums.
- * Edit these once the actual option labels are confirmed in the forms.
+ * Covers ES/EN labels for House/Auto/Life.
  */
-export const GENERO_MAP: Record<string, Genero> = {
-  Masculino: 'M',
-  Male: 'M',
-  Hombre: 'M',
-  Femenino: 'F',
-  Female: 'F',
-  Mujer: 'F',
-  Otro: 'OTRO',
-  Other: 'OTRO',
-  'Prefiero no decir': 'PREFIERO_NO_DECIR',
-  'Prefer not to say': 'PREFIERO_NO_DECIR',
-};
+export const INSURANCE_TYPE_MAP: Record<string, InsuranceType> = {
+  House: 'HOUSE',
+  house: 'HOUSE',
+  Home: 'HOUSE',
+  Casa: 'HOUSE',
+  Hogar: 'HOUSE',
+  'Seguro de casa': 'HOUSE',
+  'Seguro de hogar': 'HOUSE',
 
-export const NIVEL_MAP: Record<string, NivelAcademico> = {
-  Secundaria: 'SECUNDARIA',
-  'High school': 'SECUNDARIA',
-  'High School': 'SECUNDARIA',
-  Pregrado: 'PREGRADO',
-  Undergraduate: 'PREGRADO',
-  Posgrado: 'POSGRADO',
-  Graduate: 'POSGRADO',
-  Otro: 'OTRO',
-  Other: 'OTRO',
+  Auto: 'AUTO',
+  auto: 'AUTO',
+  Car: 'AUTO',
+  Vehículo: 'AUTO',
+  Coche: 'AUTO',
+  'Seguro de auto': 'AUTO',
+  'Seguro de coche': 'AUTO',
+
+  Life: 'LIFE',
+  life: 'LIFE',
+  Vida: 'LIFE',
+  'Seguro de vida': 'LIFE',
 };
 
 export interface ParsedJotformPayload {
@@ -96,9 +76,22 @@ function extractString(value: unknown): string | undefined {
     const trimmed = value.trim();
     return trimmed.length > 0 ? trimmed : undefined;
   }
+  if (Array.isArray(value)) {
+    const collapsed = value
+      .filter((x) => typeof x === 'string')
+      .map((s) => (s as string).trim())
+      .filter((s) => s.length > 0)
+      .join(', ');
+    return collapsed.length > 0 ? collapsed : undefined;
+  }
   if (value && typeof value === 'object') {
     // Jotform compound fields, e.g. name: { first, last, prefix, suffix }
-    const collapsed = Object.values(value as Record<string, unknown>)
+    // or phone: { full } / { area, phone }.
+    const obj = value as Record<string, unknown>;
+    if (typeof obj.full === 'string' && obj.full.trim().length > 0) {
+      return obj.full.trim();
+    }
+    const collapsed = Object.values(obj)
       .filter((x) => typeof x === 'string')
       .map((s) => (s as string).trim())
       .filter((s) => s.length > 0)
@@ -179,11 +172,10 @@ export function parseJotformPayload(form: FormData): ParsedJotformPayload {
     nombre: findValue(raw, FIELD_ALIASES.nombre),
     email: findValue(raw, FIELD_ALIASES.email),
     telefono: findValue(raw, FIELD_ALIASES.telefono),
-    genero: lookupEnum(GENERO_MAP, findValue(raw, FIELD_ALIASES.genero)),
-    edad: findValue(raw, FIELD_ALIASES.edad),
-    institucion: findValue(raw, FIELD_ALIASES.institucion),
-    carrera: findValue(raw, FIELD_ALIASES.carrera),
-    nivelAcademico: lookupEnum(NIVEL_MAP, findValue(raw, FIELD_ALIASES.nivelAcademico)),
+    insuranceType: lookupEnum(
+      INSURANCE_TYPE_MAP,
+      findValue(raw, FIELD_ALIASES.insuranceType),
+    ),
   };
 
   const parsed = registerSchema.safeParse(candidate);

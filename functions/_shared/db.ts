@@ -1,4 +1,4 @@
-import type { Attendee, Genero, NivelAcademico } from '@shared/types';
+import type { Attendee, InsuranceType } from '@shared/types';
 
 export interface AttendeeRow {
   id: string;
@@ -6,11 +6,7 @@ export interface AttendeeRow {
   nombre: string;
   email: string;
   telefono: string;
-  genero: Genero;
-  edad: number;
-  institucion: string;
-  carrera: string;
-  nivel_academico: NivelAcademico;
+  insurance_type: InsuranceType;
   created_at: string;
 }
 
@@ -21,11 +17,7 @@ export function rowToAttendee(row: AttendeeRow): Attendee {
     nombre: row.nombre,
     email: row.email,
     telefono: row.telefono,
-    genero: row.genero,
-    edad: row.edad,
-    institucion: row.institucion,
-    carrera: row.carrera,
-    nivelAcademico: row.nivel_academico,
+    insuranceType: row.insurance_type,
     createdAt: row.created_at,
   };
 }

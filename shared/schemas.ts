@@ -1,12 +1,6 @@
 import { z } from 'zod';
 
-export const generoSchema = z.enum(['M', 'F', 'OTRO', 'PREFIERO_NO_DECIR']);
-export const nivelAcademicoSchema = z.enum([
-  'SECUNDARIA',
-  'PREGRADO',
-  'POSGRADO',
-  'OTRO',
-]);
+export const insuranceTypeSchema = z.enum(['HOUSE', 'AUTO', 'LIFE']);
 
 export const registerSchema = z.object({
   nombre: z.string().trim().min(2).max(120),
@@ -17,11 +11,7 @@ export const registerSchema = z.object({
     .min(7)
     .max(20)
     .regex(/^[0-9+\-\s()]+$/, 'invalid_phone'),
-  genero: generoSchema,
-  edad: z.coerce.number().int().min(13).max(99),
-  institucion: z.string().trim().min(2).max(160),
-  carrera: z.string().trim().min(2).max(160),
-  nivelAcademico: nivelAcademicoSchema,
+  insuranceType: insuranceTypeSchema,
 });
 
 export type RegisterInput = z.infer<typeof registerSchema>;

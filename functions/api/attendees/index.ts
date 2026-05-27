@@ -32,7 +32,7 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
     total = totalRow?.total ?? 0;
 
     const rs = await ctx.env.DB.prepare(
-      `SELECT id, participant_number, nombre, email, telefono, genero, edad, institucion, carrera, nivel_academico, created_at
+      `SELECT id, participant_number, nombre, email, telefono, insurance_type, created_at
        FROM attendees
        WHERE nombre LIKE ? COLLATE NOCASE
           OR email LIKE ? COLLATE NOCASE
@@ -51,7 +51,7 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
     total = totalRow?.total ?? 0;
 
     const rs = await ctx.env.DB.prepare(
-      `SELECT id, participant_number, nombre, email, telefono, genero, edad, institucion, carrera, nivel_academico, created_at
+      `SELECT id, participant_number, nombre, email, telefono, insurance_type, created_at
        FROM attendees
        ORDER BY participant_number DESC
        LIMIT ? OFFSET ?`,

@@ -10,7 +10,7 @@ export const onRequestGet: PagesFunction<Env, 'id'> = async (ctx) => {
   }
 
   const row = await ctx.env.DB.prepare(
-    `SELECT id, participant_number, nombre, email, telefono, genero, edad, institucion, carrera, nivel_academico, created_at
+    `SELECT id, participant_number, nombre, email, telefono, insurance_type, created_at
      FROM attendees WHERE id = ? LIMIT 1`,
   )
     .bind(id)

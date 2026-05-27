@@ -10,16 +10,12 @@ describe('rowToAttendee', () => {
       nombre: 'X',
       email: 'x@x.com',
       telefono: '1',
-      genero: 'F' as const,
-      edad: 22,
-      institucion: 'I',
-      carrera: 'C',
-      nivel_academico: 'PREGRADO' as const,
+      insurance_type: 'AUTO' as const,
       created_at: '2026-01-01 10:00:00',
     };
     const out = rowToAttendee(row);
     expect(out.participantNumber).toBe(3);
-    expect(out.nivelAcademico).toBe('PREGRADO');
+    expect(out.insuranceType).toBe('AUTO');
     expect(out.createdAt).toBe('2026-01-01 10:00:00');
   });
 
@@ -30,11 +26,7 @@ describe('rowToAttendee', () => {
       nombre: 'X',
       email: 'x@x.com',
       telefono: '1',
-      genero: 'F' as const,
-      edad: 22,
-      institucion: 'I',
-      carrera: 'C',
-      nivel_academico: 'PREGRADO' as const,
+      insurance_type: 'HOUSE' as const,
       created_at: '2026-01-01 10:00:00',
     };
     const out = rowToAttendeeIso(row);
