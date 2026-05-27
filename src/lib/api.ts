@@ -10,6 +10,7 @@ import type {
   RaffleDrawResponse,
   RegisterRequest,
   RegisterResponse,
+  RegistrationLookup,
 } from '@shared/types';
 import { getToken } from './auth';
 import { mockApi } from './mockApi';
@@ -129,5 +130,13 @@ export const api = {
     return request<CurrentRaffleResponse | null>('GET', '/api/raffle/current', {
       auth: true,
     });
+  },
+
+  getRegistrationBySubmission(id: string): Promise<RegistrationLookup> {
+    if (USE_MOCK) return mockApi.getRegistrationBySubmission(id);
+    return request<RegistrationLookup>(
+      'GET',
+      `/api/registration/by-submission/${encodeURIComponent(id)}`,
+    );
   },
 };

@@ -1,5 +1,5 @@
 import { useTranslation } from '../i18n/I18nProvider';
-import { RegisterForm } from '../components/RegisterForm';
+import { JotformEmbed } from '../components/JotformEmbed';
 import { PaperPlane, SunBurst, CloudPuff } from '../components/decorations';
 
 export function RegisterPage() {
@@ -33,7 +33,7 @@ export function RegisterPage() {
                   {t('register.formTitle')}
                 </h2>
               </div>
-              <RegisterForm />
+              <JotformEmbed />
             </div>
           </div>
 

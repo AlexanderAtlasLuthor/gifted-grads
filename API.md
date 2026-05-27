@@ -54,16 +54,59 @@ Protected endpoints (require valid Bearer token):
 - `GET /api/raffle/current`
 
 Public endpoints:
-- `POST /api/register`
+- `POST /api/register` (legacy fallback — production registration goes through Jotform)
 - `POST /api/manager/login`
+- `POST /api/jotform/webhook/:secret`
+- `GET /api/registration/by-submission/:id`
 
 ---
 
 ## Endpoints
 
-### `POST /api/register` — public
+### `POST /api/jotform/webhook/:secret` — public, protected by URL secret
 
-Register a new attendee. Side effect: sends a copy of the registration via Resend to `env.ORGANIZER_EMAIL` (= `onelio@aaservices.com`). Email failure must **not** fail the request — log it and return success.
+Receives the form-data webhook that Jotform fires on every submission. The `:secret` URL segment must match `env.JOTFORM_WEBHOOK_SECRET` exactly (constant-time compare); any mismatch returns **404** so probes cannot detect the route.
+
+**Request:** `multipart/form-data` from Jotform. Relevant fields:
+
+- `submissionID` — Jotform's unique submission identifier (stored as `attendees.jotform_submission_id` for idempotency).
+- `formID` — Jotform form ID; must appear in `env.JOTFORM_ALLOWED_FORM_IDS` (CSV) or the webhook is ignored with `{ ok: false, ignored: 'form_not_allowed' }`.
+- `rawRequest` — JSON string of all answers, keys typically named `q{N}_{label}`. The mapping from these keys to our schema lives in `functions/_shared/jotform.ts` (`FIELD_MAP`, `GENERO_MAP`, `NIVEL_MAP`).
+
+**Behavior:**
+
+- Parses + validates the payload against `registerSchema`. On any parse/validation failure, returns **200** with `{ ok: false, ignored: '<code>' }` (Jotform retries aggressively on 5xx; we only want real D1 errors to bubble up).
+- **Idempotent**: if a row already exists for `submissionID`, returns `{ ok: true, idempotent: true, participantNumber }` without duplicating.
+- Otherwise assigns the next sequential `participant_number` via the same atomic helper used by `POST /api/register` and inserts.
+- Fires-and-forgets the organizer notification email via Resend (failure non-fatal).
+- Returns **200** with `{ ok: true, participantNumber, submissionId }`.
+
+**Configure in Jotform:** Form Settings → Integrations → Webhooks → `https://{TU_DOMINIO}/api/jotform/webhook/{JOTFORM_WEBHOOK_SECRET}`.
+
+---
+
+### `GET /api/registration/by-submission/:id` — public
+
+Used by the confirmation page right after Jotform's thank-you redirect. Looks up an attendee by their Jotform submission ID.
+
+**Response 200:**
+```ts
+{
+  participantNumber: number;
+  attendee: Attendee;
+}
+```
+
+**Errors:**
+- 404 `PENDING` — the webhook hasn't processed this submission yet. The client interprets `PENDING` as a signal to keep polling.
+
+**Polling contract:** the client polls every 1.5 s for up to 20 s.
+
+---
+
+### `POST /api/register` — public (legacy)
+
+Register a new attendee directly via JSON. Kept as a fallback for tests / mock dev mode / direct API consumers; the production registration flow uses Jotform. Side effect: sends a copy of the registration via Resend to `env.ORGANIZER_EMAIL` (= `onelio@aaservices.com`). Email failure must **not** fail the request — log it and return success.
 
 **Request body:**
 ```ts

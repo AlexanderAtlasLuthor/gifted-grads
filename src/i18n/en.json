@@ -72,6 +72,9 @@
   "confirmation.notice3.body": "We've sent the registration details to your email address.",
   "confirmation.download": "Download confirmation",
   "confirmation.backHome": "Back to home",
+  "confirmation.confirming": "Confirming your registration...",
+  "confirmation.timeout.title": "We're processing your registration",
+  "confirmation.timeout.body": "This can take a few minutes. Check your email or reload this page in a moment.",
   "confirmation.registerAnother": "Register someone else",
 
   "login.title": "Manager sign in",

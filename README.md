@@ -23,6 +23,73 @@ Compilación de producción: `npm run build` (sale a `dist/`). Tests: `npm test`
 - `wrangler.toml` — configuración de Cloudflare Pages + binding D1.
 - `public/_redirects` — fallback SPA para rutas del cliente.
 
+## Configuración de Jotform
+
+El formulario de registro vive en **dos formularios de Jotform** (uno ES, uno EN). Cloudflare Workers solo procesa el webhook que dispara Jotform al recibir cada submission.
+
+### 1. Crear los dos formularios
+
+- Crea dos formularios en Jotform con **exactamente los mismos campos en el mismo orden** (así comparten los mismos `qN` internos). Campos requeridos:
+
+  | Orden | Etiqueta sugerida | Tipo Jotform | Mapea a |
+  |-------|-------------------|--------------|---------|
+  | q3 | Nombre completo | Short Text / Full Name | `nombre` |
+  | q4 | Email | Email | `email` |
+  | q5 | Teléfono | Phone | `telefono` |
+  | q6 | Género | Dropdown / Radio (Masculino, Femenino, Otro, Prefiero no decir) | `genero` |
+  | q7 | Edad | Number (13–99) | `edad` |
+  | q8 | Institución o universidad | Short Text | `institucion` |
+  | q9 | Carrera o área de estudio | Short Text | `carrera` |
+  | q10 | Nivel académico | Dropdown / Radio (Secundaria, Pregrado, Posgrado, Otro) | `nivelAcademico` |
+
+- Después de crear los forms, copia los Form IDs (el número que aparece en `https://form.jotform.com/{ID}`).
+
+### 2. Configurar cada formulario
+
+Para **ambos** formularios:
+
+1. **Settings → Thank You Page → Redirect to external link**
+
+   ```
+   https://{TU_DOMINIO}/confirmacion?submission={id}
+   ```
+
+   Jotform reemplaza `{id}` con el submission ID real. La página de confirmación hace polling al backend hasta que el webhook procesa el registro.
+
+2. **Settings → Integrations → Webhooks**
+
+   ```
+   https://{TU_DOMINIO}/api/jotform/webhook/{JOTFORM_WEBHOOK_SECRET}
+   ```
+
+   Reemplaza `{JOTFORM_WEBHOOK_SECRET}` con el valor real (genera uno con `openssl rand -hex 32`).
+
+### 3. Ajustar el mapping en el código
+
+Una vez creados los formularios, edita `functions/_shared/jotform.ts` con los `qN_label` exactos de Jotform (las claves del JSON `rawRequest` que envía cada submission). Los valores por defecto siguen un patrón típico — confirma cada uno con un submission de prueba mirando `rawRequest` en el panel de Jotform.
+
+### 4. Configurar variables de entorno
+
+Frontend (`.env`):
+
+```
+VITE_JOTFORM_FORM_ID_ES="123456789012345"
+VITE_JOTFORM_FORM_ID_EN="987654321098765"
+```
+
+Worker (`wrangler.toml` para vars + Cloudflare dashboard para secrets):
+
+```toml
+[vars]
+JOTFORM_ALLOWED_FORM_IDS = "123456789012345,987654321098765"
+```
+
+```bash
+npx wrangler pages secret put JOTFORM_WEBHOOK_SECRET
+```
+
+Para dev local: pon todo en `.dev.vars` (copia de `.dev.vars.example`).
+
 ## Despliegue en Cloudflare
 
 ### 1. Crear la base de datos D1
@@ -48,6 +115,7 @@ npx wrangler d1 migrations apply DB --remote
 ```bash
 npx wrangler pages secret put MANAGER_PASSWORD
 npx wrangler pages secret put RESEND_API_KEY
+npx wrangler pages secret put JOTFORM_WEBHOOK_SECRET
 ```
 
 Para desarrollo local, copia `.dev.vars.example` a `.dev.vars` y rellena los valores.
@@ -71,17 +139,21 @@ Conecta el repositorio a Cloudflare Pages:
 ### Frontend (build-time, prefijo `VITE_`)
 
 - `VITE_API_BASE_URL` — vacío para mismo origen (Pages Functions).
-- `VITE_USE_MOCK_API` — `"true"` activa el mock in-memory.
+- `VITE_USE_MOCK_API` — `"true"` activa el mock in-memory (renderiza el form legacy en lugar del embed de Jotform).
+- `VITE_JOTFORM_FORM_ID_ES` — Form ID del formulario en español.
+- `VITE_JOTFORM_FORM_ID_EN` — Form ID del formulario en inglés.
 
 ### Worker
 
 | Nombre | Tipo | Notas |
 |--------|------|-------|
-| `DB` | D1 binding | Definido en `wrangler.toml`. Aplicar `migrations/0001_init.sql`. |
+| `DB` | D1 binding | Definido en `wrangler.toml`. Aplicar `migrations/*.sql`. |
 | `MANAGER_PASSWORD` | Secret | Contraseña del manager. |
 | `RESEND_API_KEY` | Secret | API key de Resend. |
+| `JOTFORM_WEBHOOK_SECRET` | Secret | Secret embebido en la URL del webhook de Jotform. |
 | `RESEND_FROM` | Var (en `wrangler.toml`) | Remitente verificado en Resend. |
 | `ORGANIZER_EMAIL` | Var (en `wrangler.toml`) | `onelio@aaservices.com`. |
+| `JOTFORM_ALLOWED_FORM_IDS` | Var (en `wrangler.toml`) | CSV con los dos Form IDs aceptados. |
 
 ---
 

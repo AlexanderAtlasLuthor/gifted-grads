@@ -72,6 +72,9 @@
   "confirmation.notice3.body": "Te enviamos los detalles del registro a tu correo electrónico.",
   "confirmation.download": "Descargar confirmación",
   "confirmation.backHome": "Volver al inicio",
+  "confirmation.confirming": "Confirmando tu registro...",
+  "confirmation.timeout.title": "Estamos procesando tu registro",
+  "confirmation.timeout.body": "Esto puede tardar unos minutos. Revisa tu correo o vuelve a cargar esta página en un momento.",
   "confirmation.registerAnother": "Registrar a otra persona",
 
   "login.title": "Acceso del manager",
