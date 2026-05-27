@@ -1,0 +1,6 @@
+# Local secrets for `wrangler pages dev`. Copy to `.dev.vars` (gitignored)
+# and fill in the values. These are NOT used in production — set the same
+# names in the Cloudflare dashboard as secrets.
+
+MANAGER_PASSWORD="changeme"
+RESEND_API_KEY="re_xxxxxxxxxxxxxxxxxxxx"

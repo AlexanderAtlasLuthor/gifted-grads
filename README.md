@@ -1,5 +1,90 @@
 # Gifted Grads Events
 
+> **Stack:** React 18 + TypeScript + Vite + TailwindCSS · Cloudflare Pages + Pages Functions + D1 + Resend.
+> **API contract:** [`API.md`](./API.md) · **DB schema:** [`migrations/0001_init.sql`](./migrations/0001_init.sql)
+
+## Inicio rápido
+
+```bash
+npm install
+
+# Modo mock (sin backend): store en memoria, password "admin"
+VITE_USE_MOCK_API=true npm run dev
+```
+
+Compilación de producción: `npm run build` (sale a `dist/`). Tests: `npm test`.
+
+## Estructura
+
+- `src/` — aplicación React (rutas, componentes, hooks, i18n, cliente API).
+- `shared/` — tipos y esquemas zod compartidos entre frontend y Workers.
+- `functions/` — Cloudflare Pages Functions (handlers + middleware + helpers).
+- `migrations/0001_init.sql` — esquema D1.
+- `wrangler.toml` — configuración de Cloudflare Pages + binding D1.
+- `public/_redirects` — fallback SPA para rutas del cliente.
+
+## Despliegue en Cloudflare
+
+### 1. Crear la base de datos D1
+
+```bash
+npx wrangler d1 create gifted-grads
+```
+
+Copia el `database_id` impreso y reemplázalo en `wrangler.toml`.
+
+### 2. Aplicar migraciones
+
+```bash
+# Local (para wrangler pages dev)
+npx wrangler d1 migrations apply DB --local
+
+# Producción
+npx wrangler d1 migrations apply DB --remote
+```
+
+### 3. Configurar secretos
+
+```bash
+npx wrangler pages secret put MANAGER_PASSWORD
+npx wrangler pages secret put RESEND_API_KEY
+```
+
+Para desarrollo local, copia `.dev.vars.example` a `.dev.vars` y rellena los valores.
+
+### 4. Desarrollo local contra el Worker real
+
+```bash
+npx wrangler pages dev -- npm run dev
+```
+
+### 5. Deploy
+
+Conecta el repositorio a Cloudflare Pages:
+- **Build command:** `npm run build`
+- **Output directory:** `dist`
+- **Functions directory:** `functions` (autodetectado)
+- **Compatibility flags:** `nodejs_compat`
+
+## Variables de entorno
+
+### Frontend (build-time, prefijo `VITE_`)
+
+- `VITE_API_BASE_URL` — vacío para mismo origen (Pages Functions).
+- `VITE_USE_MOCK_API` — `"true"` activa el mock in-memory.
+
+### Worker
+
+| Nombre | Tipo | Notas |
+|--------|------|-------|
+| `DB` | D1 binding | Definido en `wrangler.toml`. Aplicar `migrations/0001_init.sql`. |
+| `MANAGER_PASSWORD` | Secret | Contraseña del manager. |
+| `RESEND_API_KEY` | Secret | API key de Resend. |
+| `RESEND_FROM` | Var (en `wrangler.toml`) | Remitente verificado en Resend. |
+| `ORGANIZER_EMAIL` | Var (en `wrangler.toml`) | `onelio@aaservices.com`. |
+
+---
+
 ## Descripción del proyecto
 
 Gifted Grads Events será una aplicación web diseñada para registrar, organizar y administrar la información de las personas que asistirán a un evento. La plataforma tendrá como objetivo facilitar el proceso de inscripción, centralizar los datos de los asistentes, mostrar métricas en tiempo real y automatizar el proceso de una rifa al finalizar el evento.
