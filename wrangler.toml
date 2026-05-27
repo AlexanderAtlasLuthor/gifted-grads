@@ -22,8 +22,7 @@ RESEND_FROM = "Gifted Grads <noreply@aaservices.com>"
 ORGANIZER_EMAIL = "onelio@aaservices.com"
 
 # CSV of Jotform Form IDs accepted by the webhook (ES, EN).
-# Set this to the two real IDs once the forms are created.
-JOTFORM_ALLOWED_FORM_IDS = ""
+JOTFORM_ALLOWED_FORM_IDS = "261466146136154,261466352850055"
 
 # D1 binding. Replace `database_id` with the id printed by:
 #   npx wrangler d1 create gifted-grads

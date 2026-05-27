@@ -2,33 +2,47 @@ import { registerSchema } from '@shared/schemas';
 import type { Genero, NivelAcademico, RegisterRequest } from '@shared/types';
 
 /**
- * Maps each field in our `RegisterRequest` to the key Jotform uses inside
- * the `rawRequest` JSON payload (typically `q{N}_{label}`).
+ * Field aliases used to find each form field inside Jotform's `rawRequest`
+ * JSON payload. Jotform keys are typically `q{N}_{slug}` — we strip the
+ * `qN_` prefix and match the remaining slug against these aliases, so the
+ * mapping works no matter which slot number Jotform assigned to the field.
  *
- * IMPORTANT: After the user finalizes the two Jotform forms, replace each
- * value with the real Jotform key. Both the ES and EN forms must share the
- * same field keys (Jotform numbers fields by creation order — recreate
- * fields in the second form in the same order so they line up).
- *
- * The shape allows a primary key plus optional aliases (for either-or
- * compatibility while iterating on the form). The first key that resolves
- * to a non-empty value wins.
+ * Order matters: an exact slug match wins over a substring match, and
+ * earlier aliases win over later ones.
  */
-export const FIELD_MAP = {
-  nombre: ['q3_nombreCompleto', 'q3_nombre'],
-  email: ['q4_email'],
-  telefono: ['q5_telefono', 'q5_phone'],
-  genero: ['q6_genero', 'q6_gender'],
-  edad: ['q7_edad', 'q7_age'],
-  institucion: ['q8_institucion', 'q8_institution'],
-  carrera: ['q9_carrera', 'q9_major'],
-  nivelAcademico: ['q10_nivelAcademico', 'q10_nivel', 'q10_academicLevel'],
+export const FIELD_ALIASES = {
+  nombre: ['nombreCompleto', 'fullName', 'nombre', 'name'],
+  email: ['email', 'correoElectronico', 'correo'],
+  telefono: ['telefono', 'telephoneNumber', 'phoneNumber', 'phone'],
+  genero: ['genero', 'gender'],
+  edad: ['edad', 'age'],
+  institucion: [
+    'institucionOUniversidad',
+    'institutionOrUniversity',
+    'institucion',
+    'institution',
+    'universidad',
+    'university',
+  ],
+  carrera: [
+    'carreraOAreaDe',
+    'carreraOAreaDeEstudio',
+    'majorOrFieldOf',
+    'majorOrFieldOfStudy',
+    'carrera',
+    'major',
+  ],
+  nivelAcademico: [
+    'nivelAcademico',
+    'academicLevel',
+    'nivel',
+    'level',
+  ],
 } satisfies Record<keyof RegisterRequest, string[]>;
 
 /**
- * Maps the human-readable option text that Jotform sends in the payload to
- * our schema enum. Edit these once the actual option labels are confirmed
- * in the Jotform forms.
+ * Maps the human-readable option text Jotform sends to our schema enums.
+ * Edit these once the actual option labels are confirmed in the forms.
  */
 export const GENERO_MAP: Record<string, Genero> = {
   Masculino: 'M',
@@ -46,6 +60,7 @@ export const GENERO_MAP: Record<string, Genero> = {
 export const NIVEL_MAP: Record<string, NivelAcademico> = {
   Secundaria: 'SECUNDARIA',
   'High school': 'SECUNDARIA',
+  'High School': 'SECUNDARIA',
   Pregrado: 'PREGRADO',
   Undergraduate: 'PREGRADO',
   Posgrado: 'POSGRADO',
@@ -76,17 +91,49 @@ export class JotformParseError extends Error {
   }
 }
 
-function firstString(raw: Record<string, unknown>, keys: string[]): string | undefined {
-  for (const k of keys) {
-    const v = raw[k];
-    if (typeof v === 'string' && v.trim().length > 0) return v.trim();
-    if (v && typeof v === 'object') {
-      // Jotform sometimes nests compound fields, e.g. name: { first, last }
-      const collapsed = Object.values(v as Record<string, unknown>)
-        .filter((x) => typeof x === 'string')
-        .join(' ')
-        .trim();
-      if (collapsed) return collapsed;
+function extractString(value: unknown): string | undefined {
+  if (typeof value === 'string') {
+    const trimmed = value.trim();
+    return trimmed.length > 0 ? trimmed : undefined;
+  }
+  if (value && typeof value === 'object') {
+    // Jotform compound fields, e.g. name: { first, last, prefix, suffix }
+    const collapsed = Object.values(value as Record<string, unknown>)
+      .filter((x) => typeof x === 'string')
+      .map((s) => (s as string).trim())
+      .filter((s) => s.length > 0)
+      .join(' ');
+    return collapsed.length > 0 ? collapsed : undefined;
+  }
+  if (typeof value === 'number') return String(value);
+  return undefined;
+}
+
+function findValue(
+  raw: Record<string, unknown>,
+  aliases: string[],
+): string | undefined {
+  // Normalize each key once: strip the leading qN_ that Jotform prepends.
+  const normalized = Object.keys(raw).map((key) => ({
+    key,
+    slug: key.replace(/^q\d+_/i, '').toLowerCase(),
+  }));
+  // Exact-slug match first.
+  for (const alias of aliases) {
+    const a = alias.toLowerCase();
+    const exact = normalized.find((n) => n.slug === a);
+    if (exact) {
+      const s = extractString(raw[exact.key]);
+      if (s) return s;
+    }
+  }
+  // Substring fallback (e.g. alias "email" finds "emailAddress").
+  for (const alias of aliases) {
+    const a = alias.toLowerCase();
+    const partial = normalized.find((n) => n.slug.includes(a));
+    if (partial) {
+      const s = extractString(raw[partial.key]);
+      if (s) return s;
     }
   }
   return undefined;
@@ -98,7 +145,6 @@ function lookupEnum<T extends string>(
 ): T | undefined {
   if (!raw) return undefined;
   if (map[raw]) return map[raw];
-  // case-insensitive fallback
   const lower = raw.toLowerCase();
   for (const [k, v] of Object.entries(map)) {
     if (k.toLowerCase() === lower) return v;
@@ -109,7 +155,7 @@ function lookupEnum<T extends string>(
 /**
  * Parses a Jotform webhook payload (multipart/form-data) into a validated
  * `RegisterRequest`. Throws `JotformParseError` on any failure so the
- * webhook handler can log it and return a 200 (no Jotform retry loop).
+ * webhook handler can log it and return 200 (no Jotform retry loop).
  */
 export function parseJotformPayload(form: FormData): ParsedJotformPayload {
   const submissionId = form.get('submissionID');
@@ -130,14 +176,14 @@ export function parseJotformPayload(form: FormData): ParsedJotformPayload {
   }
 
   const candidate = {
-    nombre: firstString(raw, FIELD_MAP.nombre),
-    email: firstString(raw, FIELD_MAP.email),
-    telefono: firstString(raw, FIELD_MAP.telefono),
-    genero: lookupEnum(GENERO_MAP, firstString(raw, FIELD_MAP.genero)),
-    edad: firstString(raw, FIELD_MAP.edad),
-    institucion: firstString(raw, FIELD_MAP.institucion),
-    carrera: firstString(raw, FIELD_MAP.carrera),
-    nivelAcademico: lookupEnum(NIVEL_MAP, firstString(raw, FIELD_MAP.nivelAcademico)),
+    nombre: findValue(raw, FIELD_ALIASES.nombre),
+    email: findValue(raw, FIELD_ALIASES.email),
+    telefono: findValue(raw, FIELD_ALIASES.telefono),
+    genero: lookupEnum(GENERO_MAP, findValue(raw, FIELD_ALIASES.genero)),
+    edad: findValue(raw, FIELD_ALIASES.edad),
+    institucion: findValue(raw, FIELD_ALIASES.institucion),
+    carrera: findValue(raw, FIELD_ALIASES.carrera),
+    nivelAcademico: lookupEnum(NIVEL_MAP, findValue(raw, FIELD_ALIASES.nivelAcademico)),
   };
 
   const parsed = registerSchema.safeParse(candidate);
@@ -145,7 +191,7 @@ export function parseJotformPayload(form: FormData): ParsedJotformPayload {
     throw new JotformParseError(
       'VALIDATION',
       'Jotform payload failed validation',
-      parsed.error.issues,
+      { issues: parsed.error.issues, rawKeys: Object.keys(raw) },
     );
   }
 

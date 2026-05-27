@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from '../i18n/I18nProvider';
 import { RegisterForm } from './RegisterForm';
 import { ErrorBanner } from './ErrorBanner';
@@ -10,6 +10,10 @@ const USE_MOCK =
   (import.meta.env.DEV &&
     import.meta.env.VITE_USE_MOCK_API !== 'false' &&
     !import.meta.env.VITE_API_BASE_URL);
+
+// Production form IDs, overridable via Vite env vars at build time.
+const DEFAULT_FORM_ID_ES = '261466146136154';
+const DEFAULT_FORM_ID_EN = '261466352850055';
 
 declare global {
   interface Window {
@@ -44,22 +48,23 @@ function loadHandlerScript(): Promise<void> {
 
 export function JotformEmbed() {
   const { locale } = useTranslation();
-  const formId =
-    locale === 'en'
-      ? (import.meta.env.VITE_JOTFORM_FORM_ID_EN ?? '')
-      : (import.meta.env.VITE_JOTFORM_FORM_ID_ES ?? '');
 
-  // In mock mode we render the legacy custom form so devs can exercise
-  // the full register → confirmation flow without touching Jotform.
   if (USE_MOCK) {
     return <RegisterForm />;
   }
 
+  const formId =
+    locale === 'en'
+      ? (import.meta.env.VITE_JOTFORM_FORM_ID_EN || DEFAULT_FORM_ID_EN)
+      : (import.meta.env.VITE_JOTFORM_FORM_ID_ES || DEFAULT_FORM_ID_ES);
+
+  // Defense-in-depth: the defaults above mean formId is always set in
+  // practice, but if someone explicitly blanks out the env var AND the
+  // default, fall back to dev form / friendly error rather than crashing.
   if (!formId) {
     if (import.meta.env.DEV) {
       return <RegisterForm />;
     }
-
     return (
       <div className="space-y-4">
         <ErrorBanner
@@ -78,11 +83,15 @@ export function JotformEmbed() {
     );
   }
 
-  return <JotformIframe formId={formId} />;
+  const title =
+    locale === 'en'
+      ? 'Register for Gifted Grads Events'
+      : 'Registro para Gifted Grads Events';
+
+  return <JotformIframe formId={formId} title={title} />;
 }
 
-function JotformIframe({ formId }: { formId: string }) {
-  const iframeRef = useRef<HTMLIFrameElement>(null);
+function JotformIframe({ formId, title }: { formId: string; title: string }) {
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
 
   useEffect(() => {
@@ -93,13 +102,12 @@ function JotformIframe({ formId }: { formId: string }) {
         if (cancelled) return;
         try {
           window.jotformEmbedHandler?.(
-            `iframe[id="JotFormIFrame-${formId}"]`,
+            `iframe[id='JotFormIFrame-${formId}']`,
             'https://form.jotform.com/',
           );
         } catch {
           /* handler attaches via querySelector; ignore */
         }
-        setStatus('ready');
       })
       .catch(() => {
         if (!cancelled) setStatus('error');
@@ -112,8 +120,8 @@ function JotformIframe({ formId }: { formId: string }) {
   return (
     <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white">
       {status === 'loading' && (
-        <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/80 text-slate-500">
-          <Spinner />
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex items-center justify-center gap-2 bg-white/90 py-3 text-xs text-slate-500">
+          <Spinner /> <span>Cargando formulario...</span>
         </div>
       )}
       {status === 'error' && (
@@ -122,16 +130,28 @@ function JotformIframe({ formId }: { formId: string }) {
         </div>
       )}
       <iframe
-        ref={iframeRef}
         id={`JotFormIFrame-${formId}`}
-        title="Gifted Grads registration form"
+        title={title}
         src={`https://form.jotform.com/${formId}`}
-        allow="geolocation; microphone; camera; fullscreen"
+        allow="geolocation; microphone; camera; fullscreen; payment"
         allowFullScreen
         scrolling="no"
         frameBorder={0}
-        style={{ minHeight: '720px', width: '100%', border: 'none' }}
-        onLoad={() => setStatus('ready')}
+        style={{
+          minWidth: '100%',
+          maxWidth: '100%',
+          height: '539px',
+          border: 'none',
+        }}
+        onLoad={() => {
+          setStatus('ready');
+          // Match Jotform's recommended snippet behavior.
+          try {
+            window.scrollTo(0, 0);
+          } catch {
+            /* ignore */
+          }
+        }}
       />
     </div>
   );
