@@ -1,78 +1,105 @@
 import { useTranslation } from '../i18n/I18nProvider';
 import { JotformEmbed } from '../components/JotformEmbed';
-import { PaperPlane, SunBurst, CloudPuff } from '../components/decorations';
+import { PaperPlane, Sparkle, SunBurst } from '../components/decorations';
 
 export function RegisterPage() {
   const { t } = useTranslation();
   return (
-    <div className="relative overflow-hidden">
-      <SunBurst className="absolute -right-24 -top-24 h-96 w-96" />
-      <CloudPuff className="absolute left-1/3 top-32 hidden h-24 w-40 opacity-70 lg:block" />
-      <PaperPlane className="absolute right-[28%] top-12 hidden h-36 w-72 lg:block" />
+    <div className="relative isolate overflow-hidden bg-slate-50">
+      <SunBurst className="absolute -right-28 top-10 h-[28rem] w-[28rem] opacity-80" />
+      <PaperPlane className="absolute right-[18%] top-28 hidden h-24 w-48 opacity-70 xl:block" />
 
-      <div className="relative mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:py-14">
-        <div className="grid gap-10 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
-          <div>
-            <h1 className="text-4xl font-bold leading-tight tracking-tight text-slate-900 sm:text-5xl">
-              {t('register.title.line1')}
-              <br />
-              <span className="accent-underline text-brand-500">
-                {t('register.title.line2')}
-              </span>
-            </h1>
-            <p className="mt-5 max-w-md text-base text-slate-600">
-              {t('register.subtitle')}
-            </p>
+      <div className="relative mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:py-10">
+        <header className="max-w-3xl">
+          <div className="inline-flex items-center gap-2 rounded-full border border-brand-100 bg-white px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-700 shadow-sm">
+            <Sparkle className="h-3.5 w-3.5 text-accent-500" />
+            {t('register.badge')}
+          </div>
+          <h1 className="mt-5 text-4xl font-bold leading-tight text-slate-950 sm:text-5xl lg:text-6xl">
+            {t('register.title.line1')}{' '}
+            <span className="accent-underline text-brand-500">
+              {t('register.title.line2')}
+            </span>
+          </h1>
+          <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-600">
+            {t('register.subtitle')}
+          </p>
+        </header>
 
-            <div className="card-lg mt-8 p-6 sm:p-7">
-              <div className="mb-5 flex items-center gap-2">
-                <div className="grid h-9 w-9 place-items-center rounded-full bg-brand-50 text-brand-600">
+        <div className="mt-8 grid items-stretch gap-4 lg:grid-cols-[minmax(0,1.45fr)_minmax(340px,0.8fr)]">
+          <section className="flex flex-col rounded-3xl border border-slate-200 bg-white p-5 shadow-cardLg sm:p-7 lg:p-8">
+            <div className="mb-6 flex flex-col gap-4 border-b border-slate-100 pb-5 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-center gap-3">
+                <div className="grid h-11 w-11 place-items-center rounded-2xl bg-brand-50 text-brand-600">
                   <UserIcon />
                 </div>
-                <h2 className="text-base font-semibold text-slate-800">
-                  {t('register.formTitle')}
-                </h2>
+                <div>
+                  <h2 className="text-xl font-bold text-slate-900">
+                    {t('register.formTitle')}
+                  </h2>
+                  <p className="text-sm text-slate-500">{t('register.formSubtitle')}</p>
+                </div>
               </div>
-              <JotformEmbed />
+              <div className="inline-flex w-fit items-center gap-2 rounded-full bg-accent-50 px-3 py-1.5 text-xs font-semibold text-accent-800">
+                <GiftIcon className="h-4 w-4" />
+                {t('register.formPill')}
+              </div>
             </div>
-          </div>
+            <JotformEmbed />
+            <div className="mt-auto pt-6">
+              <div className="rounded-2xl border border-brand-100 bg-brand-50 px-4 py-3 text-sm leading-6 text-brand-900">
+                <div className="mb-1 flex items-center gap-2 font-semibold">
+                  <InfoIcon />
+                  {t('register.disclaimer.title')}
+                </div>
+                <p>{t('register.disclaimer.body')}</p>
+              </div>
+            </div>
+          </section>
 
-          <aside className="space-y-6">
-            <GiveawayCard />
-            <FeatureRow icon={<BoltIcon />} title={t('register.feature.instant.title')}>
-              {t('register.feature.instant.body')}
-            </FeatureRow>
-            <FeatureRow icon={<LockIcon />} title={t('register.feature.secure.title')}>
-              {t('register.feature.secure.body')}
-            </FeatureRow>
-            <FeatureRow icon={<TeamIcon />} title={t('register.feature.team.title')}>
-              {t('register.feature.team.body')}
-            </FeatureRow>
+          <aside className="relative overflow-hidden rounded-3xl bg-brand-900 p-6 text-white shadow-cardLg sm:p-7 lg:p-8">
+            <div className="absolute -right-16 -top-16 h-52 w-52 rounded-full bg-accent-400/20 blur-3xl" />
+            <div className="absolute -bottom-20 left-10 h-56 w-56 rounded-full bg-brand-400/20 blur-3xl" />
+            <div className="relative flex h-full flex-col">
+              <div className="rounded-2xl border border-white/10 bg-white/8 p-5 shadow-sm">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="text-sm font-medium text-brand-100">
+                      {t('register.giveaway.lead')}
+                    </p>
+                    <p className="mt-2 text-xl font-bold leading-tight text-white">
+                      {t('register.giveaway.highlight')}
+                    </p>
+                  </div>
+                  <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-accent-400 text-brand-950">
+                    <GiftIcon className="h-6 w-6" />
+                  </div>
+                </div>
+                <div className="mt-4 flex justify-end">
+                  <IpadIllustration className="h-20 w-auto" />
+                </div>
+              </div>
+
+              <div className="mt-6 space-y-4">
+                <FeatureRow icon={<BoltIcon />} title={t('register.feature.instant.title')}>
+                  {t('register.feature.instant.body')}
+                </FeatureRow>
+                <FeatureRow icon={<LockIcon />} title={t('register.feature.secure.title')}>
+                  {t('register.feature.secure.body')}
+                </FeatureRow>
+                <FeatureRow icon={<TeamIcon />} title={t('register.feature.team.title')}>
+                  {t('register.feature.team.body')}
+                </FeatureRow>
+              </div>
+
+              <div className="mt-6">
+                <div className="rounded-2xl bg-white/10 p-4 text-sm leading-6 text-brand-50">
+                  {t('register.sidebar.note')}
+                </div>
+              </div>
+            </div>
           </aside>
         </div>
-      </div>
-    </div>
-  );
-}
-
-function GiveawayCard() {
-  const { t } = useTranslation();
-  return (
-    <div className="card-lg relative overflow-hidden p-6">
-      <div className="absolute -right-10 -top-10 h-36 w-36 rounded-full bg-accent-200/60 blur-2xl" />
-      <div className="relative flex items-start gap-4">
-        <div className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-white shadow-sm">
-          <GiftIcon />
-        </div>
-        <div className="text-base leading-relaxed text-slate-800">
-          {t('register.giveaway.lead')}{' '}
-          <span className="font-semibold text-brand-700">
-            {t('register.giveaway.highlight')}
-          </span>
-        </div>
-      </div>
-      <div className="mt-4 flex justify-end">
-        <IpadIllustration className="h-24 w-auto" />
       </div>
     </div>
   );
@@ -88,13 +115,13 @@ function FeatureRow({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex items-start gap-3 px-1">
-      <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-brand-50 text-brand-600">
+    <div className="flex items-start gap-3">
+      <div className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-white/10 text-accent-300 ring-1 ring-white/10">
         {icon}
       </div>
       <div>
-        <div className="font-semibold text-slate-800">{title}</div>
-        <p className="text-sm text-slate-600">{children}</p>
+        <div className="font-semibold text-white">{title}</div>
+        <p className="text-sm leading-6 text-brand-100">{children}</p>
       </div>
     </div>
   );
@@ -108,9 +135,16 @@ function UserIcon() {
     </svg>
   );
 }
-function GiftIcon() {
+function InfoIcon() {
   return (
-    <svg viewBox="0 0 24 24" className="h-6 w-6 text-accent-500" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="currentColor">
+      <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 5a1.2 1.2 0 1 1 0 2.4A1.2 1.2 0 0 1 12 7zm1 10h-2v-6h2v6z" />
+    </svg>
+  );
+}
+function GiftIcon({ className = 'h-6 w-6' }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="2">
       <rect x="3" y="8" width="18" height="13" rx="2" />
       <path d="M3 12h18M12 8v13M8 8c0-2 1.5-4 4-4 2.5 0 4 2 4 4M8 8c-2 0-3-1-3-2.5S6 3 7.5 3c2 0 4.5 3 4.5 5" />
     </svg>

@@ -75,14 +75,14 @@ export function RegisterForm() {
         : null;
 
   return (
-    <form className="space-y-4" onSubmit={handleSubmit(onSubmit)} noValidate>
+    <form className="space-y-5" onSubmit={handleSubmit(onSubmit)} noValidate>
       {apiError && <ErrorBanner message={apiError} />}
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-x-5 gap-y-4 sm:grid-cols-2">
         <Field label={t('register.field.nombre')} error={errors.nombre?.message} htmlFor="nombre">
           <input
             id="nombre"
-            className="input"
+            className="input h-11 rounded-lg"
             placeholder={t('register.placeholder.nombre')}
             {...register('nombre')}
           />
@@ -92,7 +92,7 @@ export function RegisterForm() {
             id="email"
             type="email"
             autoComplete="email"
-            className="input"
+            className="input h-11 rounded-lg"
             placeholder={t('register.placeholder.email')}
             {...register('email')}
           />
@@ -103,13 +103,13 @@ export function RegisterForm() {
             id="telefono"
             inputMode="tel"
             autoComplete="tel"
-            className="input"
+            className="input h-11 rounded-lg"
             placeholder={t('register.placeholder.telefono')}
             {...register('telefono')}
           />
         </Field>
         <Field label={t('register.field.genero')} htmlFor="genero">
-          <select id="genero" className="input" {...register('genero')}>
+          <select id="genero" className="input h-11 rounded-lg" {...register('genero')}>
             {generos.map((g) => (
               <option key={g} value={g}>
                 {t(`genero.${g}`)}
@@ -124,14 +124,14 @@ export function RegisterForm() {
             type="number"
             min={13}
             max={99}
-            className="input"
+            className="input h-11 rounded-lg"
             {...register('edad', { valueAsNumber: true })}
           />
         </Field>
         <Field label={t('register.field.institucion')} error={errors.institucion?.message} htmlFor="institucion">
           <input
             id="institucion"
-            className="input"
+            className="input h-11 rounded-lg"
             placeholder={t('register.placeholder.institucion')}
             {...register('institucion')}
           />
@@ -140,13 +140,13 @@ export function RegisterForm() {
         <Field label={t('register.field.carrera')} error={errors.carrera?.message} htmlFor="carrera">
           <input
             id="carrera"
-            className="input"
+            className="input h-11 rounded-lg"
             placeholder={t('register.placeholder.carrera')}
             {...register('carrera')}
           />
         </Field>
         <Field label={t('register.field.nivel')} htmlFor="nivelAcademico">
-          <select id="nivelAcademico" className="input" {...register('nivelAcademico')}>
+          <select id="nivelAcademico" className="input h-11 rounded-lg" {...register('nivelAcademico')}>
             {niveles.map((n) => (
               <option key={n} value={n}>
                 {t(`nivel.${n}`)}
@@ -158,7 +158,7 @@ export function RegisterForm() {
 
       <button
         type="submit"
-        className="btn-primary w-full mt-2 py-3 text-base"
+        className="btn-primary mt-1 w-full rounded-lg py-3 text-base"
         disabled={isSubmitting || mutation.isPending}
       >
         {mutation.isPending || isSubmitting ? (
@@ -192,7 +192,7 @@ function Field({
 }) {
   return (
     <div>
-      <label className="label" htmlFor={htmlFor}>
+      <label className="mb-1.5 block text-sm font-semibold text-slate-700" htmlFor={htmlFor}>
         {label}
       </label>
       {children}
