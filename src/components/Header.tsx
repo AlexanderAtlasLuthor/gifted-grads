@@ -1,6 +1,8 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
+import clsx from 'clsx';
 import { useTranslation } from '../i18n/I18nProvider';
 import { LanguageToggle } from './LanguageToggle';
+import { Logo } from './Logo';
 import { clearToken, isAuthenticated } from '../lib/auth';
 
 export function Header() {
@@ -15,26 +17,44 @@ export function Header() {
     navigate('/manager/login');
   }
 
+  const navLinkClass = ({ isActive }: { isActive: boolean }) =>
+    clsx('nav-link', isActive && 'nav-link-active');
+
   return (
-    <header className="border-b border-slate-200 bg-white">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
-        <Link to="/" className="flex items-center gap-2">
-          <div className="grid h-9 w-9 place-items-center rounded-lg bg-brand-600 text-white font-bold">
-            GG
-          </div>
-          <div className="leading-tight">
-            <div className="text-sm font-semibold text-slate-900">
-              {t('app.title')}
-            </div>
-            <div className="text-xs text-slate-500">{t('app.tagline')}</div>
-          </div>
+    <header className="border-b border-slate-100 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/70">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 py-4 sm:px-6">
+        <Link to="/" className="flex items-center" aria-label="Gifted Grads Events">
+          <Logo />
         </Link>
+
+        {!onManager && (
+          <nav className="hidden items-center gap-8 md:flex">
+            <NavLink to="/" end className={navLinkClass}>
+              {t('nav.home')}
+            </NavLink>
+            <NavLink to="/" className={navLinkClass}>
+              {t('nav.register')}
+            </NavLink>
+            <NavLink to="/manager/login" className={navLinkClass}>
+              {t('nav.event')}
+            </NavLink>
+          </nav>
+        )}
+
         <div className="flex items-center gap-2 sm:gap-3">
           <LanguageToggle />
-          {onManager && authed && (
-            <button type="button" onClick={logout} className="btn-secondary text-xs">
+          {onManager && authed ? (
+            <button
+              type="button"
+              onClick={logout}
+              className="btn-secondary text-xs"
+            >
               {t('nav.logout')}
             </button>
+          ) : (
+            <Link to="/manager/login" className="btn-secondary text-xs">
+              {t('nav.login')}
+            </Link>
           )}
         </div>
       </div>

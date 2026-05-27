@@ -47,7 +47,7 @@ export function RegisterForm() {
       navigate('/confirmacion', {
         state: {
           participantNumber: res.participantNumber,
-          nombre: values.nombre,
+          attendee: { ...values, createdAt: res.createdAt },
         },
       });
     } catch (err) {
@@ -75,33 +75,19 @@ export function RegisterForm() {
         : null;
 
   return (
-    <form
-      className="space-y-4"
-      onSubmit={handleSubmit(onSubmit)}
-      noValidate
-    >
+    <form className="space-y-4" onSubmit={handleSubmit(onSubmit)} noValidate>
       {apiError && <ErrorBanner message={apiError} />}
 
-      <div>
-        <label className="label" htmlFor="nombre">
-          {t('register.field.nombre')}
-        </label>
-        <input
-          id="nombre"
-          className="input"
-          placeholder={t('register.placeholder.nombre')}
-          {...register('nombre')}
-        />
-        {errors.nombre && (
-          <p className="mt-1 text-xs text-red-600">{errors.nombre.message ?? t('common.invalid')}</p>
-        )}
-      </div>
-
       <div className="grid gap-4 sm:grid-cols-2">
-        <div>
-          <label className="label" htmlFor="email">
-            {t('register.field.email')}
-          </label>
+        <Field label={t('register.field.nombre')} error={errors.nombre?.message} htmlFor="nombre">
+          <input
+            id="nombre"
+            className="input"
+            placeholder={t('register.placeholder.nombre')}
+            {...register('nombre')}
+          />
+        </Field>
+        <Field label={t('register.field.email')} error={errors.email?.message} htmlFor="email">
           <input
             id="email"
             type="email"
@@ -110,14 +96,9 @@ export function RegisterForm() {
             placeholder={t('register.placeholder.email')}
             {...register('email')}
           />
-          {errors.email && (
-            <p className="mt-1 text-xs text-red-600">{errors.email.message ?? t('common.invalid')}</p>
-          )}
-        </div>
-        <div>
-          <label className="label" htmlFor="telefono">
-            {t('register.field.telefono')}
-          </label>
+        </Field>
+
+        <Field label={t('register.field.telefono')} error={errors.telefono?.message} htmlFor="telefono">
           <input
             id="telefono"
             inputMode="tel"
@@ -126,17 +107,8 @@ export function RegisterForm() {
             placeholder={t('register.placeholder.telefono')}
             {...register('telefono')}
           />
-          {errors.telefono && (
-            <p className="mt-1 text-xs text-red-600">{errors.telefono.message ?? t('common.invalid')}</p>
-          )}
-        </div>
-      </div>
-
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div>
-          <label className="label" htmlFor="genero">
-            {t('register.field.genero')}
-          </label>
+        </Field>
+        <Field label={t('register.field.genero')} htmlFor="genero">
           <select id="genero" className="input" {...register('genero')}>
             {generos.map((g) => (
               <option key={g} value={g}>
@@ -144,11 +116,9 @@ export function RegisterForm() {
               </option>
             ))}
           </select>
-        </div>
-        <div>
-          <label className="label" htmlFor="edad">
-            {t('register.field.edad')}
-          </label>
+        </Field>
+
+        <Field label={t('register.field.edad')} error={errors.edad?.message} htmlFor="edad">
           <input
             id="edad"
             type="number"
@@ -157,59 +127,38 @@ export function RegisterForm() {
             className="input"
             {...register('edad', { valueAsNumber: true })}
           />
-          {errors.edad && (
-            <p className="mt-1 text-xs text-red-600">{errors.edad.message ?? t('common.invalid')}</p>
-          )}
-        </div>
-      </div>
-
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div>
-          <label className="label" htmlFor="institucion">
-            {t('register.field.institucion')}
-          </label>
+        </Field>
+        <Field label={t('register.field.institucion')} error={errors.institucion?.message} htmlFor="institucion">
           <input
             id="institucion"
             className="input"
             placeholder={t('register.placeholder.institucion')}
             {...register('institucion')}
           />
-          {errors.institucion && (
-            <p className="mt-1 text-xs text-red-600">{errors.institucion.message ?? t('common.invalid')}</p>
-          )}
-        </div>
-        <div>
-          <label className="label" htmlFor="carrera">
-            {t('register.field.carrera')}
-          </label>
+        </Field>
+
+        <Field label={t('register.field.carrera')} error={errors.carrera?.message} htmlFor="carrera">
           <input
             id="carrera"
             className="input"
             placeholder={t('register.placeholder.carrera')}
             {...register('carrera')}
           />
-          {errors.carrera && (
-            <p className="mt-1 text-xs text-red-600">{errors.carrera.message ?? t('common.invalid')}</p>
-          )}
-        </div>
-      </div>
-
-      <div>
-        <label className="label" htmlFor="nivelAcademico">
-          {t('register.field.nivel')}
-        </label>
-        <select id="nivelAcademico" className="input" {...register('nivelAcademico')}>
-          {niveles.map((n) => (
-            <option key={n} value={n}>
-              {t(`nivel.${n}`)}
-            </option>
-          ))}
-        </select>
+        </Field>
+        <Field label={t('register.field.nivel')} htmlFor="nivelAcademico">
+          <select id="nivelAcademico" className="input" {...register('nivelAcademico')}>
+            {niveles.map((n) => (
+              <option key={n} value={n}>
+                {t(`nivel.${n}`)}
+              </option>
+            ))}
+          </select>
+        </Field>
       </div>
 
       <button
         type="submit"
-        className="btn-primary w-full mt-2"
+        className="btn-primary w-full mt-2 py-3 text-base"
         disabled={isSubmitting || mutation.isPending}
       >
         {mutation.isPending || isSubmitting ? (
@@ -217,9 +166,54 @@ export function RegisterForm() {
             <Spinner /> {t('register.submitting')}
           </>
         ) : (
-          t('register.submit')
+          <>
+            <CheckCircleIcon /> {t('register.submit')}
+          </>
         )}
       </button>
+
+      <p className="flex items-center justify-center gap-1 text-center text-xs text-slate-500">
+        <LockMiniIcon /> {t('register.privacy')}
+      </p>
     </form>
+  );
+}
+
+function Field({
+  label,
+  htmlFor,
+  error,
+  children,
+}: {
+  label: string;
+  htmlFor: string;
+  error?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div>
+      <label className="label" htmlFor={htmlFor}>
+        {label}
+      </label>
+      {children}
+      {error && <p className="mt-1 text-xs text-red-600">{error}</p>}
+    </div>
+  );
+}
+
+function CheckCircleIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
+      <circle cx="12" cy="12" r="9" />
+      <path d="M8 12.5l3 3 5-6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+function LockMiniIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2">
+      <rect x="5" y="11" width="14" height="9" rx="2" />
+      <path d="M8 11V7a4 4 0 1 1 8 0v4" />
+    </svg>
   );
 }
