@@ -10,18 +10,18 @@ export function RegisterPage() {
       <div className="pointer-events-none absolute inset-x-0 top-0 h-[46rem] bg-[radial-gradient(circle_at_50%_26%,rgba(31,78,137,0.5),transparent_42%)]" />
       <div className="pointer-events-none absolute -left-24 top-[30rem] hidden h-72 w-72 rounded-full bg-[#6EC6E8]/10 blur-3xl lg:block" />
 
-      <div className="relative mx-auto max-w-7xl px-4 pb-12 pt-8 sm:px-6 lg:pb-16">
+      <div className="relative mx-auto w-full pb-12 lg:pb-16">
         {/* =========================================================
             HERO — sphere, flyer photo, big title
             ========================================================= */}
-        <section className="relative min-h-[calc(100svh-7rem)] overflow-hidden rounded-2xl border-y border-white/10 py-6 sm:py-8 lg:min-h-[680px]">
+        <section className="relative aspect-[1672/941] w-full overflow-hidden border-y border-white/10">
           {/* The supplied flyer-style background — kids holding the globe
               over clouds. */}
           <img
             src="/register-bg.png"
             alt=""
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+            className="pointer-events-none absolute inset-0 h-full w-full object-fill"
             style={{ objectPosition: '50% 50%' }}
           />
           {/* Grain overlay. */}
@@ -34,7 +34,7 @@ export function RegisterPage() {
               over the bright globe in the supplied background image. */}
           <div className="pointer-events-none absolute inset-y-0 left-1/2 w-[60%] -translate-x-1/2 bg-[radial-gradient(60%_60%_at_50%_50%,rgba(4,8,19,0.55),transparent_70%)]" />
 
-          <div className="relative z-10 grid gap-6 text-white lg:grid-cols-[0.82fr_1fr_0.82fr]">
+          <div className="relative z-10 grid h-full gap-6 px-4 py-6 text-white sm:px-6 sm:py-8 lg:grid-cols-[0.82fr_1fr_0.82fr] lg:px-10">
             {/* Left rail */}
             <div className="space-y-5">
               <div>
@@ -88,15 +88,11 @@ export function RegisterPage() {
                   Gifted Grads<br />Westborn Collectives
                 </p>
               </div>
-              <div className="space-y-3">
-                <AgendaLine time="4:00 PM" body={t('hero.agenda.panel')} />
-                <AgendaLine time="5:30 PM" body={t('hero.agenda.opening')} accent />
-              </div>
             </div>
           </div>
 
           {/* Partner row */}
-          <div className="relative z-10 mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-4 text-[10px] uppercase tracking-[0.35em] text-ink-200/70">
+          <div className="absolute inset-x-0 bottom-0 z-10 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 px-6 py-4 text-[10px] uppercase tracking-[0.35em] text-ink-200/70 sm:px-8">
             <span>In partnership with</span>
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2 font-editorial text-ink-100/80">
               <span>Influence Radio</span>
@@ -113,7 +109,7 @@ export function RegisterPage() {
             ========================================================= */}
         <section
           id="registration"
-          className="relative mt-12 grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(360px,0.56fr)]"
+          className="relative mx-auto mt-12 grid w-full max-w-[108rem] items-start gap-6 px-4 sm:px-6 lg:grid-cols-[minmax(0,1fr)_minmax(360px,0.5fr)] lg:px-10"
         >
           <div className="pointer-events-none absolute -right-24 top-12 h-80 w-80 rounded-full bg-[#6EC6E8]/10 blur-3xl" />
 
@@ -183,21 +179,6 @@ export function RegisterPage() {
           </aside>
         </section>
       </div>
-    </div>
-  );
-}
-
-function AgendaLine({ time, body, accent }: { time: string; body: string; accent?: boolean }) {
-  return (
-    <div className="flex flex-col lg:items-end">
-      <span
-        className={
-          accent ? 'font-display text-2xl text-accent-300' : 'font-display text-2xl text-white'
-        }
-      >
-        {time}
-      </span>
-      <span className="text-[11px] uppercase tracking-[0.3em] text-ink-100/80">{body}</span>
     </div>
   );
 }

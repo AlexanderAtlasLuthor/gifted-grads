@@ -7,16 +7,17 @@ import { Bolt } from '../components/decorations';
 export function ManagerDashboardPage() {
   const { t } = useTranslation();
   return (
-    <div className="event-shell min-h-full">
+    <div className="event-shell min-h-full overflow-hidden">
       {/* Supplied dashboard background — silhouettes against clouds. */}
       <img
         src="/manager-bg.png"
         alt=""
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 h-[28rem] w-full object-cover opacity-35"
-        style={{ objectPosition: '50% 35%' }}
+        className="pointer-events-none fixed inset-0 h-screen w-screen object-cover opacity-28"
+        style={{ objectPosition: '50% 50%' }}
       />
-      <div className="pointer-events-none absolute inset-x-0 top-[24rem] h-32 bg-gradient-to-b from-transparent to-ink-950" />
+      <div className="pointer-events-none fixed inset-0 bg-gradient-to-b from-ink-950/30 via-ink-950/70 to-ink-950/95" />
+      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_50%_8%,rgba(110,198,232,0.18),transparent_38%)]" />
 
       <div className="relative mx-auto max-w-7xl space-y-10 px-4 py-10 sm:px-6 lg:py-14">
         <header className="flex flex-col gap-3">
