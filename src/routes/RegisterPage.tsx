@@ -34,7 +34,7 @@ export function RegisterPage() {
           <div className="pointer-events-none absolute inset-0 bg-ink-950/20 lg:hidden" />
           <div className="pointer-events-none absolute inset-y-0 left-1/2 w-[60%] -translate-x-1/2 bg-[radial-gradient(60%_60%_at_50%_50%,rgba(4,8,19,0.55),transparent_70%)]" />
 
-          <div className="relative z-10 grid h-full content-between gap-6 px-4 py-6 text-white sm:px-6 sm:py-8 lg:grid-cols-[0.82fr_1fr_0.82fr] lg:content-normal lg:px-10">
+          <div className="relative z-10 grid h-full place-content-center gap-6 px-4 py-6 text-white sm:px-6 sm:py-8 lg:grid-cols-[0.82fr_1fr_0.82fr] lg:content-normal lg:px-10">
             {/* Left rail — desktop only */}
             <div className="hidden space-y-4 pt-4 sm:space-y-5 sm:pt-5 lg:block lg:pt-8 xl:pt-10">
               <div>
@@ -55,7 +55,7 @@ export function RegisterPage() {
             </div>
 
             {/* Centre title */}
-            <div className="flex flex-col items-center justify-center pb-12 text-center sm:pb-16 lg:min-h-[30rem] lg:translate-y-8 lg:pb-0">
+            <div className="flex flex-col items-center justify-center text-center lg:min-h-[30rem] lg:translate-y-8 lg:pb-0">
               <span className="pill-accent">
                 <Bolt className="h-3.5 w-3.5" />
                 {t('hero.eyebrow')}
