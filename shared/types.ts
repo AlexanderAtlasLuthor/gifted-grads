@@ -68,11 +68,6 @@ export interface CurrentRaffleResponse {
   drawnAt: string;
 }
 
-export interface RegistrationLookup {
-  participantNumber: number;
-  attendee: Attendee;
-}
-
 export type ApiErrorCode =
   | 'VALIDATION_ERROR'
   | 'EMAIL_EXISTS'
@@ -83,7 +78,6 @@ export type ApiErrorCode =
   | 'NO_ATTENDEES'
   | 'RAFFLE_ALREADY_DRAWN'
   | 'RATE_LIMIT'
-  | 'PENDING'
   | 'SERVER_ERROR';
 
 export interface ApiErrorBody {

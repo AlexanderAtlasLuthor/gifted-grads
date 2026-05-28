@@ -65,9 +65,6 @@
   "confirmation.notice3.body": "Te enviamos los detalles de tu solicitud a tu correo electrónico.",
   "confirmation.download": "Descargar confirmación",
   "confirmation.backHome": "Volver al inicio",
-  "confirmation.confirming": "Confirmando tu solicitud...",
-  "confirmation.timeout.title": "Estamos procesando tu solicitud",
-  "confirmation.timeout.body": "Esto puede tardar unos minutos. Revisa tu correo o vuelve a cargar esta página en un momento.",
   "confirmation.registerAnother": "Enviar otra solicitud",
 
   "login.title": "Acceso del manager",

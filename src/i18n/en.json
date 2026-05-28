@@ -65,9 +65,6 @@
   "confirmation.notice3.body": "We've sent your request details to your email address.",
   "confirmation.download": "Download confirmation",
   "confirmation.backHome": "Back to home",
-  "confirmation.confirming": "Confirming your request...",
-  "confirmation.timeout.title": "We're processing your request",
-  "confirmation.timeout.body": "This can take a few minutes. Check your email or reload this page in a moment.",
   "confirmation.registerAnother": "Send another request",
 
   "login.title": "Manager sign in",
