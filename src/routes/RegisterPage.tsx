@@ -166,7 +166,7 @@ export function RegisterPage() {
             </div>
 
             <div className="relative mt-6">
-              <div className="rounded-2xl border border-white/10 bg-ink-900/60 p-4 text-sm leading-6 text-ink-100/85">
+              <div className="rounded-2xl border border-white/10 bg-ink-900/60 p-4 text-[15px] leading-6 text-ink-100/85 sm:text-sm">
                 {t('register.sidebar.note')}
               </div>
             </div>
@@ -184,7 +184,7 @@ export function RegisterPage() {
                   <h2 className="mt-2 font-display text-3xl uppercase tracking-wide text-white sm:text-5xl">
                     {t('register.formTitle')}
                   </h2>
-                  <p className="mt-2 max-w-2xl text-sm leading-6 text-[#8FA9C4]">
+                  <p className="mt-2 max-w-2xl text-[15px] leading-6 text-[#8FA9C4] sm:text-sm">
                     {t('register.formSubtitle')}
                   </p>
                 </div>
@@ -231,8 +231,8 @@ function FeatureRow({
         {icon}
       </div>
       <div>
-        <div className="font-display text-base uppercase tracking-wider text-white">{title}</div>
-        <p className="text-sm leading-6 text-ink-100/80">{children}</p>
+        <div className="font-display text-[17px] uppercase tracking-wider text-white sm:text-base">{title}</div>
+        <p className="text-[15px] leading-6 text-ink-100/80 sm:text-sm">{children}</p>
       </div>
     </div>
   );
