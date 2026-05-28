@@ -80,7 +80,7 @@ export function RafflePanel() {
           <div className="text-[10px] uppercase tracking-[0.35em] text-accent-300">
             {t('raffle.winner.title')}
           </div>
-          <div className="mt-3 grid gap-3 sm:grid-cols-3">
+          <div className="mt-3 grid gap-3 sm:grid-cols-3 min-w-0">
             <div>
               <div className="text-[10px] uppercase tracking-[0.3em] text-ink-200/60">
                 {t('raffle.winner.number')}
@@ -99,7 +99,7 @@ export function RafflePanel() {
               <div className="text-[10px] uppercase tracking-[0.3em] text-ink-200/60">
                 {t('raffle.winner.email')}
               </div>
-              <div className="mt-1 font-medium text-white">{displayed.winner.email}</div>
+              <div className="mt-1 font-medium text-white break-all">{displayed.winner.email}</div>
             </div>
           </div>
           {lastResult && (

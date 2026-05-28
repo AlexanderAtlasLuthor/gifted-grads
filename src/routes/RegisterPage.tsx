@@ -161,7 +161,7 @@ export function RegisterPage() {
                 {t('register.giveaway.highlight')}
               </h3>
               <div className="mt-6 flex justify-center">
-                <IpadIllustration className="h-24 w-auto" />
+                <img src="/ipad.png" alt="iPad" className="h-24 w-auto" />
               </div>
             </div>
 
@@ -251,15 +251,4 @@ function TeamIcon() {
     </svg>
   );
 }
-function IpadIllustration({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 120 90" className={className} aria-hidden="true">
-      <rect x="22" y="6" width="76" height="62" rx="6" fill="#0e1a36" stroke="rgba(255,255,255,0.18)" />
-      <rect x="26" y="10" width="68" height="54" rx="3" fill="#1c4a8a" />
-      <path d="M26 38 Q 60 18 94 38 L 94 64 L 26 64 Z" fill="#4992e8" />
-      <circle cx="86" cy="20" r="3" fill="#f7c948" />
-      <rect x="14" y="68" width="92" height="6" rx="3" fill="rgba(255,255,255,0.85)" />
-      <rect x="22" y="74" width="76" height="3" rx="1.5" fill="rgba(255,255,255,0.55)" />
-    </svg>
-  );
-}
+
