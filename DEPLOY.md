@@ -35,12 +35,14 @@ Runbook para llevar la app a producción en Cloudflare. Ejecutar los pasos **en 
   - Compatibility flag: `nodejs_compat`
 - Secrets de Pages creados en producción:
   - `MANAGER_PASSWORD`
-  - `JOTFORM_WEBHOOK_SECRET`
-- Modo sin Resend decidido el 2026-05-28:
-  - No se verificará dominio en Resend.
-  - No se usará `RESEND_API_KEY`.
-  - Jotform enviará las notificaciones/autoresponders.
-  - La app seguirá guardando leads en D1, mostrando confirmación y habilitando el manager.
+- Jotform eliminado el 2026-05-28:
+  - Form ahora es `src/components/RegisterForm.tsx` (nativo, sin iframe).
+  - Submisiones van directo a `POST /api/register` (D1 + Resend).
+  - Backend de Jotform (webhook, parser, registration/by-submission) eliminado.
+- Resend pendiente de configurar (siguiente paso):
+  - Falta verificar dominio en Resend.
+  - Falta setear `RESEND_API_KEY` como secret en Cloudflare.
+  - `RESEND_FROM` y `ORGANIZER_EMAIL` ya están en `wrangler.toml` y se aplican en el próximo deploy.
 - Deploy inicial hecho por Wrangler:
   ```bash
   npx wrangler pages deploy dist --project-name gifted-grads-events --branch main --commit-dirty=true
@@ -64,60 +66,35 @@ El deploy directo de Pages fallaba porque las Functions importaban `@shared/*`.
 Vite y TypeScript sí resolvían ese alias, pero el bundler de Cloudflare Pages Functions no.
 Se cambiaron sólo los imports dentro de `functions/` a rutas relativas (`../../shared/...`, `../../../shared/...`) para que futuros deploys de Pages compilen correctamente.
 
-### Plan ejecutado: modo sin Resend
+### Plan en curso: form nativo + Resend
 
-1. Quitar Resend como requisito de producción.
-2. Confirmar que las funciones no fallen si `RESEND_API_KEY` no existe.
-3. Usar Jotform **Emails** para:
-   - Notificar al organizador cuando llegue un lead.
-   - Enviar confirmación/autoresponder al usuario si se desea.
+1. Eliminar Jotform por completo (form nativo en React, sin iframe).
+2. Submisiones directas a `/api/register` (D1 + Resend).
+3. Configurar Resend para notificaciones al organizador y al ganador de la rifa.
 4. Mantener Cloudflare/D1 como fuente de datos para confirmación, manager, métricas y rifa.
-5. Actualizar este runbook para que el flujo pendiente sea sólo Jotform + smoke test.
 
-Estado: ejecutado. `RESEND_API_KEY`, `RESEND_FROM` y `ORGANIZER_EMAIL` son opcionales para la app. Si no existen, los endpoints registran leads y saltan el envío de correo.
-`wrangler.toml` no declara variables Resend en modo producción sin dominio.
+Estado actual: form nativo ya en código (esta PR). Resend pendiente de configurar como secret en Cloudflare.
 
-Verificación del modo sin Resend:
+### Pendiente para ir 100% funcional
 
-- `npm run typecheck` pasa.
-- `npm run test` pasa: 8 archivos de test, 48 tests.
-- `npm run build` pasa.
-- `npx wrangler pages functions build --outfile /private/tmp/gifted-grads-functions.js` pasa.
-- Deploy manual aplicado:
+- Verificar el dominio en Resend (o usar `onboarding@resend.dev` como remitente temporal).
+- Setear `RESEND_API_KEY` como secret en Cloudflare Pages:
   ```bash
-  npx wrangler pages deploy dist --project-name gifted-grads-events --branch main --commit-dirty=true
+  npx wrangler pages secret put RESEND_API_KEY --project-name gifted-grads-events
   ```
-- Deployment URL final generada: `https://6368af29.gifted-grads-events.pages.dev`
-- Smoke tests:
-  - `https://gifted-grads-events.pages.dev/` responde `200`.
-  - `https://gifted-grads-events.pages.dev/api/metrics` sin token responde `401`.
-  - `POST /api/register` sin `RESEND_API_KEY` responde `201`.
-- El lead temporal usado para el smoke test fue eliminado de D1.
-
-### Pendiente
-
-- Configurar Jotform `261465857224059`:
-  - Redirect:
-    ```text
-    https://gifted-grads-events.pages.dev/confirmacion?submission={id}
-    ```
-  - Webhook:
-    ```text
-    https://gifted-grads-events.pages.dev/api/jotform/webhook/EL_VALOR_DE_JOTFORM_WEBHOOK_SECRET
-    ```
-  - Email Notification al organizador desde Jotform.
-  - Autoresponder al usuario desde Jotform, si se quiere confirmación por email.
-- Hacer una submission real desde Jotform para validar el flujo end-to-end.
+- Confirmar que `RESEND_FROM` y `ORGANIZER_EMAIL` en `wrangler.toml` apuntan a los valores correctos (el `from` debe ser un correo del dominio verificado en Resend).
+- Redesplegar para que las funciones tomen el nuevo secret.
+- Smoke test end-to-end: registrar un lead → verificar que llega el correo a `ORGANIZER_EMAIL` y aparece en `/manager`.
 - Opcional: conectar el proyecto Pages al repo GitHub desde Cloudflare Dashboard. El proyecto quedó creado por CLI y aparece como `Git Provider: No`, aunque el deploy manual ya está activo.
 
-> Nota de seguridad: `MANAGER_PASSWORD` y `JOTFORM_WEBHOOK_SECRET` no deben commitearse en este documento. Están guardados como secrets en Cloudflare Pages.
+> Nota de seguridad: `MANAGER_PASSWORD` y `RESEND_API_KEY` no deben commitearse en este documento. Se guardan como secrets en Cloudflare Pages.
 
 ---
 
 Pre-requisitos:
 
 - `node` 22+ y `npm` instalados
-- Una cuenta de Cloudflare (gratis sirve) y acceso al Jotform `261465857224059`
+- Una cuenta de Cloudflare (gratis sirve) y una cuenta de Resend (gratis, 3,000 correos/mes)
 - Estar en la raíz del repo (`gifted-grads/`) y con `main` actualizado:
 
   ```bash
@@ -181,23 +158,35 @@ Debe listar esas tres tablas de aplicación, además de tablas internas de Cloud
 
 ---
 
-## 3 · Configurar emails en Jotform, sin Resend
+## 3 · Configurar Resend (envío de correos)
 
-No se usará Resend ni se verificará ningún dominio. Jotform enviará los correos del flujo.
+Resend manda dos correos: el de "nuevo lead" al organizador, y el de "ganaste el iPad" al ganador.
 
-En Jotform `261465857224059`:
+### 3.1 · Crear cuenta y API key
 
-1. Ve a **Settings → Emails**.
-2. Crea o edita una **Notification Email** para el organizador.
-   - Recipients: `info@aainsurances.com` o el correo operativo que prefieras.
-   - Subject sugerido: `New Gifted Grads insurance lead`
-   - Incluye los campos `Name`, `Email`, `Number` y `What type of insurance are you interested in?`.
-3. Opcional: crea una **Autoresponder Email** para el usuario.
-   - Recipient: el campo `Email` del formulario.
-   - Subject sugerido: `Thanks for registering`
-   - Mensaje sugerido: confirmar que la solicitud fue recibida y que en la página de confirmación verá su número.
+1. Crea cuenta en [resend.com/signup](https://resend.com/signup).
+2. **Domains → Add Domain** → escribe el dominio que usarás como remitente (ej. `aainsurances.com`).
+3. Resend muestra 3 registros DNS (SPF, DKIM, DMARC). Agrégalos en tu panel DNS (Cloudflare DNS / Namecheap / GoDaddy).
+4. Vuelve a Resend → **Verify Domain** (tarda 5–60 minutos).
+5. **API Keys → Create API Key**:
+   - Nombre: `gifted-grads-prod`
+   - Permission: **Sending access**
+   - Copia el key (`re_xxxxxxxxxxxxxxxxxxxxxxxx`) — solo se muestra una vez.
 
-La app no depende de esos emails para funcionar: el webhook de Jotform sigue guardando el lead en D1 y la página `/confirmacion?submission=...` muestra el número asignado.
+> Si todavía no tienes dominio propio, usa `onboarding@resend.dev` como `RESEND_FROM` temporal. Los correos llegan pero pueden caer más fácil en spam. Verifica un dominio cuando lo tengas.
+
+### 3.2 · Verificar las variables en `wrangler.toml`
+
+```toml
+[vars]
+RESEND_FROM = "Gifted Grads <noreply@aainsurances.com>"
+ORGANIZER_EMAIL = "info@aainsurances.com"
+```
+
+- `RESEND_FROM`: el "From" que aparece. **Tiene que ser un email del dominio que verificaste en Resend.**
+- `ORGANIZER_EMAIL`: a dónde llegan los avisos de nuevos leads.
+
+Si cambias estos valores, haz commit + push para que el siguiente deploy los tome.
 
 ---
 
@@ -223,19 +212,15 @@ El primer deploy compilará el frontend pero las funciones fallarán en runtime 
 
 ### Secrets
 
-Genera el secret del webhook:
+Seteá los dos secrets necesarios (te pedirán cada valor por stdin):
 
 ```bash
-openssl rand -hex 32
-# copia el output: lo necesitarás en el paso 6
+npx wrangler pages secret put MANAGER_PASSWORD --project-name gifted-grads-events
+npx wrangler pages secret put RESEND_API_KEY   --project-name gifted-grads-events
 ```
 
-Después seteá los dos secrets necesarios (te pedirán cada valor por stdin):
-
-```bash
-npx wrangler pages secret put MANAGER_PASSWORD       --project-name gifted-grads-events
-npx wrangler pages secret put JOTFORM_WEBHOOK_SECRET --project-name gifted-grads-events
-```
+- `MANAGER_PASSWORD`: la contraseña del dashboard de manager.
+- `RESEND_API_KEY`: el key `re_xxxxx` que copiaste en el paso 3.1.
 
 > Si el `--project-name` no coincide, búscalo con `npx wrangler pages project list`.
 
@@ -252,46 +237,16 @@ Redeploy para tomar los secrets y el binding: dashboard → **Deployments → Re
 
 ---
 
-## 6 · Configurar Jotform (form `261465857224059`)
-
-1. **Settings → Thank You Page → Redirect to external link**:
-   ```
-   https://TU-DOMINIO/confirmacion?submission={id}
-   ```
-   Jotform sustituye `{id}` por el submission ID real. La página de confirmación hace polling al backend hasta que llegue el webhook.
-
-2. **Settings → Integrations → Webhooks → Add webhook**:
-   ```
-   https://TU-DOMINIO/api/jotform/webhook/EL-SECRET-DEL-PASO-5
-   ```
-   (El secret es el valor que generaste con `openssl rand -hex 32` y guardaste como `JOTFORM_WEBHOOK_SECRET`.)
-
-3. **Verificar campos**. El matcher en [`functions/_shared/jotform.ts`](./functions/_shared/jotform.ts) busca por slug:
-
-   | Campo Jotform | Mapea a | Tipo |
-   |---|---|---|
-   | Name | `nombre` | Full Name / Short Text |
-   | Email | `email` | Email |
-   | Number | `telefono` | Phone |
-   | What type of insurance are you interested in? | `insuranceType` | Dropdown / Radio |
-
-   El dropdown debe devolver uno de: `Auto insurance`, `Home insurance`, `Commercial insurance`, `Renters insurance` (ver `INSURANCE_TYPE_MAP` para los aliases en ES/EN aceptados). Si Jotform usa otros textos, agrégalos al map y haz commit.
-
-4. **Haz una submission de prueba**. Si la confirmación tarda más de 10s o no aparece el número:
-   - Dashboard Cloudflare → **Pages → gifted-grads-events → Functions → Real-time logs**
-   - Busca la línea con `rawKeys` — son las claves que envió Jotform. Compara contra `FIELD_ALIASES`.
-   - Confirma también que Jotform haya enviado la Notification Email al organizador.
-
----
-
-## 7 · Smoke test end-to-end
+## 6 · Smoke test end-to-end
 
 - [ ] `https://TU-DOMINIO/` carga con el background del flyer (`/register-bg.png`)
-- [ ] `https://TU-DOMINIO/manager/login` carga con el background gris
-- [ ] Submit del Jotform redirige a `/confirmacion?submission=...` y muestra el número de participante en pocos segundos
-- [ ] Llega el correo configurado en **Jotform → Settings → Emails**
-- [ ] Login del manager con `MANAGER_PASSWORD` → ve la submission en `/manager`
-- [ ] Sorteo de rifa: selecciona ganador y responde `emailSent: false` si no hay Resend configurado
+- [ ] Llenar el form en la sección `#registration` y hacer submit
+- [ ] Redirige a `/confirmacion` y muestra el ticket con el número de participante
+- [ ] Llega el correo "Nuevo lead de seguro #N — [nombre]" a `ORGANIZER_EMAIL`
+- [ ] Reply al correo va al lead (campo `reply-to` correcto)
+- [ ] `https://TU-DOMINIO/manager/login` carga, login con `MANAGER_PASSWORD` funciona
+- [ ] Ver la submission en `/manager` → métricas y tabla actualizadas
+- [ ] Sorteo de rifa: seleccionar ganador → llega correo "🎉 ¡Ganaste el iPad!" al lead
 
 Healthcheck rápido (sin token, debería responder `401`, no `500`):
 
@@ -325,13 +280,11 @@ npx wrangler d1 migrations apply DB --remote
 
 **`D1_ERROR: no such table: attendees`** → No corriste las migraciones (paso 2) o el binding `DB` no está apuntando a la D1 correcta.
 
-**Submission no llega a la confirmación** → Webhook mal configurado o secret incorrecto. Revisa **Pages → Functions → Logs** y confirma que la URL coincide con `JOTFORM_WEBHOOK_SECRET`.
+**Submit del form devuelve 500** → Revisa **Pages → Functions → Logs**. Causa más común: D1 no enlazada al binding `DB`.
 
-**No llegan emails** → Revisa **Jotform → Settings → Emails**. En modo sin Resend, Cloudflare no envía correos; sólo registra datos y muestra confirmación.
+**No llegan emails** → Revisa el dashboard de Resend → **Emails**. Si no aparecen ahí, `RESEND_API_KEY` no está seteado o `RESEND_FROM` no está verificado en Resend. Si aparecen como `sent` pero no llegan a la bandeja, revisa spam.
 
 **Login del manager devuelve 401** → `MANAGER_PASSWORD` no seteado como secret o redeploy pendiente tras setearlo.
-
-**`Invalid form id`** → El form ID que llegó al webhook no está en `JOTFORM_ALLOWED_FORM_IDS` (`wrangler.toml:25`). Asegúrate de que coincida.
 
 ---
 

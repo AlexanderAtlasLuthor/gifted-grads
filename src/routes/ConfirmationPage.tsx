@@ -1,11 +1,7 @@
-import { useEffect, useMemo, useState } from 'react';
 import { Link, Navigate, useLocation } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from '../i18n/I18nProvider';
 import { formatDateTime, formatParticipantNumber } from '../lib/format';
 import { Bolt, Sparkle } from '../components/decorations';
-import { Spinner } from '../components/Spinner';
-import { ApiError, api } from '../lib/api';
 import type { Attendee, InsuranceType } from '@shared/types';
 
 interface ConfirmationState {
@@ -19,58 +15,17 @@ interface ConfirmationState {
   };
 }
 
-interface DisplayState {
-  participantNumber: number;
-  attendee?: ConfirmationState['attendee'] | Attendee;
-}
-
-const POLL_INTERVAL_MS = 1500;
-const POLL_TIMEOUT_MS = 20_000;
-
 export function ConfirmationPage() {
-  const { t } = useTranslation();
   const location = useLocation();
   const params = new URLSearchParams(location.search);
-  const submissionId = params.get('submission');
   const numberFromQuery = params.get('n');
 
   const state = (location.state as ConfirmationState | null) ?? {};
-  const eagerNumber =
+  const participantNumber =
     state.participantNumber ??
     (numberFromQuery ? Number(numberFromQuery) : null);
 
-  const [timedOut, setTimedOut] = useState(false);
-  useEffect(() => {
-    if (!submissionId || eagerNumber) return;
-    const handle = setTimeout(() => setTimedOut(true), POLL_TIMEOUT_MS);
-    return () => clearTimeout(handle);
-  }, [submissionId, eagerNumber]);
-
-  const lookup = useQuery({
-    queryKey: ['registration', 'by-submission', submissionId],
-    queryFn: () => api.getRegistrationBySubmission(submissionId as string),
-    enabled: !!submissionId && !eagerNumber && !timedOut,
-    refetchInterval: (q) => (q.state.data ? false : POLL_INTERVAL_MS),
-    retry: (failureCount, err) => {
-      if (err instanceof ApiError && err.code === 'PENDING') return true;
-      return failureCount < 2;
-    },
-  });
-
-  const displayed: DisplayState | null = useMemo(() => {
-    if (eagerNumber && Number.isFinite(eagerNumber)) {
-      return { participantNumber: eagerNumber, attendee: state.attendee };
-    }
-    if (lookup.data) {
-      return {
-        participantNumber: lookup.data.participantNumber,
-        attendee: lookup.data.attendee,
-      };
-    }
-    return null;
-  }, [eagerNumber, state.attendee, lookup.data]);
-
-  if (!displayed && !submissionId) {
+  if (!participantNumber || !Number.isFinite(participantNumber)) {
     return <Navigate to="/" replace />;
   }
 
@@ -85,38 +40,7 @@ export function ConfirmationPage() {
       />
       <div className="pointer-events-none absolute inset-x-0 top-[20rem] h-32 bg-gradient-to-b from-transparent to-ink-950" />
       <div className="relative mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:py-20">
-        {displayed ? (
-          <Loaded participantNumber={displayed.participantNumber} attendee={displayed.attendee} />
-        ) : timedOut ? (
-          <Timeout />
-        ) : (
-          <Pending message={t('confirmation.confirming')} />
-        )}
-      </div>
-    </div>
-  );
-}
-
-function Pending({ message }: { message: string }) {
-  return (
-    <div className="mx-auto flex max-w-md flex-col items-center gap-4 py-20 text-center">
-      <Spinner className="h-8 w-8 text-sky-400" />
-      <div className="text-ink-100/80">{message}</div>
-    </div>
-  );
-}
-
-function Timeout() {
-  const { t } = useTranslation();
-  return (
-    <div className="mx-auto max-w-xl py-12 text-center">
-      <div className="card-lg p-8">
-        <div className="text-3xl">⌛</div>
-        <h1 className="headline mt-4 text-3xl">{t('confirmation.timeout.title')}</h1>
-        <p className="mt-2 text-ink-100/80">{t('confirmation.timeout.body')}</p>
-        <Link to="/" className="btn-secondary mt-6 inline-flex">
-          {t('confirmation.backHome')}
-        </Link>
+        <Loaded participantNumber={participantNumber} attendee={state.attendee} />
       </div>
     </div>
   );

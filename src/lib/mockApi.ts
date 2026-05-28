@@ -10,7 +10,6 @@ import type {
   RaffleDrawResponse,
   RegisterRequest,
   RegisterResponse,
-  RegistrationLookup,
 } from '@shared/types';
 import { ApiError } from './api';
 
@@ -226,15 +225,5 @@ export const mockApi = {
   async currentRaffle(): Promise<CurrentRaffleResponse | null> {
     requireAuth();
     return delay(currentWinner);
-  },
-
-  async getRegistrationBySubmission(id: string): Promise<RegistrationLookup> {
-    seed();
-    const found = attendees[attendees.length - 1];
-    if (!found) {
-      throw new ApiError(404, 'PENDING', 'Registration not yet processed');
-    }
-    void id;
-    return delay({ participantNumber: found.participantNumber, attendee: found });
   },
 };

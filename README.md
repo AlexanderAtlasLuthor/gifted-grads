@@ -1,6 +1,6 @@
 # Gifted Grads Insurance
 
-> Captura de leads de seguros con formulario Jotform embebido, webhook a
+> Captura de leads de seguros con formulario propio en React, backend en
 > Cloudflare Workers, asignación de número de participante para rifa de
 > iPad y dashboard del manager.
 >
@@ -30,70 +30,19 @@ Compilación de producción: `npm run build` (sale a `dist/`). Tests: `npm test`
 - `wrangler.toml` — configuración de Cloudflare Pages + binding D1.
 - `public/_redirects` — fallback SPA para rutas del cliente.
 
-## Configuración de Jotform
+## Flujo de registro
 
-El formulario de registro vive en un Jotform (el toggle ES/EN del header cambia la UI alrededor, pero ambos idiomas embedean el mismo form). Cloudflare Workers solo procesa el webhook que dispara Jotform al recibir cada submission.
+El formulario de registro (`src/components/RegisterForm.tsx`) envía directo a `POST /api/register` (Cloudflare Pages Function). El handler valida con Zod, asigna el siguiente `participantNumber` atómicamente, guarda en D1, dispara el correo al organizador vía Resend, y responde con el número para mostrarlo en `/confirmacion`. El toggle ES/EN solo cambia la UI alrededor — el endpoint y el flujo son los mismos.
 
-### 1. Estructura del formulario
-
-Los 4 campos requeridos. El matcher del webhook strips el prefijo `qN_` y matchea por slug, así que el número de pregunta no importa — solo que el slug/etiqueta del campo coincida con alguno de los aliases definidos en `functions/_shared/jotform.ts`.
-
-| Etiqueta sugerida | Tipo Jotform | Mapea a |
-|-------------------|--------------|---------|
-| Name | Full Name / Short Text | `nombre` |
-| Number | Phone | `telefono` |
-| Email | Email | `email` |
-| What type of insurance are you interested in? | Dropdown / Radio (`House`, `Auto`, `Life`) | `insuranceType` |
-
-Después de crear el form, copia el Form ID (el número que aparece en `https://form.jotform.com/{ID}`).
-
-### 2. Configurar el formulario
-
-1. **Settings → Thank You Page → Redirect to external link**
-
-   ```
-   https://{TU_DOMINIO}/confirmacion?submission={id}
-   ```
-
-   Jotform reemplaza `{id}` con el submission ID real. La página de confirmación hace polling al backend hasta que el webhook procesa el registro.
-
-2. **Settings → Integrations → Webhooks**
-
-   ```
-   https://{TU_DOMINIO}/api/jotform/webhook/{JOTFORM_WEBHOOK_SECRET}
-   ```
-
-   Reemplaza `{JOTFORM_WEBHOOK_SECRET}` con el valor real (genera uno con `openssl rand -hex 32`).
-
-### 3. Ajustar el mapping (si los slugs no coinciden)
-
-El matcher en `functions/_shared/jotform.ts` busca por slug. Si Jotform usó otro slug para algún campo, agrégalo a `FIELD_ALIASES` (lista ordenada de candidatos por campo). Los aliases de opciones de tipo de seguro (House/Auto/Life en ES e EN) están en `INSURANCE_TYPE_MAP`.
-
-Para ver el `rawRequest` real que envía tu form: haz un submission de prueba y revisa el log del worker (`wrangler pages dev` o Cloudflare dashboard → Pages → Functions → Logs). Si la validación falla, el log incluye `rawKeys` con todas las claves que llegaron.
-
-### 4. Configurar variables de entorno
-
-Frontend (`.env`, los defaults en `.env.example` apuntan al form en producción):
-
-```
-VITE_JOTFORM_FORM_ID_ES="261465857224059"
-VITE_JOTFORM_FORM_ID_EN="261465857224059"
-```
-
-Worker (`wrangler.toml` para vars + Cloudflare dashboard para secrets):
+Variables de entorno del worker (`wrangler.toml` para vars + Cloudflare dashboard para secrets):
 
 ```toml
 [vars]
-JOTFORM_ALLOWED_FORM_IDS = "261465857224059"
 RESEND_FROM = "Gifted Grads <noreply@aainsurances.com>"
 ORGANIZER_EMAIL = "info@aainsurances.com"
 ```
 
-```bash
-npx wrangler pages secret put JOTFORM_WEBHOOK_SECRET
-```
-
-Para dev local: pon todo en `.dev.vars` (copia de `.dev.vars.example`).
+Para dev local: copia `.dev.vars.example` a `.dev.vars` y rellena los secrets.
 
 ## Despliegue en Cloudflare
 
@@ -120,7 +69,6 @@ npx wrangler d1 migrations apply DB --remote
 ```bash
 npx wrangler pages secret put MANAGER_PASSWORD
 npx wrangler pages secret put RESEND_API_KEY
-npx wrangler pages secret put JOTFORM_WEBHOOK_SECRET
 ```
 
 Para desarrollo local, copia `.dev.vars.example` a `.dev.vars` y rellena los valores.
@@ -145,8 +93,6 @@ Conecta el repositorio a Cloudflare Pages:
 
 - `VITE_API_BASE_URL` — vacío para mismo origen (Pages Functions).
 - `VITE_USE_MOCK_API` — `"true"` activa el mock in-memory; `"false"` lo desactiva. En `npm run dev`, si no hay `VITE_API_BASE_URL`, el mock se activa automáticamente.
-- `VITE_JOTFORM_FORM_ID_ES` — Form ID del formulario en español.
-- `VITE_JOTFORM_FORM_ID_EN` — Form ID del formulario en inglés.
 
 ### Worker
 
@@ -155,10 +101,8 @@ Conecta el repositorio a Cloudflare Pages:
 | `DB` | D1 binding | Definido en `wrangler.toml`. Aplicar `migrations/*.sql`. |
 | `MANAGER_PASSWORD` | Secret | Contraseña del manager. |
 | `RESEND_API_KEY` | Secret | API key de Resend. |
-| `JOTFORM_WEBHOOK_SECRET` | Secret | Secret embebido en la URL del webhook de Jotform. |
 | `RESEND_FROM` | Var (en `wrangler.toml`) | Remitente verificado en Resend. |
 | `ORGANIZER_EMAIL` | Var (en `wrangler.toml`) | `onelio@aaservices.com`. |
-| `JOTFORM_ALLOWED_FORM_IDS` | Var (en `wrangler.toml`) | CSV con los dos Form IDs aceptados. |
 
 ---
 

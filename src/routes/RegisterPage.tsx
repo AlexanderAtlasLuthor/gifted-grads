@@ -1,5 +1,5 @@
 import { useTranslation } from '../i18n/I18nProvider';
-import { JotformEmbed } from '../components/JotformEmbed';
+import { RegisterForm } from '../components/RegisterForm';
 import { Bolt } from '../components/decorations';
 
 export function RegisterPage() {
@@ -140,7 +140,7 @@ export function RegisterPage() {
               </div>
             </div>
 
-            <JotformEmbed />
+            <RegisterForm />
 
             <div className="mt-auto pt-6">
               <div className="rounded-2xl border border-white/10 bg-ink-900/60 px-4 py-3 text-sm leading-6 text-ink-100/90">
