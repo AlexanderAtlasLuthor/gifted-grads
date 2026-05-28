@@ -13,7 +13,7 @@ export function RegisterPage() {
         {/* =========================================================
             HERO — sphere, flyer photo, big title
             ========================================================= */}
-        <section className="relative grid min-h-[calc(100svh-5rem)] place-items-center overflow-hidden border-y border-white/10 sm:min-h-[48rem] lg:aspect-[1672/941] lg:min-h-0">
+        <section className="relative grid min-h-[calc(100svh-5rem)] place-items-center overflow-hidden border-t border-white/10 sm:min-h-[48rem] lg:aspect-[1672/941] lg:min-h-0">
           {/* The supplied flyer-style background — kids holding the globe
               over clouds. */}
           <img
