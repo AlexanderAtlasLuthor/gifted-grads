@@ -8,6 +8,13 @@
   "nav.login": "Log in",
   "nav.logout": "Sign out",
 
+  "qr.open": "Open registration QR code",
+  "qr.close": "Close",
+  "qr.title": "Scan to register",
+  "qr.subtitle": "Open the Born Gifted registration form instantly.",
+  "qr.imageAlt": "QR code for Born Gifted registration",
+  "qr.loading": "Building QR...",
+
   "register.title": "Request a quote",
   "register.title.line1": "Register for",
   "register.title.line2": "Born Gifted",

@@ -8,6 +8,13 @@
   "nav.login": "Ingresar",
   "nav.logout": "Cerrar sesión",
 
+  "qr.open": "Abrir código QR de registro",
+  "qr.close": "Cerrar",
+  "qr.title": "Escanea para registrarte",
+  "qr.subtitle": "Abre el formulario de registro de Born Gifted al instante.",
+  "qr.imageAlt": "Código QR para el registro de Born Gifted",
+  "qr.loading": "Creando QR...",
+
   "register.title": "Solicita tu cotización",
   "register.title.line1": "Regístrate para",
   "register.title.line2": "Born Gifted",

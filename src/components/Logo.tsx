@@ -3,9 +3,11 @@ import clsx from 'clsx';
 export function Logo({
   className,
   showText = true,
+  compactOnMobile = false,
 }: {
   className?: string;
   showText?: boolean;
+  compactOnMobile?: boolean;
 }) {
   return (
     <div className={clsx('flex items-center gap-3', className)}>
@@ -18,7 +20,12 @@ export function Logo({
         />
       </div>
       {showText && (
-        <div className="flex flex-col leading-tight">
+        <div
+          className={clsx(
+            'flex-col leading-tight',
+            compactOnMobile ? 'hidden sm:flex' : 'flex',
+          )}
+        >
           <span className="font-display text-xs uppercase tracking-widest text-accent-300">
             Born Gifted
           </span>
