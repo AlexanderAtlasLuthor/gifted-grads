@@ -1,4 +1,4 @@
-import type { Donation, DonationStatus } from '@shared/types';
+import type { Donation, DonationStatus } from '../../shared/types';
 import { sqliteToIso } from './db';
 
 export interface DonationRow {

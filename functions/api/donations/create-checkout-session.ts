@@ -5,7 +5,7 @@
 // the donor there. The Stripe webhook (api/stripe/webhook.ts) is what
 // actually flips the row to "succeeded" once payment goes through.
 
-import { donationCreateSchema } from '@shared/schemas';
+import { donationCreateSchema } from '../../../shared/schemas';
 import { error, json } from '../../_shared/responses';
 import {
   createCheckoutSession,

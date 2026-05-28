@@ -6,7 +6,7 @@
 // [name]! Your $X donation was received."
 
 import { error, json } from '../../../_shared/responses';
-import type { DonationLookupResponse } from '@shared/types';
+import type { DonationLookupResponse } from '../../../../shared/types';
 
 type Env = { DB: D1Database };
 

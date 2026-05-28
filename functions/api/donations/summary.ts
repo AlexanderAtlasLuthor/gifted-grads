@@ -6,7 +6,7 @@
 
 import { json } from '../../_shared/responses';
 import { rowToDonation, type DonationRow } from '../../_shared/donations';
-import type { DonationSummary } from '@shared/types';
+import type { DonationSummary } from '../../../shared/types';
 
 type Env = {
   DB: D1Database;
