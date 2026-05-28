@@ -80,6 +80,8 @@
   "confirmation.email.title": "Revisa tu correo",
   "confirmation.email.body": "Te enviamos un correo con tu confirmación y próximos pasos.",
   "confirmation.email.spam": "Si no lo encuentras, revisa tu carpeta de spam o promociones.",
+  "confirmation.spamHeading": "¿No ves el correo?",
+  "confirmation.spamBody": "Revisa tu carpeta de spam o promociones — ahí suelen caer las confirmaciones. Agrégamos a tus contactos para que el aviso del ganador del iPad llegue directo a tu bandeja.",
   "confirmation.notice1.title": "Tu solicitud llegó al equipo de seguros",
   "confirmation.notice1.body": "Nuestro equipo revisará tu información y te contactará para una cotización personalizada.",
   "confirmation.notice2.title": "Ya estás participando en la rifa",

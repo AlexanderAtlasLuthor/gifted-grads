@@ -70,6 +70,19 @@ function Loaded({
         <p className="mt-4 max-w-xl text-base leading-7 text-ink-100/80">
           {t('confirmation.subtitle.line1')} {t('confirmation.subtitle.line2')}
         </p>
+
+        {/* Prominent spam-folder reminder — visible immediately so the
+            attendee doesn't lose their participant number if the email
+            ends up in a junk filter. */}
+        <div className="mx-auto mt-6 flex max-w-xl items-start gap-3 rounded-2xl border border-accent-300/40 bg-accent-300/10 px-4 py-3 text-left">
+          <span className="mt-0.5 text-lg" aria-hidden="true">📬</span>
+          <p className="text-sm leading-6 text-ink-100/90">
+            <span className="font-semibold text-accent-200">
+              {t('confirmation.spamHeading')}
+            </span>{' '}
+            {t('confirmation.spamBody')}
+          </p>
+        </div>
       </div>
 
       {/* The participant ticket. */}
@@ -88,10 +101,6 @@ function Loaded({
               {t('confirmation.email.title')}
             </h2>
             <p className="mt-1 text-sm text-ink-100/80">{t('confirmation.email.body')}</p>
-            <div className="mt-4 rounded-xl border border-white/10 bg-ink-900/60 px-3 py-2 text-xs text-ink-100/80">
-              <InfoIcon className="mr-1 inline h-3.5 w-3.5" />
-              {t('confirmation.email.spam')}
-            </div>
           </div>
         </section>
 
@@ -312,13 +321,6 @@ function EnvelopeIllustration({ className }: { className?: string }) {
       <path d="M34 24 h 52 M34 32 h 40 M34 40 h 30" stroke="#74b1f5" strokeWidth="2" strokeLinecap="round" />
       <circle cx="92" cy="68" r="10" fill="#f7c948" />
       <path d="M87 68 l 4 4 l 7 -8" fill="none" stroke="#070d1c" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-function InfoIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} fill="currentColor">
-      <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 5a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5zm1 10h-2v-6h2v6z" />
     </svg>
   );
 }

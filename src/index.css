@@ -16,6 +16,22 @@
   html {
     color-scheme: dark;
     scroll-behavior: smooth;
+    /* Stop iOS Safari from "helpfully" zooming text when the user
+       rotates the device or double-taps. */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    touch-action: manipulation;
+  }
+  /* iOS Safari auto-zooms when focusing a form control whose computed
+     font-size is below 16px. Inputs and selects use Tailwind's text-sm
+     (14px) which trips this. On touch viewports bump them up so the
+     browser stops zooming on focus. The visual size barely shifts. */
+  @media (max-width: 1023px) {
+    input,
+    select,
+    textarea {
+      font-size: 16px !important;
+    }
   }
   body {
     @apply bg-ink-950 text-ink-50 antialiased font-sans;

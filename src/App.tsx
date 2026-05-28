@@ -1,5 +1,5 @@
-import { useMemo } from 'react';
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { useEffect, useMemo } from 'react';
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import {
   QueryCache,
   QueryClient,
@@ -49,6 +49,7 @@ export function App() {
     <QueryClientProvider client={queryClient}>
       <I18nProvider>
         <BrowserRouter>
+          <ScrollToTop />
           <div className="min-h-full flex flex-col">
             <Header />
             <main className="flex-1">
@@ -73,4 +74,19 @@ export function App() {
       </I18nProvider>
     </QueryClientProvider>
   );
+}
+
+/**
+ * Snap the viewport to the top on every route change. Without this React
+ * Router keeps the previous page's scroll position, which on Confirmation
+ * landed the visitor mid-page after submitting the form. Using
+ * `behavior: 'instant'` overrides the global `scroll-behavior: smooth`
+ * so the jump isn't animated.
+ */
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, [pathname]);
+  return null;
 }

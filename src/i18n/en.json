@@ -80,6 +80,8 @@
   "confirmation.email.title": "Check your email",
   "confirmation.email.body": "We've sent you an email with your confirmation and next steps.",
   "confirmation.email.spam": "If you can't find it, check your spam or promotions folder.",
+  "confirmation.spamHeading": "Don't see the email?",
+  "confirmation.spamBody": "Check your spam or promotions folder — that's where confirmations sometimes land. Add us to your contacts so the iPad raffle winner notice arrives straight to your inbox.",
   "confirmation.notice1.title": "Your request reached the insurance team",
   "confirmation.notice1.body": "Our team will review your information and contact you with a personalized quote.",
   "confirmation.notice2.title": "You are already entered in the giveaway",
