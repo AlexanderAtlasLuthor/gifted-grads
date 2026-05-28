@@ -118,39 +118,6 @@ export function RegisterPage() {
           className="relative z-20 w-full bg-[linear-gradient(rgba(0,0,0,0.24),rgba(0,0,0,0.14)),url('/formbackground.jpg')] bg-cover bg-center bg-no-repeat px-4 py-12 sm:px-6 lg:px-10 lg:py-16"
         >
           <div className="mx-auto grid w-full max-w-[108rem] items-stretch gap-6 lg:grid-cols-2">
-          <div className="glass-card grain-on relative flex h-full flex-col bg-ink-950/75 p-5 shadow-[0_24px_80px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-7 lg:p-8">
-
-            <div className="mb-6 border-b border-white/10 pb-5">
-              <div className="flex flex-wrap items-start justify-between gap-4">
-                <div>
-                  <p className="eyebrow">{t('register.eyebrow')}</p>
-                  <h2 className="mt-2 font-display text-3xl uppercase tracking-wide text-white sm:text-5xl">
-                    {t('register.formTitle')}
-                  </h2>
-                  <p className="mt-2 max-w-2xl text-sm leading-6 text-[#8FA9C4]">
-                    {t('register.formSubtitle')}
-                  </p>
-                </div>
-                <div className="pill-accent">
-                  <GiftIcon className="h-4 w-4" />
-                  {t('register.formPill')}
-                </div>
-              </div>
-            </div>
-
-            <RegisterForm />
-
-            <div className="mt-auto pt-6">
-              <div className="rounded-2xl border border-white/10 bg-ink-900/60 px-4 py-3 text-sm leading-6 text-ink-100/90">
-                <div className="mb-1 flex items-center gap-2 font-display text-base uppercase tracking-wider text-sky-300">
-                  <InfoIcon />
-                  {t('register.disclaimer.title')}
-                </div>
-                <p className="text-ink-100/80">{t('register.disclaimer.body')}</p>
-              </div>
-            </div>
-          </div>
-
           <aside className="glass-card grain-on relative flex h-full flex-col overflow-hidden p-6 sm:p-7 lg:p-8">
             <div className="pointer-events-none absolute -right-16 -top-16 h-52 w-52 rounded-full bg-white/5 blur-3xl" />
             <div className="pointer-events-none absolute -bottom-24 left-6 h-60 w-60 rounded-full bg-white/5 blur-3xl" />
@@ -183,6 +150,39 @@ export function RegisterPage() {
               </div>
             </div>
           </aside>
+
+          <div className="glass-card grain-on relative flex h-full flex-col bg-ink-950/75 p-5 shadow-[0_24px_80px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-7 lg:p-8">
+
+            <div className="mb-6 border-b border-white/10 pb-5">
+              <div className="flex flex-wrap items-start justify-between gap-4">
+                <div>
+                  <p className="eyebrow">{t('register.eyebrow')}</p>
+                  <h2 className="mt-2 font-display text-3xl uppercase tracking-wide text-white sm:text-5xl">
+                    {t('register.formTitle')}
+                  </h2>
+                  <p className="mt-2 max-w-2xl text-sm leading-6 text-[#8FA9C4]">
+                    {t('register.formSubtitle')}
+                  </p>
+                </div>
+                <div className="pill-accent">
+                  <GiftIcon className="h-4 w-4" />
+                  {t('register.formPill')}
+                </div>
+              </div>
+            </div>
+
+            <RegisterForm />
+
+            <div className="mt-auto pt-6">
+              <div className="rounded-2xl border border-white/10 bg-ink-900/60 px-4 py-3 text-sm leading-6 text-ink-100/90">
+                <div className="mb-1 flex items-center gap-2 font-display text-base uppercase tracking-wider text-sky-300">
+                  <InfoIcon />
+                  {t('register.disclaimer.title')}
+                </div>
+                <p className="text-ink-100/80">{t('register.disclaimer.body')}</p>
+              </div>
+            </div>
+          </div>
           </div>
         </section>
       </div>
