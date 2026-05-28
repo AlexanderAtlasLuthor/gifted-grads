@@ -19,13 +19,13 @@ export function Logo({
       </div>
       {showText && (
         <div className="flex min-w-0 flex-col leading-tight">
-          {/* On mobile the type shrinks and the tracking tightens so
-              "Gifted Grads · Events" still fits next to the language
-              toggle + QR pill on a 390px-wide iPhone. */}
-          <span className="font-display text-[11px] uppercase tracking-[0.12em] text-accent-300 sm:text-xs sm:tracking-widest">
+          {/* On mobile the type stays large enough to read at arm's length;
+              tracking compresses so "Gifted Grads · Events" still fits next
+              to the ES/EN toggle + QR pill on a 390px iPhone. */}
+          <span className="font-display text-sm uppercase tracking-[0.1em] text-accent-300 sm:text-xs sm:tracking-widest">
             Born Gifted
           </span>
-          <span className="truncate text-[9px] font-semibold uppercase tracking-[0.14em] text-ink-200/80 sm:text-[10px] sm:tracking-[0.3em]">
+          <span className="truncate text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-200/80 sm:text-[10px] sm:tracking-[0.3em]">
             Gifted Grads · Events
           </span>
         </div>
