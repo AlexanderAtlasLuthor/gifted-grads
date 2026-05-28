@@ -116,9 +116,9 @@ export function RegisterPage() {
             ========================================================= */}
         <section
           id="registration"
-          className="relative mx-auto mt-12 grid w-full max-w-[108rem] items-stretch gap-6 px-4 sm:px-6 lg:grid-cols-2 lg:px-10"
+          className="relative mx-auto mt-12 grid w-full max-w-[108rem] items-stretch gap-6 px-4 sm:px-6 lg:grid-cols-2 lg:px-10 overflow-hidden bg-[url('/formbackground.jpg')] bg-cover bg-center"
         >
-          <div className="pointer-events-none absolute -right-24 top-12 h-80 w-80 rounded-full bg-[#6EC6E8]/10 blur-3xl" />
+          <div className="pointer-events-none absolute inset-0 bg-black/30" />
 
           <div className="glass-card grain-on relative flex h-full flex-col p-5 sm:p-7 lg:p-8">
             <div className="mb-6 border-b border-white/10 pb-5">
