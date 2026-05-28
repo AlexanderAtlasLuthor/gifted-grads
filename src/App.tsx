@@ -7,6 +7,7 @@ import {
 } from '@tanstack/react-query';
 import { I18nProvider } from './i18n/I18nProvider';
 import { Header } from './components/Header';
+import { Footer } from './components/Footer';
 import { RegisterPage } from './routes/RegisterPage';
 import { ConfirmationPage } from './routes/ConfirmationPage';
 import { ManagerLoginPage } from './routes/ManagerLoginPage';
@@ -66,6 +67,7 @@ export function App() {
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </main>
+            <Footer />
           </div>
         </BrowserRouter>
       </I18nProvider>

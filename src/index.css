@@ -222,6 +222,19 @@
     @apply relative rounded-2xl border border-white/[0.12] bg-white/[0.06] shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-xl;
   }
 
+  /* Glass rail — the paper-glass material used on header and footer.
+     Same translucent treatment as the cards but slightly tinted with the
+     brand cyan and with a softer shadow so it sits cleanly against the
+     hero / form backdrops. */
+  .glass-rail {
+    @apply relative border-white/10 bg-ink-950/40 shadow-[0_4px_24px_rgba(4,8,19,0.45)] backdrop-blur-2xl supports-[backdrop-filter]:bg-ink-950/30;
+    background-image: linear-gradient(
+      180deg,
+      rgba(110, 198, 232, 0.07),
+      rgba(110, 198, 232, 0.02)
+    );
+  }
+
   /* Event-page title — big black uppercase with a faint cyan glow. */
   .event-title {
     @apply font-display uppercase leading-[0.85] tracking-tight text-white;

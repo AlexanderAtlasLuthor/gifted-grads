@@ -148,6 +148,9 @@
   "raffle.confirm.redraw": "There is already a winner. Draw another participant?",
   "raffle.confirm.manual": "Confirm manually selecting #{number}?",
 
+  "footer.brand": "An A&A app",
+  "footer.developedBy": "Developed by",
+
   "common.loading": "Loading...",
   "common.retry": "Retry",
   "common.error": "Something went wrong.",

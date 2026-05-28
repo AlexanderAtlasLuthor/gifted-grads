@@ -18,8 +18,8 @@ export function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-30 border-b border-white/5 bg-ink-950/60 backdrop-blur-xl supports-[backdrop-filter]:bg-ink-950/40">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-3 py-3 sm:gap-6 sm:px-6 sm:py-4">
+    <header className="glass-rail grain-on sticky top-0 z-30 border-b">
+      <div className="relative z-10 mx-auto flex max-w-7xl items-center justify-between gap-3 px-3 py-3 sm:gap-6 sm:px-6 sm:py-4">
         <Link to="/" className="flex min-w-0 items-center" aria-label="Born Gifted · Gifted Grads">
           <Logo compactOnMobile />
         </Link>

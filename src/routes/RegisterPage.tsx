@@ -153,7 +153,7 @@ export function RegisterPage() {
 
           <div
             id="information-form"
-            className="glass-card grain-on relative flex h-full scroll-mt-24 flex-col bg-ink-950/75 p-5 shadow-[0_24px_80px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-7 lg:p-8"
+            className="glass-card grain-on relative flex h-full scroll-mt-24 flex-col overflow-hidden p-5 sm:p-7 lg:p-8"
           >
 
             <div className="mb-6 border-b border-white/10 pb-5">
