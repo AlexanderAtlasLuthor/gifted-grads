@@ -2,7 +2,6 @@ import { useTranslation } from '../i18n/I18nProvider';
 import { MetricsGrid } from '../components/MetricsGrid';
 import { AttendeeTable } from '../components/AttendeeTable';
 import { RafflePanel } from '../components/RafflePanel';
-import { DonationProgress } from '../components/DonationProgress';
 import { Bolt } from '../components/decorations';
 
 export function ManagerDashboardPage() {
@@ -35,11 +34,6 @@ export function ManagerDashboardPage() {
         <section>
           <SectionTitle>{t('dashboard.section.metrics')}</SectionTitle>
           <MetricsGrid />
-        </section>
-
-        <section>
-          <SectionTitle>{t('dashboard.section.donations')}</SectionTitle>
-          <DonationProgress />
         </section>
 
         <section>

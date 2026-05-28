@@ -10,7 +10,6 @@ import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { RegisterPage } from './routes/RegisterPage';
 import { ConfirmationPage } from './routes/ConfirmationPage';
-import { DonationThankYouPage } from './routes/DonationThankYouPage';
 import { ManagerLoginPage } from './routes/ManagerLoginPage';
 import { ManagerDashboardPage } from './routes/ManagerDashboardPage';
 import { ProtectedRoute } from './routes/ProtectedRoute';
@@ -56,7 +55,6 @@ export function App() {
               <Routes>
                 <Route path="/" element={<RegisterPage />} />
                 <Route path="/confirmacion" element={<ConfirmationPage />} />
-                <Route path="/donations/thank-you" element={<DonationThankYouPage />} />
                 <Route path="/manager/login" element={<ManagerLoginPage />} />
                 <Route
                   path="/manager"
