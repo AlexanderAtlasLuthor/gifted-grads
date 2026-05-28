@@ -17,7 +17,12 @@ compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = "dist"
 
 [vars]
-RESEND_FROM = "Gifted Grads <noreply@aainsurances.com>"
+# Using Resend's shared sender (onboarding@resend.dev) so we don't need
+# to verify a custom domain. Tell IT to whitelist `onboarding@resend.dev`
+# so the notifications don't get filtered as spam.
+# When the dominio aainsurances.com is verified in Resend, change this
+# back to "Gifted Grads <noreply@aainsurances.com>".
+RESEND_FROM = "Gifted Grads <onboarding@resend.dev>"
 ORGANIZER_EMAIL = "info@aainsurances.com"
 
 # D1 binding. Replace `database_id` with the id printed by:
