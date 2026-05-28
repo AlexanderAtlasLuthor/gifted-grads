@@ -54,18 +54,18 @@ export function RegisterPage() {
             </div>
 
             {/* Centre title */}
-            <div className="flex -translate-y-20 flex-col items-center justify-center text-center lg:min-h-[30rem] lg:translate-y-8 lg:pb-0">
-              <span className="pill-accent">
+            <div className="flex -translate-y-36 flex-col items-center justify-center text-center sm:-translate-y-24 lg:min-h-[30rem] lg:translate-y-8 lg:pb-0">
+              <span className="pill-accent text-[12px] sm:text-[13px]">
                 <Bolt className="h-3.5 w-3.5" />
                 {t('hero.eyebrow')}
               </span>
-              <p className="eyebrow mt-5 text-sky-200/80 sm:mt-8">
+              <p className="eyebrow mt-5 text-[12px] text-sky-200/80 sm:mt-8 sm:text-sm">
                 Gifted Grads · Westborn Collectives
               </p>
-              <h1 className="event-title mt-4 whitespace-nowrap text-[clamp(2.8rem,12vw,4.5rem)] sm:mt-5 sm:text-[clamp(3.2rem,11vw,5.6rem)] lg:text-[clamp(3.4rem,12vw,8.5rem)]">
+              <h1 className="event-title mt-4 whitespace-nowrap text-[clamp(3rem,13.5vw,5rem)] sm:mt-5 sm:text-[clamp(3.6rem,11vw,6rem)] lg:text-[clamp(3.4rem,12vw,8.5rem)]">
                 “BORN GIFTED”
               </h1>
-              <p className="mt-4 max-w-[18rem] font-editorial text-[10px] uppercase leading-5 tracking-[0.14em] text-[#D8F3FF] sm:max-w-none sm:text-sm sm:tracking-[0.45em] lg:hidden">
+              <p className="mt-4 max-w-[20rem] font-editorial text-[11px] uppercase leading-5 tracking-[0.18em] text-[#D8F3FF] sm:max-w-none sm:text-sm sm:tracking-[0.45em] lg:hidden">
                 Fundraiser · Exhibition · Registration
               </p>
               <p className="mt-4 hidden items-center justify-center gap-5 font-editorial text-base uppercase tracking-[0.32em] text-[#D8F3FF] lg:flex">
