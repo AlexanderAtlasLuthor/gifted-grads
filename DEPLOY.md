@@ -2,6 +2,86 @@
 
 Runbook para llevar la app a producción en Cloudflare. Ejecutar los pasos **en orden**.
 
+## Estado actual del deploy
+
+Última actualización: 2026-05-28.
+
+### Hecho
+
+- Rama local `main` sincronizada con remoto.
+- Dependencias verificadas con `npm install`.
+- Build de producción verificada con `npm run build`.
+- Login de Wrangler completado.
+- D1 creada:
+  - Nombre: `gifted-grads`
+  - Binding esperado por la app: `DB`
+  - `database_id`: `1f16d1ab-b12f-4f1a-98af-4bfef669537d`
+- [`wrangler.toml`](./wrangler.toml) actualizado con el `database_id` real.
+- Migraciones remotas aplicadas con:
+  ```bash
+  npx wrangler d1 migrations apply DB --remote
+  ```
+- Verificación de migraciones: `npx wrangler d1 migrations list DB --remote` devuelve `No migrations to apply`.
+- Tablas verificadas en D1 remota:
+  - `attendees`
+  - `manager_sessions`
+  - `raffle_draws`
+  - internas de Cloudflare/SQLite: `_cf_KV`, `d1_migrations`, `sqlite_sequence`
+- Proyecto Cloudflare Pages creado:
+  - Project name: `gifted-grads-events`
+  - URL principal: `https://gifted-grads-events.pages.dev`
+  - Production branch configurada: `main`
+  - Compatibility date: `2025-01-01`
+  - Compatibility flag: `nodejs_compat`
+- Secrets de Pages creados en producción:
+  - `MANAGER_PASSWORD`
+  - `JOTFORM_WEBHOOK_SECRET`
+- Deploy inicial hecho por Wrangler:
+  ```bash
+  npx wrangler pages deploy dist --project-name gifted-grads-events --branch main --commit-dirty=true
+  ```
+- Smoke tests hechos:
+  - `https://gifted-grads-events.pages.dev/` responde `200`.
+  - `https://gifted-grads-events.pages.dev/api/metrics` sin token responde `401`, no `500`.
+  - Login manager responde `200`.
+  - `/api/metrics` con token responde métricas desde D1.
+- Tests locales verificados:
+  ```bash
+  npm run test
+  ```
+  Resultado: 8 archivos de test, 48 tests pasando.
+- Cambios commiteados y pusheados a `main`:
+  - Commit: `9ea278e chore: configure production deploy`
+
+### Ajuste técnico hecho durante el deploy
+
+El deploy directo de Pages fallaba porque las Functions importaban `@shared/*`.
+Vite y TypeScript sí resolvían ese alias, pero el bundler de Cloudflare Pages Functions no.
+Se cambiaron sólo los imports dentro de `functions/` a rutas relativas (`../../shared/...`, `../../../shared/...`) para que futuros deploys de Pages compilen correctamente.
+
+### Pendiente
+
+- Crear/verificar el dominio `aainsurances.com` en Resend.
+- Crear la API key de Resend y subirla como:
+  ```bash
+  npx wrangler pages secret put RESEND_API_KEY --project-name gifted-grads-events
+  ```
+- Configurar Jotform `261465857224059`:
+  - Redirect:
+    ```text
+    https://gifted-grads-events.pages.dev/confirmacion?submission={id}
+    ```
+  - Webhook:
+    ```text
+    https://gifted-grads-events.pages.dev/api/jotform/webhook/EL_VALOR_DE_JOTFORM_WEBHOOK_SECRET
+    ```
+- Hacer una submission real desde Jotform para validar el flujo end-to-end y el correo de Resend.
+- Opcional: conectar el proyecto Pages al repo GitHub desde Cloudflare Dashboard. El proyecto quedó creado por CLI y aparece como `Git Provider: No`, aunque el deploy manual ya está activo.
+
+> Nota de seguridad: `MANAGER_PASSWORD`, `RESEND_API_KEY` y `JOTFORM_WEBHOOK_SECRET` no deben commitearse en este documento. Están o deben estar guardados como secrets en Cloudflare Pages.
+
+---
+
 Pre-requisitos:
 
 - `node` 22+ y `npm` instalados
@@ -48,7 +128,7 @@ git push
 
 ## 2 · Aplicar migraciones a la D1
 
-Las 4 migraciones en `migrations/` crean las tablas (`attendees`, `raffle_draws`, `manager_sessions`, `jotform_submissions`) y los tipos de seguro actuales (`AUTO/HOME/COMMERCIAL/RENTERS`).
+Las 4 migraciones en `migrations/` crean las tablas de aplicación (`attendees`, `raffle_draws`, `manager_sessions`) y los tipos de seguro actuales (`AUTO/HOME/COMMERCIAL/RENTERS`).
 
 ```bash
 # Producción
@@ -65,7 +145,7 @@ npx wrangler d1 migrations list DB --remote
 npx wrangler d1 execute DB --remote --command "SELECT name FROM sqlite_master WHERE type='table';"
 ```
 
-Debe listar las cuatro tablas.
+Debe listar esas tres tablas de aplicación, además de tablas internas de Cloudflare/SQLite como `d1_migrations` y `sqlite_sequence`.
 
 ---
 
