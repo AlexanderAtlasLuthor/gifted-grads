@@ -33,7 +33,7 @@ function BarRow({
   );
 }
 
-const INSURANCE_TYPES: InsuranceType[] = ['HOUSE', 'AUTO', 'LIFE'];
+const INSURANCE_TYPES: InsuranceType[] = ['AUTO', 'HOME', 'COMMERCIAL', 'RENTERS'];
 
 export function MetricsGrid() {
   const { t, locale } = useTranslation();

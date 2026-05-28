@@ -17,7 +17,7 @@ import { ApiError } from './api';
 const MOCK_PASSWORD = 'admin';
 const TOKEN_TTL_MS = 12 * 60 * 60 * 1000;
 
-const insuranceTypes: InsuranceType[] = ['HOUSE', 'AUTO', 'LIFE'];
+const insuranceTypes: InsuranceType[] = ['AUTO', 'HOME', 'COMMERCIAL', 'RENTERS'];
 const nombresSeed = [
   'Ana López',
   'Carlos Pérez',
@@ -65,12 +65,18 @@ function delay<T>(value: T, ms = 150): Promise<T> {
 
 function computeMetrics(): Metrics {
   const total = attendees.length;
-  const byInsuranceType: InsuranceTypeBreakdown = { HOUSE: 0, AUTO: 0, LIFE: 0 };
+  const byInsuranceType: InsuranceTypeBreakdown = {
+    AUTO: 0,
+    HOME: 0,
+    COMMERCIAL: 0,
+    RENTERS: 0,
+  };
   for (const a of attendees) byInsuranceType[a.insuranceType]++;
   const insuranceTypePercent: InsuranceTypeBreakdown = {
-    HOUSE: total ? (byInsuranceType.HOUSE / total) * 100 : 0,
     AUTO: total ? (byInsuranceType.AUTO / total) * 100 : 0,
-    LIFE: total ? (byInsuranceType.LIFE / total) * 100 : 0,
+    HOME: total ? (byInsuranceType.HOME / total) * 100 : 0,
+    COMMERCIAL: total ? (byInsuranceType.COMMERCIAL / total) * 100 : 0,
+    RENTERS: total ? (byInsuranceType.RENTERS / total) * 100 : 0,
   };
   const todayPrefix = new Date().toISOString().slice(0, 10);
   const leadsToday = attendees.filter((a) =>

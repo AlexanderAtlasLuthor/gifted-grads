@@ -64,8 +64,12 @@ describe('mockApi', () => {
     const { mockApi } = await freshMockApi();
     await mockApi.login('admin');
     const m = await mockApi.metrics();
-    expect(m.byInsuranceType.HOUSE + m.byInsuranceType.AUTO + m.byInsuranceType.LIFE)
-      .toBe(m.total);
+    expect(
+      m.byInsuranceType.AUTO +
+      m.byInsuranceType.HOME +
+      m.byInsuranceType.COMMERCIAL +
+      m.byInsuranceType.RENTERS,
+    ).toBe(m.total);
   });
 
   it('drawRaffle manual mode finds participant by number', async () => {

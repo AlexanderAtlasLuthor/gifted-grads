@@ -49,9 +49,10 @@
   "register.error.email_exists": "Este correo ya está registrado.",
   "register.error.validation": "Por favor revisa los datos del formulario.",
 
-  "insurance.HOUSE": "Seguro de casa",
-  "insurance.AUTO": "Seguro de auto",
-  "insurance.LIFE": "Seguro de vida",
+  "insurance.AUTO": "Auto insurance",
+  "insurance.HOME": "Home insurance",
+  "insurance.COMMERCIAL": "Commercial insurance",
+  "insurance.RENTERS": "Renters insurance",
 
   "confirmation.title": "¡Solicitud recibida!",
   "confirmation.subtitle": "Gracias por solicitar tu cotización.",

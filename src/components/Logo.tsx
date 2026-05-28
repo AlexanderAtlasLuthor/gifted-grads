@@ -9,7 +9,7 @@ export function Logo({
 }) {
   return (
     <div className={clsx('flex items-center gap-3', className)}>
-      <div className="grid place-items-center rounded-full bg-white/95 p-1.5 shadow-[0_4px_20px_rgba(247,201,72,0.25)] ring-1 ring-accent-400/30">
+      <div className="grid place-items-center">
         <img
           src="/logo.png"
           alt="Gifted Grads"

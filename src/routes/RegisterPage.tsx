@@ -14,14 +14,14 @@ export function RegisterPage() {
         {/* =========================================================
             HERO — sphere, flyer photo, big title
             ========================================================= */}
-        <section className="relative aspect-[1672/941] w-full overflow-hidden border-y border-white/10">
+        <section className="relative min-h-[calc(100svh-5rem)] overflow-hidden border-y border-white/10 sm:min-h-[42rem] lg:aspect-[1672/941] lg:min-h-0">
           {/* The supplied flyer-style background — kids holding the globe
               over clouds. */}
           <img
             src="/register-bg.png"
             alt=""
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 h-full w-full object-fill"
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover lg:object-fill"
             style={{ objectPosition: '50% 50%' }}
           />
           {/* Grain overlay. */}
@@ -32,20 +32,21 @@ export function RegisterPage() {
           <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-ink-950/70 to-transparent" />
           {/* Centre vertical scrim — so the BORN GIFTED title reads cleanly
               over the bright globe in the supplied background image. */}
+          <div className="pointer-events-none absolute inset-0 bg-ink-950/20 lg:hidden" />
           <div className="pointer-events-none absolute inset-y-0 left-1/2 w-[60%] -translate-x-1/2 bg-[radial-gradient(60%_60%_at_50%_50%,rgba(4,8,19,0.55),transparent_70%)]" />
 
-          <div className="relative z-10 grid h-full gap-6 px-4 py-6 text-white sm:px-6 sm:py-8 lg:grid-cols-[0.82fr_1fr_0.82fr] lg:px-10">
+          <div className="relative z-10 grid h-full content-between gap-6 px-4 py-6 text-white sm:px-6 sm:py-8 lg:grid-cols-[0.82fr_1fr_0.82fr] lg:content-normal lg:px-10">
             {/* Left rail */}
-            <div className="space-y-5">
+            <div className="space-y-4 sm:space-y-5">
               <div>
-                <p className="font-display text-[clamp(3.2rem,8vw,5.8rem)] uppercase leading-[0.82] text-white drop-shadow-[0_4px_30px_rgba(0,0,0,0.65)]">
+                <p className="font-display text-[clamp(3.4rem,18vw,5.8rem)] uppercase leading-[0.82] text-white drop-shadow-[0_4px_30px_rgba(0,0,0,0.65)] lg:text-[clamp(3.2rem,8vw,5.8rem)]">
                   May 31<span className="align-super text-[0.42em]">st</span>
                 </p>
                 <p className="mt-2 font-editorial text-2xl tracking-wider text-[#F4F7FA] sm:text-3xl">
                   4PM&nbsp;—&nbsp;UNTIL
                 </p>
               </div>
-              <div className="border-l-2 border-accent-400/70 pl-4 leading-relaxed">
+              <div className="max-w-[13rem] border-l-2 border-accent-400/70 pl-4 leading-relaxed sm:max-w-none">
                 <p className="font-display text-xl tracking-wide text-white">Casa Nübe</p>
                 <p className="mt-1 max-w-[15rem] text-[#D9E7F4]">
                   2060 NW 1st Ave<br />
@@ -55,23 +56,30 @@ export function RegisterPage() {
             </div>
 
             {/* Centre title */}
-            <div className="flex min-h-[24rem] flex-col items-center justify-center text-center sm:min-h-[30rem]">
+            <div className="flex flex-col items-center justify-center pb-16 text-center sm:pb-20 lg:min-h-[30rem] lg:pb-0">
               <span className="pill-accent">
                 <Bolt className="h-3.5 w-3.5" />
                 {t('hero.eyebrow')}
               </span>
-              <p className="eyebrow mt-8 text-sky-200/80">
+              <p className="eyebrow mt-5 text-sky-200/80 sm:mt-8">
                 Gifted Grads · Westborn Collectives
               </p>
-              <h1 className="event-title mt-5 text-[clamp(3.4rem,12vw,8.5rem)]">
+              <h1 className="event-title mt-4 text-[clamp(3.4rem,19vw,5.8rem)] sm:mt-5 lg:text-[clamp(3.4rem,12vw,8.5rem)]">
                 “BORN GIFTED”
               </h1>
-              <p className="mt-4 font-editorial text-sm uppercase tracking-[0.45em] text-[#D8F3FF] sm:text-base">
-                Fundraiser&nbsp;·&nbsp;Exhibition&nbsp;·&nbsp;Registration
+              <p className="mt-4 max-w-[18rem] font-editorial text-[10px] uppercase leading-5 tracking-[0.14em] text-[#D8F3FF] sm:max-w-none sm:text-sm sm:tracking-[0.45em] lg:hidden">
+                Fundraiser · Exhibition · Registration
+              </p>
+              <p className="mt-4 hidden items-center justify-center gap-5 font-editorial text-base uppercase tracking-[0.32em] text-[#D8F3FF] lg:flex">
+                <span>Fundraiser</span>
+                <span className="text-[#D8F3FF]/70">·</span>
+                <span>Exhibition</span>
+                <span className="text-[#D8F3FF]/70">·</span>
+                <span>Registration</span>
               </p>
               <a
                 href="#registration"
-                className="btn-primary mt-10 px-8 py-3 text-sm uppercase tracking-widest"
+                className="btn-primary mt-7 px-8 py-3 text-sm uppercase tracking-widest sm:mt-10"
               >
                 <Bolt className="h-4 w-4" />
                 {t('hero.cta')}
@@ -79,7 +87,7 @@ export function RegisterPage() {
             </div>
 
             {/* Right rail */}
-            <div className="flex flex-col justify-between gap-10 text-left lg:text-right">
+            <div className="hidden flex-col justify-between gap-10 text-left lg:flex lg:text-right">
               <div>
                 <p className="text-sm uppercase tracking-[0.35em] text-[#F4F7FA]/85">
                   {t('hero.brought.line1')}
@@ -92,7 +100,7 @@ export function RegisterPage() {
           </div>
 
           {/* Partner row */}
-          <div className="absolute inset-x-0 bottom-0 z-10 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 px-6 py-4 text-[10px] uppercase tracking-[0.35em] text-ink-200/70 sm:px-8">
+          <div className="absolute inset-x-0 bottom-0 z-10 hidden flex-wrap items-center justify-between gap-4 border-t border-white/10 px-6 py-4 text-[10px] uppercase tracking-[0.35em] text-ink-200/70 sm:px-8 lg:flex">
             <span>In partnership with</span>
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2 font-editorial text-ink-100/80">
               <span>Influence Radio</span>
@@ -109,11 +117,11 @@ export function RegisterPage() {
             ========================================================= */}
         <section
           id="registration"
-          className="relative mx-auto mt-12 grid w-full max-w-[108rem] items-start gap-6 px-4 sm:px-6 lg:grid-cols-[minmax(0,1fr)_minmax(360px,0.5fr)] lg:px-10"
+          className="relative mx-auto mt-12 grid w-full max-w-[108rem] items-stretch gap-6 px-4 sm:px-6 lg:grid-cols-2 lg:px-10"
         >
           <div className="pointer-events-none absolute -right-24 top-12 h-80 w-80 rounded-full bg-[#6EC6E8]/10 blur-3xl" />
 
-          <div className="glass-card grain-on relative flex flex-col p-5 sm:p-7 lg:p-8">
+          <div className="glass-card grain-on relative flex h-full flex-col p-5 sm:p-7 lg:p-8">
             <div className="mb-6 border-b border-white/10 pb-5">
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div>
@@ -145,7 +153,7 @@ export function RegisterPage() {
             </div>
           </div>
 
-          <aside className="glass-card grain-on relative flex flex-col overflow-hidden p-6 sm:p-7 lg:p-8">
+          <aside className="glass-card grain-on relative flex h-full flex-col overflow-hidden p-6 sm:p-7 lg:p-8">
             <div className="pointer-events-none absolute -right-16 -top-16 h-52 w-52 rounded-full bg-accent-400/15 blur-3xl" />
             <div className="pointer-events-none absolute -bottom-24 left-6 h-60 w-60 rounded-full bg-sky-400/15 blur-3xl" />
 

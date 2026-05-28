@@ -7,7 +7,7 @@ import type {
 type Env = { DB: D1Database };
 
 function emptyBreakdown(): InsuranceTypeBreakdown {
-  return { HOUSE: 0, AUTO: 0, LIFE: 0 };
+  return { AUTO: 0, HOME: 0, COMMERCIAL: 0, RENTERS: 0 };
 }
 
 export const onRequestGet: PagesFunction<Env> = async (ctx) => {

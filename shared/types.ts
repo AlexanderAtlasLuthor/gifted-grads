@@ -1,4 +1,4 @@
-export type InsuranceType = 'HOUSE' | 'AUTO' | 'LIFE';
+export type InsuranceType = 'AUTO' | 'HOME' | 'COMMERCIAL' | 'RENTERS';
 
 export interface RegisterRequest {
   nombre: string;
@@ -31,9 +31,10 @@ export interface AttendeeListResponse {
 }
 
 export interface InsuranceTypeBreakdown {
-  HOUSE: number;
   AUTO: number;
-  LIFE: number;
+  HOME: number;
+  COMMERCIAL: number;
+  RENTERS: number;
 }
 
 export interface Metrics {

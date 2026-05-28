@@ -24,29 +24,49 @@ export const FIELD_ALIASES = {
 
 /**
  * Maps the human-readable option text Jotform sends to our schema enums.
- * Covers ES/EN labels for House/Auto/Life.
+ * Covers ES/EN labels for the supported insurance products.
  */
 export const INSURANCE_TYPE_MAP: Record<string, InsuranceType> = {
-  House: 'HOUSE',
-  house: 'HOUSE',
-  Home: 'HOUSE',
-  Casa: 'HOUSE',
-  Hogar: 'HOUSE',
-  'Seguro de casa': 'HOUSE',
-  'Seguro de hogar': 'HOUSE',
-
   Auto: 'AUTO',
   auto: 'AUTO',
+  'Auto insurance': 'AUTO',
   Car: 'AUTO',
   Vehículo: 'AUTO',
   Coche: 'AUTO',
   'Seguro de auto': 'AUTO',
   'Seguro de coche': 'AUTO',
 
-  Life: 'LIFE',
-  life: 'LIFE',
-  Vida: 'LIFE',
-  'Seguro de vida': 'LIFE',
+  Home: 'HOME',
+  home: 'HOME',
+  House: 'HOME',
+  house: 'HOME',
+  'Home insurance': 'HOME',
+  Casa: 'HOME',
+  Hogar: 'HOME',
+  'Seguro de casa': 'HOME',
+  'Seguro de hogar': 'HOME',
+
+  Commercial: 'COMMERCIAL',
+  commercial: 'COMMERCIAL',
+  Business: 'COMMERCIAL',
+  business: 'COMMERCIAL',
+  'Commercial insurance': 'COMMERCIAL',
+  'Business insurance': 'COMMERCIAL',
+  Comercial: 'COMMERCIAL',
+  Negocio: 'COMMERCIAL',
+  'Seguro comercial': 'COMMERCIAL',
+  'Seguro de negocio': 'COMMERCIAL',
+
+  Renters: 'RENTERS',
+  renters: 'RENTERS',
+  Renter: 'RENTERS',
+  renter: 'RENTERS',
+  'Renters insurance': 'RENTERS',
+  'Renter insurance': 'RENTERS',
+  Inquilinos: 'RENTERS',
+  Inquilino: 'RENTERS',
+  'Seguro de inquilinos': 'RENTERS',
+  'Seguro de inquilino': 'RENTERS',
 };
 
 export interface ParsedJotformPayload {

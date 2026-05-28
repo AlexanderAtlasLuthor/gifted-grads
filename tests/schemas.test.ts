@@ -37,8 +37,8 @@ describe('registerSchema', () => {
     ).toThrow();
   });
 
-  it('accepts HOUSE, AUTO and LIFE', () => {
-    for (const t of ['HOUSE', 'AUTO', 'LIFE'] as const) {
+  it('accepts the supported insurance types', () => {
+    for (const t of ['AUTO', 'HOME', 'COMMERCIAL', 'RENTERS'] as const) {
       const parsed = registerSchema.parse({ ...validRegister, insuranceType: t });
       expect(parsed.insuranceType).toBe(t);
     }

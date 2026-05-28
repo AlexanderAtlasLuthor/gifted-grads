@@ -26,7 +26,7 @@ describe('rowToAttendee', () => {
       nombre: 'X',
       email: 'x@x.com',
       telefono: '1',
-      insurance_type: 'HOUSE' as const,
+      insurance_type: 'HOME' as const,
       created_at: '2026-01-01 10:00:00',
     };
     const out = rowToAttendeeIso(row);

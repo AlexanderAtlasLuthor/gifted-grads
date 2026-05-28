@@ -45,13 +45,19 @@ describe('parseJotformPayload', () => {
     expect(out.data.telefono).toBe('+1 555 0000');
   });
 
-  it('maps House / Auto / Life to schema enums', () => {
+  it('maps supported insurance labels to schema enums', () => {
     for (const [label, expected] of [
-      ['House', 'HOUSE'],
       ['Auto', 'AUTO'],
-      ['Life', 'LIFE'],
-      ['Casa', 'HOUSE'],
-      ['Vida', 'LIFE'],
+      ['Auto insurance', 'AUTO'],
+      ['Home', 'HOME'],
+      ['Home insurance', 'HOME'],
+      ['Commercial', 'COMMERCIAL'],
+      ['Commercial insurance', 'COMMERCIAL'],
+      ['Renters', 'RENTERS'],
+      ['Renters insurance', 'RENTERS'],
+      ['Casa', 'HOME'],
+      ['Seguro comercial', 'COMMERCIAL'],
+      ['Seguro de inquilinos', 'RENTERS'],
     ] as const) {
       const fd = makePayload({
         submissionID: '1',

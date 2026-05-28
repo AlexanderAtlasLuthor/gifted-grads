@@ -9,7 +9,7 @@ import { Spinner } from './Spinner';
 import { ApiError } from '../lib/api';
 import type { InsuranceType } from '@shared/types';
 
-const insuranceTypes: InsuranceType[] = ['HOUSE', 'AUTO', 'LIFE'];
+const insuranceTypes: InsuranceType[] = ['AUTO', 'HOME', 'COMMERCIAL', 'RENTERS'];
 
 export function RegisterForm() {
   const { t } = useTranslation();
