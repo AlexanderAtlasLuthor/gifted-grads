@@ -61,7 +61,7 @@ function RegistrationQrModal({ onClose }: { onClose: () => void }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-ink-950/90 p-4 backdrop-blur-md"
+      className="fixed inset-0 z-[9999] flex items-center justify-center overflow-y-auto bg-ink-950/90 p-4 backdrop-blur-md"
       role="dialog"
       aria-modal="true"
       aria-labelledby="registration-qr-title"

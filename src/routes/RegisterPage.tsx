@@ -7,14 +7,13 @@ export function RegisterPage() {
   return (
     <div className="event-shell min-h-full">
       {/* Glow overlays — top sky-glow and an off-screen cyan ember. */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-[46rem] bg-[radial-gradient(circle_at_50%_26%,rgba(31,78,137,0.5),transparent_42%)]" />
-      <div className="pointer-events-none absolute -left-24 top-[30rem] hidden h-72 w-72 rounded-full bg-[#6EC6E8]/10 blur-3xl lg:block" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-[46rem] bg-[radial-gradient(circle_at_50%_26%,rgba(4,8,19,0.65),transparent_42%)]" />
 
       <div className="relative mx-auto w-full pb-12 lg:pb-16">
         {/* =========================================================
             HERO — sphere, flyer photo, big title
             ========================================================= */}
-        <section className="relative min-h-[calc(100svh-5rem)] overflow-hidden border-y border-white/10 sm:min-h-[48rem] lg:aspect-[1672/941] lg:min-h-0">
+        <section className="relative grid min-h-[calc(100svh-5rem)] place-items-center overflow-hidden border-y border-white/10 sm:min-h-[48rem] lg:aspect-[1672/941] lg:min-h-0">
           {/* The supplied flyer-style background — kids holding the globe
               over clouds. */}
           <img
@@ -116,11 +115,10 @@ export function RegisterPage() {
             ========================================================= */}
         <section
           id="registration"
-          className="relative mx-auto mt-12 grid w-full max-w-[108rem] items-stretch gap-6 px-4 sm:px-6 lg:grid-cols-2 lg:px-10 overflow-hidden bg-[url('/formbackground.jpg')] bg-cover bg-center"
+          className="relative z-20 mx-auto mt-12 grid w-full max-w-[108rem] items-stretch gap-6 overflow-hidden rounded-[2rem] bg-[linear-gradient(rgba(0,0,0,0.24),rgba(0,0,0,0.14)),url('/formbackground.jpg')] bg-cover bg-center bg-no-repeat px-4 py-6 sm:px-6 lg:grid-cols-2 lg:px-10 lg:py-8"
         >
-          <div className="pointer-events-none absolute inset-0 bg-black/30" />
+          <div className="glass-card grain-on relative flex h-full flex-col bg-ink-950/75 p-5 shadow-[0_24px_80px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-7 lg:p-8">
 
-          <div className="glass-card grain-on relative flex h-full flex-col p-5 sm:p-7 lg:p-8">
             <div className="mb-6 border-b border-white/10 pb-5">
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div>
@@ -153,8 +151,8 @@ export function RegisterPage() {
           </div>
 
           <aside className="glass-card grain-on relative flex h-full flex-col overflow-hidden p-6 sm:p-7 lg:p-8">
-            <div className="pointer-events-none absolute -right-16 -top-16 h-52 w-52 rounded-full bg-accent-400/15 blur-3xl" />
-            <div className="pointer-events-none absolute -bottom-24 left-6 h-60 w-60 rounded-full bg-sky-400/15 blur-3xl" />
+            <div className="pointer-events-none absolute -right-16 -top-16 h-52 w-52 rounded-full bg-white/5 blur-3xl" />
+            <div className="pointer-events-none absolute -bottom-24 left-6 h-60 w-60 rounded-full bg-white/5 blur-3xl" />
 
             <div className="relative">
               <span className="eyebrow text-accent-300">{t('register.giveaway.lead')}</span>
