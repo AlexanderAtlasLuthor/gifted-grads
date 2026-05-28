@@ -5,8 +5,8 @@ import { sendResendEmail, winnerEmail } from '../../_shared/emails';
 
 type Env = {
   DB: D1Database;
-  RESEND_API_KEY: string;
-  RESEND_FROM: string;
+  RESEND_API_KEY?: string;
+  RESEND_FROM?: string;
 };
 
 export const onRequestPost: PagesFunction<Env> = async (ctx) => {

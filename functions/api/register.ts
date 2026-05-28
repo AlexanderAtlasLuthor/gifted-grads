@@ -12,9 +12,9 @@ import { organizerEmail, sendResendEmail } from '../_shared/emails';
 
 type Env = {
   DB: D1Database;
-  RESEND_API_KEY: string;
-  RESEND_FROM: string;
-  ORGANIZER_EMAIL: string;
+  RESEND_API_KEY?: string;
+  RESEND_FROM?: string;
+  ORGANIZER_EMAIL?: string;
 };
 
 export const onRequestPost: PagesFunction<Env> = async (ctx) => {
@@ -36,17 +36,19 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
 
   const attendee = result.attendee;
 
-  const { subject, html, text } = organizerEmail(attendee);
-  ctx.waitUntil(
-    sendResendEmail({
-      apiKey: ctx.env.RESEND_API_KEY,
-      from: ctx.env.RESEND_FROM,
-      to: ctx.env.ORGANIZER_EMAIL,
-      subject,
-      html,
-      text,
-    }),
-  );
+  if (ctx.env.RESEND_API_KEY && ctx.env.RESEND_FROM && ctx.env.ORGANIZER_EMAIL) {
+    const { subject, html, text } = organizerEmail(attendee);
+    ctx.waitUntil(
+      sendResendEmail({
+        apiKey: ctx.env.RESEND_API_KEY,
+        from: ctx.env.RESEND_FROM,
+        to: ctx.env.ORGANIZER_EMAIL,
+        subject,
+        html,
+        text,
+      }),
+    );
+  }
 
   return json(201, {
     id: attendee.id,

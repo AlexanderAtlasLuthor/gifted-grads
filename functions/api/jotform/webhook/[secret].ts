@@ -18,9 +18,9 @@ import {
 
 type Env = {
   DB: D1Database;
-  RESEND_API_KEY: string;
-  RESEND_FROM: string;
-  ORGANIZER_EMAIL: string;
+  RESEND_API_KEY?: string;
+  RESEND_FROM?: string;
+  ORGANIZER_EMAIL?: string;
   JOTFORM_WEBHOOK_SECRET: string;
   JOTFORM_ALLOWED_FORM_IDS?: string;
 };

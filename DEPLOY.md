@@ -36,6 +36,11 @@ Runbook para llevar la app a producción en Cloudflare. Ejecutar los pasos **en 
 - Secrets de Pages creados en producción:
   - `MANAGER_PASSWORD`
   - `JOTFORM_WEBHOOK_SECRET`
+- Modo sin Resend decidido el 2026-05-28:
+  - No se verificará dominio en Resend.
+  - No se usará `RESEND_API_KEY`.
+  - Jotform enviará las notificaciones/autoresponders.
+  - La app seguirá guardando leads en D1, mostrando confirmación y habilitando el manager.
 - Deploy inicial hecho por Wrangler:
   ```bash
   npx wrangler pages deploy dist --project-name gifted-grads-events --branch main --commit-dirty=true
@@ -59,13 +64,38 @@ El deploy directo de Pages fallaba porque las Functions importaban `@shared/*`.
 Vite y TypeScript sí resolvían ese alias, pero el bundler de Cloudflare Pages Functions no.
 Se cambiaron sólo los imports dentro de `functions/` a rutas relativas (`../../shared/...`, `../../../shared/...`) para que futuros deploys de Pages compilen correctamente.
 
+### Plan ejecutado: modo sin Resend
+
+1. Quitar Resend como requisito de producción.
+2. Confirmar que las funciones no fallen si `RESEND_API_KEY` no existe.
+3. Usar Jotform **Emails** para:
+   - Notificar al organizador cuando llegue un lead.
+   - Enviar confirmación/autoresponder al usuario si se desea.
+4. Mantener Cloudflare/D1 como fuente de datos para confirmación, manager, métricas y rifa.
+5. Actualizar este runbook para que el flujo pendiente sea sólo Jotform + smoke test.
+
+Estado: ejecutado. `RESEND_API_KEY`, `RESEND_FROM` y `ORGANIZER_EMAIL` son opcionales para la app. Si no existen, los endpoints registran leads y saltan el envío de correo.
+`wrangler.toml` no declara variables Resend en modo producción sin dominio.
+
+Verificación del modo sin Resend:
+
+- `npm run typecheck` pasa.
+- `npm run test` pasa: 8 archivos de test, 48 tests.
+- `npm run build` pasa.
+- `npx wrangler pages functions build --outfile /private/tmp/gifted-grads-functions.js` pasa.
+- Deploy manual aplicado:
+  ```bash
+  npx wrangler pages deploy dist --project-name gifted-grads-events --branch main --commit-dirty=true
+  ```
+- Deployment URL final generada: `https://6368af29.gifted-grads-events.pages.dev`
+- Smoke tests:
+  - `https://gifted-grads-events.pages.dev/` responde `200`.
+  - `https://gifted-grads-events.pages.dev/api/metrics` sin token responde `401`.
+  - `POST /api/register` sin `RESEND_API_KEY` responde `201`.
+- El lead temporal usado para el smoke test fue eliminado de D1.
+
 ### Pendiente
 
-- Crear/verificar el dominio `aainsurances.com` en Resend.
-- Crear la API key de Resend y subirla como:
-  ```bash
-  npx wrangler pages secret put RESEND_API_KEY --project-name gifted-grads-events
-  ```
 - Configurar Jotform `261465857224059`:
   - Redirect:
     ```text
@@ -75,17 +105,19 @@ Se cambiaron sólo los imports dentro de `functions/` a rutas relativas (`../../
     ```text
     https://gifted-grads-events.pages.dev/api/jotform/webhook/EL_VALOR_DE_JOTFORM_WEBHOOK_SECRET
     ```
-- Hacer una submission real desde Jotform para validar el flujo end-to-end y el correo de Resend.
+  - Email Notification al organizador desde Jotform.
+  - Autoresponder al usuario desde Jotform, si se quiere confirmación por email.
+- Hacer una submission real desde Jotform para validar el flujo end-to-end.
 - Opcional: conectar el proyecto Pages al repo GitHub desde Cloudflare Dashboard. El proyecto quedó creado por CLI y aparece como `Git Provider: No`, aunque el deploy manual ya está activo.
 
-> Nota de seguridad: `MANAGER_PASSWORD`, `RESEND_API_KEY` y `JOTFORM_WEBHOOK_SECRET` no deben commitearse en este documento. Están o deben estar guardados como secrets en Cloudflare Pages.
+> Nota de seguridad: `MANAGER_PASSWORD` y `JOTFORM_WEBHOOK_SECRET` no deben commitearse en este documento. Están guardados como secrets en Cloudflare Pages.
 
 ---
 
 Pre-requisitos:
 
 - `node` 22+ y `npm` instalados
-- Una cuenta de Cloudflare (gratis sirve), una de Resend y acceso al Jotform `261465857224059`
+- Una cuenta de Cloudflare (gratis sirve) y acceso al Jotform `261465857224059`
 - Estar en la raíz del repo (`gifted-grads/`) y con `main` actualizado:
 
   ```bash
@@ -149,16 +181,23 @@ Debe listar esas tres tablas de aplicación, además de tablas internas de Cloud
 
 ---
 
-## 3 · Verificar dominio en Resend
+## 3 · Configurar emails en Jotform, sin Resend
 
-1. Entra a [Resend](https://resend.com) → **Domains** → añade y verifica `aainsurances.com` (registros DNS que Resend te da).
-2. Si no controlas ese dominio, edita [`wrangler.toml`](./wrangler.toml) y cambia:
-   ```toml
-   RESEND_FROM     = "Born Gifted <noreply@TU-DOMINIO.com>"
-   ORGANIZER_EMAIL = "tu-correo@TU-DOMINIO.com"
-   ```
-   Commit y push.
-3. **API Keys** → crea una key con permisos de envío → guárdala para el paso 5.
+No se usará Resend ni se verificará ningún dominio. Jotform enviará los correos del flujo.
+
+En Jotform `261465857224059`:
+
+1. Ve a **Settings → Emails**.
+2. Crea o edita una **Notification Email** para el organizador.
+   - Recipients: `info@aainsurances.com` o el correo operativo que prefieras.
+   - Subject sugerido: `New Gifted Grads insurance lead`
+   - Incluye los campos `Name`, `Email`, `Number` y `What type of insurance are you interested in?`.
+3. Opcional: crea una **Autoresponder Email** para el usuario.
+   - Recipient: el campo `Email` del formulario.
+   - Subject sugerido: `Thanks for registering`
+   - Mensaje sugerido: confirmar que la solicitud fue recibida y que en la página de confirmación verá su número.
+
+La app no depende de esos emails para funcionar: el webhook de Jotform sigue guardando el lead en D1 y la página `/confirmacion?submission=...` muestra el número asignado.
 
 ---
 
@@ -191,11 +230,10 @@ openssl rand -hex 32
 # copia el output: lo necesitarás en el paso 6
 ```
 
-Después seteá los tres secrets (te pedirán cada valor por stdin):
+Después seteá los dos secrets necesarios (te pedirán cada valor por stdin):
 
 ```bash
 npx wrangler pages secret put MANAGER_PASSWORD       --project-name gifted-grads-events
-npx wrangler pages secret put RESEND_API_KEY         --project-name gifted-grads-events
 npx wrangler pages secret put JOTFORM_WEBHOOK_SECRET --project-name gifted-grads-events
 ```
 
@@ -242,6 +280,7 @@ Redeploy para tomar los secrets y el binding: dashboard → **Deployments → Re
 4. **Haz una submission de prueba**. Si la confirmación tarda más de 10s o no aparece el número:
    - Dashboard Cloudflare → **Pages → gifted-grads-events → Functions → Real-time logs**
    - Busca la línea con `rawKeys` — son las claves que envió Jotform. Compara contra `FIELD_ALIASES`.
+   - Confirma también que Jotform haya enviado la Notification Email al organizador.
 
 ---
 
@@ -250,9 +289,9 @@ Redeploy para tomar los secrets y el binding: dashboard → **Deployments → Re
 - [ ] `https://TU-DOMINIO/` carga con el background del flyer (`/register-bg.png`)
 - [ ] `https://TU-DOMINIO/manager/login` carga con el background gris
 - [ ] Submit del Jotform redirige a `/confirmacion?submission=...` y muestra el número de participante en pocos segundos
-- [ ] Llega el correo a `info@aainsurances.com` (Resend dashboard → Logs)
+- [ ] Llega el correo configurado en **Jotform → Settings → Emails**
 - [ ] Login del manager con `MANAGER_PASSWORD` → ve la submission en `/manager`
-- [ ] Sorteo de rifa: el ganador recibe el email con su número
+- [ ] Sorteo de rifa: selecciona ganador y responde `emailSent: false` si no hay Resend configurado
 
 Healthcheck rápido (sin token, debería responder `401`, no `500`):
 
@@ -288,7 +327,7 @@ npx wrangler d1 migrations apply DB --remote
 
 **Submission no llega a la confirmación** → Webhook mal configurado o secret incorrecto. Revisa **Pages → Functions → Logs** y confirma que la URL coincide con `JOTFORM_WEBHOOK_SECRET`.
 
-**`Resend: domain not verified`** → DNS de Resend pendiente, o `RESEND_FROM` apunta a un dominio que no controlas. Cambia a uno verificado.
+**No llegan emails** → Revisa **Jotform → Settings → Emails**. En modo sin Resend, Cloudflare no envía correos; sólo registra datos y muestra confirmación.
 
 **Login del manager devuelve 401** → `MANAGER_PASSWORD` no seteado como secret o redeploy pendiente tras setearlo.
 
