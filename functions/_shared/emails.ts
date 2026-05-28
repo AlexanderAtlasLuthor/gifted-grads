@@ -69,7 +69,7 @@ function escapeHtml(s: string): string {
 
 function shellHtml(title: string, body: string): string {
   return `<!doctype html>
-<html lang="es">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -118,14 +118,14 @@ export function organizerEmail(attendee: Attendee): {
   html: string;
   text: string;
 } {
-  const subject = `Nuevo lead de seguro #${pad(attendee.participantNumber)} — ${attendee.nombre}`;
+  const subject = `New insurance lead #${pad(attendee.participantNumber)} — ${attendee.nombre}`;
   const rows: Array<[string, string]> = [
-    ['Número', `#${pad(attendee.participantNumber)}`],
-    ['Nombre', attendee.nombre],
+    ['Number', `#${pad(attendee.participantNumber)}`],
+    ['Name', attendee.nombre],
     ['Email', attendee.email],
-    ['Teléfono', attendee.telefono],
-    ['Tipo de seguro', insuranceLabel(attendee.insuranceType)],
-    ['Recibido', new Date(attendee.createdAt).toLocaleString('es', { timeZone: 'UTC' })],
+    ['Phone', attendee.telefono],
+    ['Insurance type', insuranceLabel(attendee.insuranceType)],
+    ['Received', new Date(attendee.createdAt).toLocaleString('en-US', { timeZone: 'UTC' })],
   ];
   const tableRows = rows
     .map(
@@ -135,15 +135,15 @@ export function organizerEmail(attendee: Attendee): {
     .join('');
   const html = shellHtml(
     subject,
-    `<p style="margin:0 0 8px;font-size:13px;color:#f6cf56;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;">Nuevo registro</p>
+    `<p style="margin:0 0 8px;font-size:13px;color:#f6cf56;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;">New registration</p>
      <h1 style="margin:0 0 14px;font-size:28px;line-height:1.1;color:#ffffff;">Lead #${pad(attendee.participantNumber)}</h1>
-     <p style="margin:0 0 18px;font-size:15px;line-height:1.6;color:#cbd5e1;">Llegó una nueva solicitud desde el formulario de Gifted Grads.</p>
+     <p style="margin:0 0 18px;font-size:15px;line-height:1.6;color:#cbd5e1;">A new request came in from the Gifted Grads form.</p>
      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid rgba(255,255,255,0.08);">
        ${tableRows}
      </table>
-     <p style="margin:24px 0 0;font-size:13px;line-height:1.6;color:#94a3b8;">Puedes responder este correo directamente para contactar al lead.</p>`,
+     <p style="margin:24px 0 0;font-size:13px;line-height:1.6;color:#94a3b8;">You can reply directly to this email to contact the lead.</p>`,
   );
-  const text = `Nuevo lead de seguro — Gifted Grads\n\n${rows.map(([k, v]) => `${k}: ${v}`).join('\n')}\n`;
+  const text = `New insurance lead — Gifted Grads\n\n${rows.map(([k, v]) => `${k}: ${v}`).join('\n')}\n`;
   return { subject, html, text };
 }
 
@@ -153,43 +153,43 @@ export function attendeeConfirmationEmail(attendee: Attendee): {
   text: string;
 } {
   const number = `#${pad(attendee.participantNumber)}`;
-  const subject = `Tu número ${number} — Born Gifted`;
+  const subject = `Your number ${number} — Born Gifted`;
   const html = shellHtml(
     subject,
-    `<p style="margin:0 0 8px;font-size:13px;color:#f6cf56;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;">Registro confirmado</p>
-     <h1 style="margin:0 0 14px;font-size:30px;line-height:1.1;color:#ffffff;">¡Gracias, ${escapeHtml(attendee.nombre)}!</h1>
+    `<p style="margin:0 0 8px;font-size:13px;color:#f6cf56;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;">Registration confirmed</p>
+     <h1 style="margin:0 0 14px;font-size:30px;line-height:1.1;color:#ffffff;">Thank you, ${escapeHtml(attendee.nombre)}!</h1>
      <p style="margin:0 0 18px;font-size:15px;line-height:1.6;color:#cbd5e1;">
-       Ya estás registrado para Born Gifted y participando en la rifa del iPad.
+       You are registered for Born Gifted and entered in the iPad raffle.
      </p>
      <div style="border:1px dashed rgba(246,207,86,0.75);background:#172033;padding:20px;border-radius:14px;text-align:center;margin:18px 0 20px;">
-       <div style="font-size:12px;color:#f6cf56;text-transform:uppercase;letter-spacing:0.18em;font-weight:800;">Tu número de participante</div>
+       <div style="font-size:12px;color:#f6cf56;text-transform:uppercase;letter-spacing:0.18em;font-weight:800;">Your participant number</div>
        <div style="font-family:'Courier New',monospace;font-size:42px;line-height:1;font-weight:800;color:#ffffff;margin-top:10px;">${number}</div>
      </div>
      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:8px;">
        <tr>
-         <td style="padding:8px 0;color:#94a3b8;font-size:13px;width:120px;">Evento</td>
+         <td style="padding:8px 0;color:#94a3b8;font-size:13px;width:120px;">Event</td>
          <td style="padding:8px 0;color:#f8fafc;font-size:14px;font-weight:600;">Born Gifted · May 31 · Miami</td>
        </tr>
        <tr>
-         <td style="padding:8px 0;color:#94a3b8;font-size:13px;width:120px;">Lugar</td>
+         <td style="padding:8px 0;color:#94a3b8;font-size:13px;width:120px;">Venue</td>
          <td style="padding:8px 0;color:#f8fafc;font-size:14px;font-weight:600;">Casa Nübe · 2060 NW 1st Ave</td>
        </tr>
      </table>
      <p style="margin:22px 0 0;font-size:14px;line-height:1.6;color:#cbd5e1;">
-       Guarda este número. Si resulta ganador, recibirás otro correo separado con las instrucciones para reclamar el premio.
+       Save this number. If it is selected as the winner, you will receive a separate email with instructions to claim the prize.
      </p>
-     <p style="margin:24px 0 0;font-size:14px;color:#f8fafc;">¡Nos vemos pronto!<br/><span style="color:#94a3b8;">Equipo Gifted Grads</span></p>`,
+     <p style="margin:24px 0 0;font-size:14px;color:#f8fafc;">See you soon!<br/><span style="color:#94a3b8;">Gifted Grads Team</span></p>`,
   );
-  const text = `¡Gracias, ${attendee.nombre}!
+  const text = `Thank you, ${attendee.nombre}!
 
-Ya estás registrado para Born Gifted y participando en la rifa del iPad.
+You are registered for Born Gifted and entered in the iPad raffle.
 
-Tu número de participante: ${number}
+Your participant number: ${number}
 
-Guarda este número. Si resulta ganador, recibirás otro correo separado con las instrucciones para reclamar el premio.
+Save this number. If it is selected as the winner, you will receive a separate email with instructions to claim the prize.
 
-¡Nos vemos pronto!
-Equipo Gifted Grads`;
+See you soon!
+Gifted Grads Team`;
   return { subject, html, text };
 }
 
@@ -199,31 +199,31 @@ export function winnerEmail(attendee: Attendee): {
   text: string;
 } {
   const number = `#${pad(attendee.participantNumber)}`;
-  const subject = `🎉 ¡Ganaste el iPad! — Gifted Grads`;
+  const subject = `🎉 You won the iPad! — Gifted Grads`;
   const html = shellHtml(
     subject,
-    `<p style="margin:0 0 8px;font-size:13px;color:#f6cf56;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;">Rifa del iPad</p>
-     <h1 style="margin:0 0 14px;font-size:30px;line-height:1.1;color:#ffffff;">¡Felicidades, ${escapeHtml(attendee.nombre)}!</h1>
+    `<p style="margin:0 0 8px;font-size:13px;color:#f6cf56;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;">iPad raffle</p>
+     <h1 style="margin:0 0 14px;font-size:30px;line-height:1.1;color:#ffffff;">Congratulations, ${escapeHtml(attendee.nombre)}!</h1>
      <p style="margin:0 0 18px;font-size:15px;line-height:1.6;color:#cbd5e1;">
-       Tu número de participante <strong style="color:#f6cf56;font-family:'Courier New',monospace;">${number}</strong> fue el seleccionado en la rifa.
-       Has ganado un <strong>iPad</strong>.
+       Your participant number <strong style="color:#f6cf56;font-family:'Courier New',monospace;">${number}</strong> was selected in the raffle.
+       You won an <strong>iPad</strong>.
      </p>
      <div style="border:1px dashed rgba(246,207,86,0.75);background:#172033;padding:20px;border-radius:14px;text-align:center;margin:18px 0 20px;">
-       <div style="font-size:12px;color:#f6cf56;text-transform:uppercase;letter-spacing:0.18em;font-weight:800;">Número ganador</div>
+       <div style="font-size:12px;color:#f6cf56;text-transform:uppercase;letter-spacing:0.18em;font-weight:800;">Winning number</div>
        <div style="font-family:'Courier New',monospace;font-size:42px;line-height:1;font-weight:800;color:#ffffff;margin-top:10px;">${number}</div>
      </div>
      <p style="margin:16px 0 0;font-size:14px;line-height:1.6;color:#cbd5e1;">
-       Para reclamar tu premio, responde a este correo con tu nombre completo y un horario disponible para coordinar la entrega.
+       To claim your prize, reply to this email with your full name and an available time to coordinate delivery.
      </p>
-     <p style="margin:24px 0 0;font-size:14px;color:#f8fafc;">¡Nos vemos pronto!<br/><span style="color:#94a3b8;">Equipo Gifted Grads</span></p>`,
+     <p style="margin:24px 0 0;font-size:14px;color:#f8fafc;">See you soon!<br/><span style="color:#94a3b8;">Gifted Grads Team</span></p>`,
   );
-  const text = `¡Felicidades ${attendee.nombre}!
+  const text = `Congratulations ${attendee.nombre}!
 
-Tu número de participante ${number} fue el seleccionado en la rifa. Has ganado un iPad.
+Your participant number ${number} was selected in the raffle. You won an iPad.
 
-Para reclamar tu premio, responde a este correo con tu nombre completo y un horario disponible para coordinar la entrega.
+To claim your prize, reply to this email with your full name and an available time to coordinate delivery.
 
-¡Nos vemos pronto!
-Equipo Gifted Grads`;
+See you soon!
+Gifted Grads Team`;
   return { subject, html, text };
 }
