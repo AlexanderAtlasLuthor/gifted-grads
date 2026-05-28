@@ -6,7 +6,10 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="glass-rail grain-on relative border-t">
+    <footer
+      className="glass-rail grain-on relative border-t"
+      style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
+    >
       <div className="relative z-10 mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-4 text-[10px] uppercase tracking-[0.28em] text-ink-100/60 sm:flex-row sm:gap-6 sm:px-6 sm:py-5 sm:text-[11px] sm:tracking-[0.32em]">
         <div>
           ©{' '}
