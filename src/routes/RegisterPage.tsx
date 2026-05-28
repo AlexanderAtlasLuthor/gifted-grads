@@ -1,5 +1,5 @@
 import { useTranslation } from '../i18n/I18nProvider';
-import { JotformEmbed } from '../components/JotformEmbed';
+import { RegisterForm } from '../components/RegisterForm';
 import { PaperPlane, Sparkle, SunBurst } from '../components/decorations';
 
 export function RegisterPage() {
@@ -45,7 +45,7 @@ export function RegisterPage() {
                 {t('register.formPill')}
               </div>
             </div>
-            <JotformEmbed />
+            <RegisterForm />
             <div className="mt-auto pt-6">
               <div className="rounded-2xl border border-brand-100 bg-brand-50 px-4 py-3 text-sm leading-6 text-brand-900">
                 <div className="mb-1 flex items-center gap-2 font-semibold">
