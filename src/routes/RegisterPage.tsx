@@ -21,8 +21,8 @@ export function RegisterPage() {
             src="/register-bg.png"
             alt=""
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 h-full w-full object-cover lg:object-fill"
-            style={{ objectPosition: '50% 50%' }}
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+            style={{ objectPosition: '50% 56%' }}
           />
           {/* Grain overlay. */}
           <div className="pointer-events-none absolute inset-0 grain-on opacity-70" />
@@ -37,7 +37,7 @@ export function RegisterPage() {
 
           <div className="relative z-10 grid h-full content-between gap-6 px-4 py-6 text-white sm:px-6 sm:py-8 lg:grid-cols-[0.82fr_1fr_0.82fr] lg:content-normal lg:px-10">
             {/* Left rail */}
-            <div className="space-y-4 sm:space-y-5">
+            <div className="space-y-4 pt-4 sm:space-y-5 sm:pt-5 lg:pt-8 xl:pt-10">
               <div>
                 <p className="font-display text-[clamp(3.4rem,18vw,5.8rem)] uppercase leading-[0.82] text-white drop-shadow-[0_4px_30px_rgba(0,0,0,0.65)] lg:text-[clamp(3.2rem,8vw,5.8rem)]">
                   May 31<span className="align-super text-[0.42em]">st</span>
@@ -56,7 +56,7 @@ export function RegisterPage() {
             </div>
 
             {/* Centre title */}
-            <div className="flex flex-col items-center justify-center pb-16 text-center sm:pb-20 lg:min-h-[30rem] lg:pb-0">
+            <div className="flex translate-y-4 flex-col items-center justify-center pb-16 text-center sm:translate-y-6 sm:pb-20 lg:min-h-[30rem] lg:translate-y-8 lg:pb-0">
               <span className="pill-accent">
                 <Bolt className="h-3.5 w-3.5" />
                 {t('hero.eyebrow')}
@@ -87,7 +87,7 @@ export function RegisterPage() {
             </div>
 
             {/* Right rail */}
-            <div className="hidden flex-col justify-between gap-10 text-left lg:flex lg:text-right">
+            <div className="hidden flex-col justify-between gap-10 pt-7 text-left lg:flex lg:text-right xl:pt-9">
               <div>
                 <p className="text-sm uppercase tracking-[0.35em] text-[#F4F7FA]/85">
                   {t('hero.brought.line1')}
