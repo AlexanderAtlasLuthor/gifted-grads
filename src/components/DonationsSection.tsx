@@ -64,31 +64,42 @@ export function DonationsSection({ compact = false }: { compact?: boolean }) {
   return (
     <section
       id="donate"
-      className="glass-card grain-on relative scroll-mt-24 overflow-hidden p-6 sm:p-7 lg:p-8"
+      className="glass-card grain-on relative flex h-full scroll-mt-24 flex-col overflow-hidden bg-ink-950/80 p-5 shadow-[0_24px_80px_rgba(0,0,0,0.4)] sm:p-7 lg:p-8"
     >
-      <div className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-accent-300/10 blur-3xl" />
-      <div className="relative">
-        <span className="eyebrow text-accent-300">{t('donate.eyebrow')}</span>
-        <h3
-          className={
-            compact
-              ? 'event-title mt-3 text-2xl sm:text-3xl'
-              : 'event-title mt-3 text-3xl sm:text-4xl'
-          }
-        >
-          {t('donate.headline')}
-        </h3>
-        {!compact && (
-          <p className="mt-3 max-w-md text-sm leading-6 text-ink-100/80">
-            {t('donate.subtitle')}
-          </p>
-        )}
+      <div className="pointer-events-none absolute -right-12 -top-12 h-44 w-44 rounded-full bg-accent-300/10 blur-3xl" />
+
+      {/* Header — same border-b + eyebrow + headline + pill pattern that
+          the Information form uses, so the two cards read as siblings. */}
+      <div className="relative mb-6 border-b border-white/10 pb-5">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <p className="eyebrow text-accent-300">{t('donate.eyebrow')}</p>
+            <h2
+              className={
+                compact
+                  ? 'mt-2 font-display text-2xl uppercase tracking-wide text-white sm:text-3xl'
+                  : 'mt-2 font-display text-3xl uppercase tracking-wide text-white sm:text-5xl'
+              }
+            >
+              {t('donate.headline')}
+            </h2>
+            {!compact && (
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-[#8FA9C4]">
+                {t('donate.subtitle')}
+              </p>
+            )}
+          </div>
+          <div className="pill-accent">
+            <HeartIcon className="h-4 w-4" />
+            {t('donate.pill')}
+          </div>
+        </div>
       </div>
 
-      {errorMessage && <ErrorBanner className="mt-5" message={errorMessage} />}
+      {errorMessage && <ErrorBanner className="relative mb-4" message={errorMessage} />}
 
       {/* Preset chips */}
-      <div className="relative mt-6 grid grid-cols-3 gap-2">
+      <div className="relative grid grid-cols-3 gap-2">
         {PRESETS_CENTS.map((cents) => {
           const active = selected === cents;
           return (
@@ -102,6 +113,7 @@ export function DonationsSection({ compact = false }: { compact?: boolean }) {
                   ? 'border-accent-300 bg-accent-300/15 text-accent-100'
                   : 'border-white/15 bg-white/5 text-white hover:border-accent-300/60 hover:bg-white/[0.08]')
               }
+              aria-pressed={active}
             >
               {formatCurrency(cents, 'usd', locale === 'es' ? 'es' : 'en-US')}
             </button>
@@ -122,7 +134,7 @@ export function DonationsSection({ compact = false }: { compact?: boolean }) {
           }
           aria-pressed={selected === 'custom'}
         >
-          <span className="text-sm font-semibold uppercase tracking-widest text-ink-100/80">
+          <span className="text-[11px] font-semibold uppercase tracking-[0.25em] text-ink-100/70">
             {t('donate.custom')}
           </span>
           <span className="text-ink-100/40">$</span>
@@ -182,7 +194,7 @@ export function DonationsSection({ compact = false }: { compact?: boolean }) {
           </>
         ) : (
           <>
-            <HeartIcon /> {t('donate.cta')}
+            <HeartIcon className="h-5 w-5" /> {t('donate.cta')}
           </>
         )}
       </button>
@@ -194,9 +206,9 @@ export function DonationsSection({ compact = false }: { compact?: boolean }) {
   );
 }
 
-function HeartIcon() {
+function HeartIcon({ className = 'h-5 w-5' }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
+    <svg viewBox="0 0 24 24" className={className} fill="currentColor">
       <path d="M12 21s-7-4.35-9-9.5C1.5 7 5 4 8 4c2 0 3 1 4 2 1-1 2-2 4-2 3 0 6.5 3 5 7.5C19 16.65 12 21 12 21z" />
     </svg>
   );

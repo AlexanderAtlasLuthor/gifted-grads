@@ -149,6 +149,7 @@
   "raffle.confirm.manual": "¿Confirmas seleccionar manualmente el número #{number}?",
 
   "donate.eyebrow": "Apoya a Born Gifted",
+  "donate.pill": "100% seguro · Stripe",
   "donate.headline": "Ayúdanos a alcanzar la meta",
   "donate.subtitle": "Cada dólar financia la exhibición Born Gifted, becas y mentorías para la próxima generación de jóvenes con talento.",
   "donate.custom": "Otro monto",
