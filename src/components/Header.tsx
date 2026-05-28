@@ -27,7 +27,7 @@ export function Header() {
         <div className="flex shrink-0 items-center gap-2 sm:gap-3">
           <LanguageToggle />
           <RegistrationQrButton />
-          {onManager && authed ? (
+          {onManager && authed && (
             <button
               type="button"
               onClick={logout}
@@ -35,10 +35,6 @@ export function Header() {
             >
               {t('nav.logout')}
             </button>
-          ) : (
-            <Link to="/manager/login" className="btn-secondary px-3 text-xs sm:px-5">
-              {t('nav.login')}
-            </Link>
           )}
         </div>
       </div>
