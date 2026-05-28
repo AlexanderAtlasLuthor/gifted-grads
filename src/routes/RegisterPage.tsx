@@ -177,12 +177,14 @@ export function RegisterPage() {
             <RegisterForm />
 
             <div className="mt-auto pt-6">
-              <div className="rounded-2xl border border-white/10 bg-ink-900/60 px-4 py-3 text-sm leading-6 text-ink-100/90">
-                <div className="mb-1 flex items-center gap-2 font-display text-base uppercase tracking-wider text-sky-300">
+              <div className="rounded-2xl border border-white/10 bg-ink-900/60 px-4 py-3">
+                <div className="mb-2 flex items-center gap-2 font-display text-base uppercase tracking-wider text-sky-300">
                   <InfoIcon />
                   {t('register.disclaimer.title')}
                 </div>
-                <p className="text-ink-100/80">{t('register.disclaimer.body')}</p>
+                <p className="text-[10.5px] leading-[1.45] text-ink-100/70">
+                  {t('register.disclaimer.body')}
+                </p>
               </div>
             </div>
           </div>
