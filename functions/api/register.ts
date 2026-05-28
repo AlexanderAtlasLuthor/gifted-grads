@@ -4,7 +4,11 @@
 import { registerSchema } from '../../shared/schemas';
 import { error, json } from '../_shared/responses';
 import { insertAttendee } from '../_shared/attendees';
-import { organizerEmail, sendResendEmail } from '../_shared/emails';
+import {
+  attendeeConfirmationEmail,
+  organizerEmail,
+  sendResendEmail,
+} from '../_shared/emails';
 
 type Env = {
   DB: D1Database;
@@ -32,18 +36,35 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
 
   const attendee = result.attendee;
 
-  if (ctx.env.RESEND_API_KEY && ctx.env.RESEND_FROM && ctx.env.ORGANIZER_EMAIL) {
-    const { subject, html, text } = organizerEmail(attendee);
-    ctx.waitUntil(
+  if (ctx.env.RESEND_API_KEY && ctx.env.RESEND_FROM) {
+    const attendeeEmail = attendeeConfirmationEmail(attendee);
+    const emailJobs = [
       sendResendEmail({
         apiKey: ctx.env.RESEND_API_KEY,
         from: ctx.env.RESEND_FROM,
-        to: ctx.env.ORGANIZER_EMAIL,
-        subject,
-        html,
-        text,
+        to: attendee.email,
+        subject: attendeeEmail.subject,
+        html: attendeeEmail.html,
+        text: attendeeEmail.text,
       }),
-    );
+    ];
+
+    if (ctx.env.ORGANIZER_EMAIL) {
+      const organizer = organizerEmail(attendee);
+      emailJobs.push(
+        sendResendEmail({
+          apiKey: ctx.env.RESEND_API_KEY,
+          from: ctx.env.RESEND_FROM,
+          to: ctx.env.ORGANIZER_EMAIL,
+          subject: organizer.subject,
+          html: organizer.html,
+          text: organizer.text,
+          replyTo: attendee.email,
+        }),
+      );
+    }
+
+    ctx.waitUntil(Promise.all(emailJobs));
   }
 
   return json(201, {
