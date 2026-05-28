@@ -54,6 +54,13 @@
   "register.submitting": "Sending...",
   "register.error.generic": "Could not submit the request. Try again.",
   "register.error.email_exists": "This email is already registered.",
+  "register.error.email_invalid": "Enter a valid email address (must include @).",
+  "register.error.email_too_long": "Email address is too long.",
+  "register.error.name_too_short": "Enter your full name.",
+  "register.error.name_too_long": "Name is too long.",
+  "register.error.phone_invalid_chars": "Phone can only contain digits, spaces and + - ( ) characters.",
+  "register.error.phone_min_10_digits": "Phone number must have at least 10 digits.",
+  "register.error.phone_too_long": "Phone number is too long.",
   "register.error.validation": "Please check the form data.",
 
   "insurance.AUTO": "Auto insurance",

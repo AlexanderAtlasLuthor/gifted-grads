@@ -54,6 +54,13 @@
   "register.submitting": "Enviando...",
   "register.error.generic": "Hubo un error al enviar. Intenta nuevamente.",
   "register.error.email_exists": "Este correo ya está registrado.",
+  "register.error.email_invalid": "Ingresa un correo válido (debe incluir @).",
+  "register.error.email_too_long": "El correo electrónico es demasiado largo.",
+  "register.error.name_too_short": "Ingresa tu nombre completo.",
+  "register.error.name_too_long": "El nombre es demasiado largo.",
+  "register.error.phone_invalid_chars": "El teléfono solo puede contener dígitos, espacios y los caracteres + - ( ).",
+  "register.error.phone_min_10_digits": "El teléfono debe tener al menos 10 dígitos.",
+  "register.error.phone_too_long": "El teléfono es demasiado largo.",
   "register.error.validation": "Por favor revisa los datos del formulario.",
 
   "insurance.AUTO": "Auto insurance",

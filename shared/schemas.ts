@@ -3,14 +3,23 @@ import { z } from 'zod';
 export const insuranceTypeSchema = z.enum(['AUTO', 'HOME', 'COMMERCIAL', 'RENTERS']);
 
 export const registerSchema = z.object({
-  nombre: z.string().trim().min(2).max(120),
-  email: z.string().trim().toLowerCase().email().max(160),
+  nombre: z.string().trim().min(2, 'name_too_short').max(120, 'name_too_long'),
+  email: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .min(5, 'email_invalid')
+    .max(160, 'email_too_long')
+    .email('email_invalid'),
   telefono: z
     .string()
     .trim()
-    .min(7)
-    .max(20)
-    .regex(/^[0-9+\-\s()]+$/, 'invalid_phone'),
+    .max(20, 'phone_too_long')
+    .regex(/^[0-9+\-\s().]*$/, 'phone_invalid_chars')
+    .refine(
+      (v) => v.replace(/\D/g, '').length >= 10,
+      'phone_min_10_digits',
+    ),
   insuranceType: insuranceTypeSchema,
 });
 

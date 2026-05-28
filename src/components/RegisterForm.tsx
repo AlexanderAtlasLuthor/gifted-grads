@@ -19,10 +19,11 @@ export function RegisterForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isValid },
     setError,
   } = useForm<RegisterInput>({
     resolver: zodResolver(registerSchema),
+    mode: 'onChange',
     defaultValues: {
       nombre: '',
       email: '',
@@ -64,41 +65,73 @@ export function RegisterForm() {
         ? t('register.error.generic')
         : null;
 
+  // A zod refine/regex message looks like `phone_min_10_digits`. Try to
+  // resolve it against the i18n dictionary; fall back to the raw string.
+  function translateError(message: string | undefined): string | undefined {
+    if (!message) return undefined;
+    const key = `register.error.${message}`;
+    const translated = t(key);
+    return translated === key ? message : translated;
+  }
+
+  const submitDisabled =
+    isSubmitting || mutation.isPending || !isValid;
+
   return (
     <form className="space-y-5" onSubmit={handleSubmit(onSubmit)} noValidate>
       {apiError && <ErrorBanner message={apiError} />}
 
       <div className="grid gap-x-5 gap-y-4 sm:grid-cols-2">
-        <Field label={t('register.field.nombre')} error={errors.nombre?.message} htmlFor="nombre">
+        <Field
+          label={t('register.field.nombre')}
+          error={translateError(errors.nombre?.message)}
+          htmlFor="nombre"
+        >
           <input
             id="nombre"
             className="input h-11 rounded-lg"
             placeholder={t('register.placeholder.nombre')}
+            autoComplete="name"
             {...register('nombre')}
           />
         </Field>
-        <Field label={t('register.field.email')} error={errors.email?.message} htmlFor="email">
+        <Field
+          label={t('register.field.email')}
+          error={translateError(errors.email?.message)}
+          htmlFor="email"
+        >
           <input
             id="email"
             type="email"
             autoComplete="email"
+            inputMode="email"
             className="input h-11 rounded-lg"
             placeholder={t('register.placeholder.email')}
             {...register('email')}
           />
         </Field>
 
-        <Field label={t('register.field.telefono')} error={errors.telefono?.message} htmlFor="telefono">
+        <Field
+          label={t('register.field.telefono')}
+          error={translateError(errors.telefono?.message)}
+          htmlFor="telefono"
+        >
           <input
             id="telefono"
+            type="tel"
             inputMode="tel"
             autoComplete="tel"
             className="input h-11 rounded-lg"
             placeholder={t('register.placeholder.telefono')}
+            maxLength={20}
             {...register('telefono')}
           />
         </Field>
-        <Field label={t('register.field.insuranceType')} htmlFor="insuranceType">
+        <Field
+          label={t('register.field.insuranceType')}
+          error={translateError(errors.insuranceType?.message)}
+          htmlFor="insuranceType"
+        >
           <select id="insuranceType" className="input h-11 rounded-lg" {...register('insuranceType')}>
             {insuranceTypes.map((it) => (
               <option key={it} value={it}>
@@ -112,7 +145,8 @@ export function RegisterForm() {
       <button
         type="submit"
         className="btn-primary w-full mt-2 py-3 text-base"
-        disabled={isSubmitting || mutation.isPending}
+        disabled={submitDisabled}
+        aria-disabled={submitDisabled}
       >
         {mutation.isPending || isSubmitting ? (
           <>

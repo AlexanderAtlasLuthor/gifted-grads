@@ -25,10 +25,50 @@ describe('registerSchema', () => {
     ).toThrow();
   });
 
+  it('rejects emails without @', () => {
+    expect(() =>
+      registerSchema.parse({ ...validRegister, email: 'noemail.example.com' }),
+    ).toThrow();
+  });
+
+  it('rejects emails without a domain', () => {
+    expect(() =>
+      registerSchema.parse({ ...validRegister, email: 'a@' }),
+    ).toThrow();
+  });
+
   it('rejects phone numbers with letters', () => {
     expect(() =>
       registerSchema.parse({ ...validRegister, telefono: 'abc-123' }),
     ).toThrow();
+  });
+
+  it('rejects phones with fewer than 10 digits even if length passes', () => {
+    // 7 digits with dashes = 8 chars total — old rule let this pass.
+    expect(() =>
+      registerSchema.parse({ ...validRegister, telefono: '555-1234' }),
+    ).toThrow();
+  });
+
+  it('rejects a single-digit phone', () => {
+    expect(() =>
+      registerSchema.parse({ ...validRegister, telefono: '5' }),
+    ).toThrow();
+  });
+
+  it('accepts a 10-digit phone with no formatting', () => {
+    const parsed = registerSchema.parse({ ...validRegister, telefono: '5551234567' });
+    expect(parsed.telefono).toBe('5551234567');
+  });
+
+  it('accepts a 10-digit phone with spaces and parens', () => {
+    const parsed = registerSchema.parse({ ...validRegister, telefono: '(555) 123-4567' });
+    expect(parsed.telefono).toBe('(555) 123-4567');
+  });
+
+  it('accepts an 11-digit phone with country code', () => {
+    const parsed = registerSchema.parse({ ...validRegister, telefono: '+1 555 123 4567' });
+    expect(parsed.telefono).toBe('+1 555 123 4567');
   });
 
   it('rejects unknown insurance types', () => {
