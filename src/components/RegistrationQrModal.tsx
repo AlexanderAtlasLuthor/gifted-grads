@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from 'react';
 import QRCode from 'qrcode';
 import { useTranslation } from '../i18n/I18nProvider';
 import { Bolt } from './decorations';
-import { Logo } from './Logo';
 
 export function RegistrationQrButton() {
   const { t } = useTranslation();
@@ -62,14 +61,14 @@ function RegistrationQrModal({ onClose }: { onClose: () => void }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-ink-950/90 p-4 backdrop-blur-md sm:items-center"
+      className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-ink-950/90 p-4 backdrop-blur-md"
       role="dialog"
       aria-modal="true"
       aria-labelledby="registration-qr-title"
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-sm overflow-hidden rounded-3xl border border-white/10 bg-ink-950 shadow-[0_24px_80px_rgba(0,0,0,0.6)]"
+        className="relative my-auto w-full max-w-sm overflow-hidden rounded-3xl border border-white/10 bg-ink-950 shadow-[0_24px_80px_rgba(0,0,0,0.6)]"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -92,22 +91,21 @@ function RegistrationQrModal({ onClose }: { onClose: () => void }) {
           </svg>
         </button>
 
-        <div className="border-b border-white/10 bg-ink-950 px-5 pb-4 pt-5">
-          <Logo showText={false} />
-          <div className="mt-3 inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.35em] text-accent-300">
+        <div className="border-b border-white/10 bg-ink-950 px-5 pb-3 pt-4 pr-14">
+          <div className="inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.35em] text-accent-300">
             <Bolt className="h-3.5 w-3.5" />
             Born Gifted
           </div>
           <h2
             id="registration-qr-title"
-            className="mt-1.5 font-display text-2xl uppercase tracking-wide text-white"
+            className="mt-1 font-display text-xl uppercase tracking-wide text-white"
           >
             {t('qr.title')}
           </h2>
         </div>
 
-        <div className="bg-ink-950 px-5 pb-5 pt-4">
-          <div className="mx-auto w-full max-w-[260px] rounded-2xl bg-white p-3 shadow-[0_18px_50px_rgba(0,0,0,0.45)]">
+        <div className="bg-ink-950 px-5 pb-4 pt-4">
+          <div className="mx-auto w-full max-w-[220px] rounded-2xl bg-white p-2.5 shadow-[0_18px_50px_rgba(0,0,0,0.45)]">
             {qrSrc ? (
               <img
                 src={qrSrc}
@@ -122,18 +120,18 @@ function RegistrationQrModal({ onClose }: { onClose: () => void }) {
             )}
           </div>
 
-          <p className="mt-4 text-center text-sm leading-6 text-ink-100/80">
+          <p className="mt-3 text-center text-xs leading-5 text-ink-100/80">
             {t('qr.subtitle')}
           </p>
           <a
             href={registrationUrl}
-            className="mt-3 block truncate rounded-xl border border-white/10 bg-ink-900 px-4 py-2.5 text-center text-xs font-semibold text-sky-200 transition hover:bg-white/10"
+            className="mt-3 block truncate rounded-xl border border-white/10 bg-ink-900 px-4 py-2 text-center text-[11px] font-semibold text-sky-200 transition hover:bg-white/10"
           >
             {registrationUrl}
           </a>
           <button
             type="button"
-            className="mt-3 w-full rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-xs font-semibold uppercase tracking-widest text-white transition hover:bg-white/10"
+            className="mt-3 w-full rounded-xl border border-white/15 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition hover:bg-white/10"
             onClick={onClose}
           >
             {t('qr.close')}
