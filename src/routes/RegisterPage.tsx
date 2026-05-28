@@ -121,14 +121,14 @@ export function RegisterPage() {
               so the cut between the two sections feels like one continuous
               scene instead of a hard edge. */}
           <div
-            className="pointer-events-none absolute inset-x-0 top-0 z-[1] h-56 sm:h-72"
+            className="pointer-events-none absolute inset-x-0 top-0 z-[1] h-[28rem] sm:h-[34rem]"
             style={{
               backgroundImage:
-                'linear-gradient(to bottom, #070d1c 0%, rgba(7,13,28,0.92) 28%, rgba(7,13,28,0.55) 62%, rgba(7,13,28,0) 100%)',
+                'linear-gradient(to bottom, #070d1c 0%, #070d1c 22%, rgba(7,13,28,0.96) 45%, rgba(7,13,28,0.75) 65%, rgba(7,13,28,0.4) 85%, rgba(7,13,28,0) 100%)',
             }}
           />
           {/* Background darkening so the cards stay legible over the bricks. */}
-          <div className="pointer-events-none absolute inset-0 z-[1] bg-[linear-gradient(rgba(0,0,0,0.28),rgba(0,0,0,0.18))]" />
+          <div className="pointer-events-none absolute inset-0 z-[1] bg-[linear-gradient(rgba(0,0,0,0.42),rgba(0,0,0,0.28))]" />
           {/* Bottom fade — softens the transition into the glass-rail footer. */}
           <div
             className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-40"
