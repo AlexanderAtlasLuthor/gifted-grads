@@ -54,7 +54,7 @@ export function RegisterPage() {
             </div>
 
             {/* Centre title */}
-            <div className="flex flex-col items-center justify-center text-center lg:min-h-[30rem] lg:translate-y-8 lg:pb-0">
+            <div className="flex -translate-y-20 flex-col items-center justify-center text-center lg:min-h-[30rem] lg:translate-y-8 lg:pb-0">
               <span className="pill-accent">
                 <Bolt className="h-3.5 w-3.5" />
                 {t('hero.eyebrow')}
