@@ -24,7 +24,7 @@ export function Header() {
     >
       <div className="relative z-10 mx-auto flex max-w-7xl items-center justify-between gap-3 px-3 py-3 sm:gap-6 sm:px-6 sm:py-4">
         <Link to="/" className="flex min-w-0 items-center" aria-label="Born Gifted · Gifted Grads">
-          <Logo compactOnMobile />
+          <Logo />
         </Link>
 
         <div className="flex shrink-0 items-center gap-2 sm:gap-3">

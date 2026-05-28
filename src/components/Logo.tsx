@@ -3,15 +3,13 @@ import clsx from 'clsx';
 export function Logo({
   className,
   showText = true,
-  compactOnMobile = false,
 }: {
   className?: string;
   showText?: boolean;
-  compactOnMobile?: boolean;
 }) {
   return (
-    <div className={clsx('flex items-center gap-3', className)}>
-      <div className="grid place-items-center">
+    <div className={clsx('flex min-w-0 items-center gap-2 sm:gap-3', className)}>
+      <div className="grid shrink-0 place-items-center">
         <img
           src="/logo.png"
           alt="Gifted Grads"
@@ -20,16 +18,14 @@ export function Logo({
         />
       </div>
       {showText && (
-        <div
-          className={clsx(
-            'flex-col leading-tight',
-            compactOnMobile ? 'hidden sm:flex' : 'flex',
-          )}
-        >
-          <span className="font-display text-xs uppercase tracking-widest text-accent-300">
+        <div className="flex min-w-0 flex-col leading-tight">
+          {/* On mobile the type shrinks and the tracking tightens so
+              "Gifted Grads · Events" still fits next to the language
+              toggle + QR pill on a 390px-wide iPhone. */}
+          <span className="font-display text-[11px] uppercase tracking-[0.12em] text-accent-300 sm:text-xs sm:tracking-widest">
             Born Gifted
           </span>
-          <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-ink-200/80">
+          <span className="truncate text-[9px] font-semibold uppercase tracking-[0.14em] text-ink-200/80 sm:text-[10px] sm:tracking-[0.3em]">
             Gifted Grads · Events
           </span>
         </div>
