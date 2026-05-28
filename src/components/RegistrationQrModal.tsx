@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { createPortal } from 'react-dom';
 import QRCode from 'qrcode';
 import { useTranslation } from '../i18n/I18nProvider';
 import { Bolt } from './decorations';
@@ -59,7 +60,9 @@ function RegistrationQrModal({ onClose }: { onClose: () => void }) {
     return () => document.removeEventListener('keydown', onKey);
   }, [onClose]);
 
-  return (
+  if (typeof document === 'undefined') return null;
+
+  return createPortal(
     <div
       className="fixed inset-0 z-[9999] flex items-center justify-center overflow-y-auto bg-ink-950/90 p-4 backdrop-blur-md"
       role="dialog"
@@ -138,6 +141,7 @@ function RegistrationQrModal({ onClose }: { onClose: () => void }) {
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

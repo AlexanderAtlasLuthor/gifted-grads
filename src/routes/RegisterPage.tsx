@@ -9,7 +9,7 @@ export function RegisterPage() {
       {/* Glow overlays — top sky-glow and an off-screen cyan ember. */}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-[46rem] bg-[radial-gradient(circle_at_50%_26%,rgba(4,8,19,0.65),transparent_42%)]" />
 
-      <div className="relative mx-auto w-full pb-12 lg:pb-16">
+      <div className="relative mx-auto w-full">
         {/* =========================================================
             HERO — sphere, flyer photo, big title
             ========================================================= */}
@@ -115,8 +115,9 @@ export function RegisterPage() {
             ========================================================= */}
         <section
           id="registration"
-          className="relative z-20 mx-auto mt-12 grid w-full max-w-[108rem] items-stretch gap-6 overflow-hidden rounded-[2rem] bg-[linear-gradient(rgba(0,0,0,0.24),rgba(0,0,0,0.14)),url('/formbackground.jpg')] bg-cover bg-center bg-no-repeat px-4 py-6 sm:px-6 lg:grid-cols-2 lg:px-10 lg:py-8"
+          className="relative z-20 w-full bg-[linear-gradient(rgba(0,0,0,0.24),rgba(0,0,0,0.14)),url('/formbackground.jpg')] bg-cover bg-center bg-no-repeat px-4 py-12 sm:px-6 lg:px-10 lg:py-16"
         >
+          <div className="mx-auto grid w-full max-w-[108rem] items-stretch gap-6 lg:grid-cols-2">
           <div className="glass-card grain-on relative flex h-full flex-col bg-ink-950/75 p-5 shadow-[0_24px_80px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-7 lg:p-8">
 
             <div className="mb-6 border-b border-white/10 pb-5">
@@ -182,6 +183,7 @@ export function RegisterPage() {
               </div>
             </div>
           </aside>
+          </div>
         </section>
       </div>
     </div>
