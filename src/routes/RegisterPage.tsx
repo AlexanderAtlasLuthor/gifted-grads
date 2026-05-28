@@ -115,9 +115,30 @@ export function RegisterPage() {
             ========================================================= */}
         <section
           id="registration"
-          className="relative z-20 w-full bg-[linear-gradient(rgba(0,0,0,0.24),rgba(0,0,0,0.14)),url('/formbackground.jpg')] bg-cover bg-center bg-no-repeat px-4 py-12 sm:px-6 lg:px-10 lg:py-16"
+          className="relative z-20 w-full overflow-hidden bg-[url('/formbackground.jpg')] bg-cover bg-center bg-no-repeat px-4 py-16 sm:px-6 sm:py-20 lg:px-10 lg:py-24"
         >
-          <div className="mx-auto grid w-full max-w-[108rem] items-stretch gap-6 lg:grid-cols-2">
+          {/* Top fade — bleeds the hero's ink-950 bottom into the brick texture
+              so the cut between the two sections feels like one continuous
+              scene instead of a hard edge. */}
+          <div
+            className="pointer-events-none absolute inset-x-0 top-0 z-[1] h-56 sm:h-72"
+            style={{
+              backgroundImage:
+                'linear-gradient(to bottom, #070d1c 0%, rgba(7,13,28,0.92) 28%, rgba(7,13,28,0.55) 62%, rgba(7,13,28,0) 100%)',
+            }}
+          />
+          {/* Background darkening so the cards stay legible over the bricks. */}
+          <div className="pointer-events-none absolute inset-0 z-[1] bg-[linear-gradient(rgba(0,0,0,0.28),rgba(0,0,0,0.18))]" />
+          {/* Bottom fade — softens the transition into the glass-rail footer. */}
+          <div
+            className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-40"
+            style={{
+              backgroundImage:
+                'linear-gradient(to top, #070d1c 0%, rgba(7,13,28,0.5) 55%, rgba(7,13,28,0) 100%)',
+            }}
+          />
+
+          <div className="relative z-[2] mx-auto grid w-full max-w-[108rem] items-stretch gap-6 lg:grid-cols-2">
           <aside className="glass-card grain-on relative flex h-full flex-col overflow-hidden p-6 sm:p-7 lg:p-8">
             <div className="pointer-events-none absolute -right-16 -top-16 h-52 w-52 rounded-full bg-white/5 blur-3xl" />
             <div className="pointer-events-none absolute -bottom-24 left-6 h-60 w-60 rounded-full bg-white/5 blur-3xl" />
