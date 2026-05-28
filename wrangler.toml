@@ -29,5 +29,5 @@ JOTFORM_ALLOWED_FORM_IDS = "261465857224059"
 [[d1_databases]]
 binding = "DB"
 database_name = "gifted-grads"
-database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+database_id = "1f16d1ab-b12f-4f1a-98af-4bfef669537d"
 migrations_dir = "migrations"
