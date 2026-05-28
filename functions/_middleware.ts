@@ -10,6 +10,7 @@ const PROTECTED_PREFIXES = [
   '/api/attendees',
   '/api/metrics',
   '/api/raffle/',
+  '/api/donations/summary',
 ];
 
 function isProtected(pathname: string): boolean {

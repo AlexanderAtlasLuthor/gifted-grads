@@ -1,5 +1,6 @@
 import { useTranslation } from '../i18n/I18nProvider';
 import { RegisterForm } from '../components/RegisterForm';
+import { DonationsSection } from '../components/DonationsSection';
 import { Bolt } from '../components/decorations';
 
 export function RegisterPage() {
@@ -209,6 +210,13 @@ export function RegisterPage() {
               </div>
             </div>
           </div>
+          </div>
+
+          {/* Donations section — sits inside the registration backdrop so
+              it inherits the brick texture + the bottom fade into the
+              footer. Single-column on mobile, capped width on desktop. */}
+          <div className="relative z-[2] mx-auto mt-8 w-full max-w-3xl">
+            <DonationsSection />
           </div>
         </section>
       </div>

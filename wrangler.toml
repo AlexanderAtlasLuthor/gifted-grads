@@ -25,6 +25,14 @@ pages_build_output_dir = "dist"
 RESEND_FROM = "Gifted Grads <onboarding@resend.dev>"
 ORGANIZER_EMAIL = "info@aainsurances.com"
 
+# Donations — Stripe currency + dashboard goal. Adjust without redeploy
+# from the Cloudflare Pages → Settings → Environment variables UI.
+DONATION_CURRENCY = "usd"
+DONATION_GOAL_CENTS = "500000"
+# Absolute base URL used to build Stripe redirect URLs. Falls back to
+# the request origin when empty (good for preview / local dev).
+PUBLIC_BASE_URL = ""
+
 # D1 binding. Replace `database_id` with the id printed by:
 #   npx wrangler d1 create gifted-grads
 [[d1_databases]]

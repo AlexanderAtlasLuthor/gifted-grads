@@ -69,6 +69,48 @@ export interface CurrentRaffleResponse {
   drawnAt: string;
 }
 
+export type DonationStatus = 'pending' | 'succeeded' | 'refunded' | 'failed';
+
+export interface Donation {
+  id: string;
+  amountCents: number;
+  currency: string;
+  donorName?: string;
+  donorEmail?: string;
+  message?: string;
+  status: DonationStatus;
+  createdAt: string;
+  succeededAt?: string;
+}
+
+export interface DonationCreateRequest {
+  amountCents: number;
+  donorName?: string;
+  donorEmail?: string;
+  message?: string;
+}
+
+export interface DonationCreateResponse {
+  checkoutUrl: string;
+  sessionId: string;
+}
+
+export interface DonationSummary {
+  totalCents: number;
+  goalCents: number;
+  count: number;
+  currency: string;
+  recent: Donation[];
+  updatedAt: string;
+}
+
+export interface DonationLookupResponse {
+  amountCents: number;
+  currency: string;
+  donorName?: string;
+  status: DonationStatus;
+}
+
 export type ApiErrorCode =
   | 'VALIDATION_ERROR'
   | 'EMAIL_EXISTS'
@@ -79,6 +121,7 @@ export type ApiErrorCode =
   | 'NO_ATTENDEES'
   | 'RAFFLE_ALREADY_DRAWN'
   | 'RATE_LIMIT'
+  | 'STRIPE_ERROR'
   | 'SERVER_ERROR';
 
 export interface ApiErrorBody {

@@ -4,6 +4,10 @@ import type {
   Attendee,
   AttendeeListResponse,
   CurrentRaffleResponse,
+  DonationCreateRequest,
+  DonationCreateResponse,
+  DonationLookupResponse,
+  DonationSummary,
   LoginResponse,
   Metrics,
   RaffleDrawRequest,
@@ -131,6 +135,30 @@ export const api = {
   currentRaffle(): Promise<CurrentRaffleResponse | null> {
     if (USE_MOCK) return mockApi.currentRaffle();
     return request<CurrentRaffleResponse | null>('GET', '/api/raffle/current', {
+      auth: true,
+    });
+  },
+
+  createDonation(body: DonationCreateRequest): Promise<DonationCreateResponse> {
+    if (USE_MOCK) return mockApi.createDonation(body);
+    return request<DonationCreateResponse>(
+      'POST',
+      '/api/donations/create-checkout-session',
+      { body },
+    );
+  },
+
+  getDonationBySession(id: string): Promise<DonationLookupResponse> {
+    if (USE_MOCK) return mockApi.getDonationBySession(id);
+    return request<DonationLookupResponse>(
+      'GET',
+      `/api/donations/by-session/${encodeURIComponent(id)}`,
+    );
+  },
+
+  donationSummary(): Promise<DonationSummary> {
+    if (USE_MOCK) return mockApi.donationSummary();
+    return request<DonationSummary>('GET', '/api/donations/summary', {
       auth: true,
     });
   },

@@ -36,3 +36,25 @@ export const raffleDrawSchema = z.union([
     participantNumber: z.coerce.number().int().positive(),
   }),
 ]);
+
+// Donations — amount is in cents. Min $1, max $10,000 to keep abusive
+// inputs out and to satisfy Stripe's min charge of $0.50.
+export const donationCreateSchema = z.object({
+  amountCents: z.coerce
+    .number()
+    .int()
+    .min(100, 'donation_min_1_dollar')
+    .max(1_000_000, 'donation_max_10000'),
+  donorName: z.string().trim().min(2).max(120).optional().or(z.literal('')),
+  donorEmail: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .email('email_invalid')
+    .max(160)
+    .optional()
+    .or(z.literal('')),
+  message: z.string().trim().max(500).optional().or(z.literal('')),
+});
+
+export type DonationCreateInput = z.infer<typeof donationCreateSchema>;

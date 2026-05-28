@@ -2,6 +2,11 @@ import type {
   Attendee,
   AttendeeListResponse,
   CurrentRaffleResponse,
+  Donation,
+  DonationCreateRequest,
+  DonationCreateResponse,
+  DonationLookupResponse,
+  DonationSummary,
   InsuranceType,
   InsuranceTypeBreakdown,
   LoginResponse,
@@ -12,6 +17,37 @@ import type {
   RegisterResponse,
 } from '@shared/types';
 import { ApiError } from './api';
+
+const MOCK_DONATION_GOAL_CENTS = 500_000;
+const mockDonations: Donation[] = [
+  {
+    id: 'demo-1',
+    amountCents: 10000,
+    currency: 'usd',
+    donorName: 'Carla Pérez',
+    status: 'succeeded',
+    createdAt: new Date(Date.now() - 25 * 60_000).toISOString(),
+    succeededAt: new Date(Date.now() - 25 * 60_000).toISOString(),
+  },
+  {
+    id: 'demo-2',
+    amountCents: 5000,
+    currency: 'usd',
+    donorName: 'Andrés M.',
+    status: 'succeeded',
+    createdAt: new Date(Date.now() - 90 * 60_000).toISOString(),
+    succeededAt: new Date(Date.now() - 90 * 60_000).toISOString(),
+  },
+  {
+    id: 'demo-3',
+    amountCents: 2500,
+    currency: 'usd',
+    donorName: 'Anonymous',
+    status: 'succeeded',
+    createdAt: new Date(Date.now() - 4 * 3600_000).toISOString(),
+    succeededAt: new Date(Date.now() - 4 * 3600_000).toISOString(),
+  },
+];
 
 const MOCK_PASSWORD = 'admin';
 const TOKEN_TTL_MS = 12 * 60 * 60 * 1000;
@@ -225,5 +261,57 @@ export const mockApi = {
   async currentRaffle(): Promise<CurrentRaffleResponse | null> {
     requireAuth();
     return delay(currentWinner);
+  },
+
+  async createDonation(
+    body: DonationCreateRequest,
+  ): Promise<DonationCreateResponse> {
+    const id = `mock-${crypto.randomUUID()}`;
+    const donation: Donation = {
+      id,
+      amountCents: body.amountCents,
+      currency: 'usd',
+      donorName: body.donorName,
+      donorEmail: body.donorEmail,
+      message: body.message,
+      status: 'succeeded',
+      createdAt: new Date().toISOString(),
+      succeededAt: new Date().toISOString(),
+    };
+    mockDonations.unshift(donation);
+    return delay({
+      sessionId: id,
+      // Simulated thank-you redirect — dev flow lands on /donations/thank-you
+      // without hitting Stripe at all.
+      checkoutUrl: `${window.location.origin}/donations/thank-you?session_id=${encodeURIComponent(id)}`,
+    });
+  },
+
+  async getDonationBySession(id: string): Promise<DonationLookupResponse> {
+    const found = mockDonations.find((d) => d.id === id);
+    if (!found) {
+      throw new ApiError(404, 'NOT_FOUND', 'Donation not found');
+    }
+    return delay({
+      amountCents: found.amountCents,
+      currency: found.currency,
+      donorName: found.donorName,
+      status: found.status,
+    });
+  },
+
+  async donationSummary(): Promise<DonationSummary> {
+    requireAuth();
+    const totalCents = mockDonations
+      .filter((d) => d.status === 'succeeded')
+      .reduce((acc, d) => acc + d.amountCents, 0);
+    return delay({
+      totalCents,
+      goalCents: MOCK_DONATION_GOAL_CENTS,
+      count: mockDonations.filter((d) => d.status === 'succeeded').length,
+      currency: 'usd',
+      recent: mockDonations.filter((d) => d.status === 'succeeded').slice(0, 5),
+      updatedAt: new Date().toISOString(),
+    });
   },
 };

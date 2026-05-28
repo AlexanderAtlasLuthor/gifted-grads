@@ -4,3 +4,12 @@
 
 MANAGER_PASSWORD="changeme"
 RESEND_API_KEY="re_xxxxxxxxxxxxxxxxxxxx"
+
+# Stripe — donations
+# Get the secret key from https://dashboard.stripe.com/apikeys (start
+# with sk_test_ for testing).
+STRIPE_SECRET_KEY="sk_test_xxxxxxxxxxxxxxxxxxxx"
+# Webhook signing secret from your endpoint settings (whsec_...). Local
+# testing: run `stripe listen --forward-to localhost:8788/api/stripe/webhook`
+# and copy the printed signing secret here.
+STRIPE_WEBHOOK_SECRET="whsec_xxxxxxxxxxxxxxxxxxxx"

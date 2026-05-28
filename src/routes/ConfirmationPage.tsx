@@ -2,6 +2,7 @@ import { Link, Navigate, useLocation } from 'react-router-dom';
 import { useTranslation } from '../i18n/I18nProvider';
 import { formatDateTime, formatParticipantNumber } from '../lib/format';
 import { Bolt, Sparkle } from '../components/decorations';
+import { DonationsSection } from '../components/DonationsSection';
 import type { Attendee, InsuranceType } from '@shared/types';
 
 interface ConfirmationState {
@@ -136,6 +137,12 @@ function Loaded({
             body={t('confirmation.notice3.body')}
           />
         </section>
+      </div>
+
+      {/* Donation invite — sits below the entry-pass summary, compact
+          variant so the page doesn't get bogged down. */}
+      <div className="mt-10">
+        <DonationsSection compact />
       </div>
 
       <div className="mt-10 flex justify-center">

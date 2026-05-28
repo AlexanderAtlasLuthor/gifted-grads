@@ -6,6 +6,8 @@ export const queryKeys = {
   attendee: (id: string) => ['attendee', id] as const,
   metrics: ['metrics'] as const,
   raffleCurrent: ['raffle', 'current'] as const,
+  donationSummary: ['donations', 'summary'] as const,
+  donationBySession: (id: string) => ['donations', 'session', id] as const,
 };
 
 export const POLL_INTERVAL_MS = 4000;
