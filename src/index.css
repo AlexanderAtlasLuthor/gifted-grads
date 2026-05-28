@@ -15,6 +15,7 @@
   }
   html {
     color-scheme: dark;
+    scroll-behavior: smooth;
   }
   body {
     @apply bg-ink-950 text-ink-50 antialiased font-sans;

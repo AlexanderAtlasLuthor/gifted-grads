@@ -76,7 +76,7 @@ export function RegisterPage() {
                 <span>Registration</span>
               </p>
               <a
-                href="#registration"
+                href="#information-form"
                 className="btn-primary mt-7 px-8 py-3 text-sm uppercase tracking-widest sm:mt-10"
               >
                 <Bolt className="h-4 w-4" />
@@ -151,7 +151,10 @@ export function RegisterPage() {
             </div>
           </aside>
 
-          <div className="glass-card grain-on relative flex h-full flex-col bg-ink-950/75 p-5 shadow-[0_24px_80px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-7 lg:p-8">
+          <div
+            id="information-form"
+            className="glass-card grain-on relative flex h-full scroll-mt-24 flex-col bg-ink-950/75 p-5 shadow-[0_24px_80px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-7 lg:p-8"
+          >
 
             <div className="mb-6 border-b border-white/10 pb-5">
               <div className="flex flex-wrap items-start justify-between gap-4">
