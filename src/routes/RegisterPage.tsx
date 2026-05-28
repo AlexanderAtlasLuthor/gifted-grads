@@ -62,7 +62,7 @@ export function RegisterPage() {
               <p className="eyebrow mt-5 text-sky-200/80 sm:mt-8">
                 Gifted Grads · Westborn Collectives
               </p>
-              <h1 className="event-title mt-4 text-[clamp(3.4rem,19vw,5.8rem)] sm:mt-5 lg:text-[clamp(3.4rem,12vw,8.5rem)]">
+              <h1 className="event-title mt-4 whitespace-nowrap text-[clamp(2.8rem,12vw,4.5rem)] sm:mt-5 sm:text-[clamp(3.2rem,11vw,5.6rem)] lg:text-[clamp(3.4rem,12vw,8.5rem)]">
                 “BORN GIFTED”
               </h1>
               <p className="mt-4 max-w-[18rem] font-editorial text-[10px] uppercase leading-5 tracking-[0.14em] text-[#D8F3FF] sm:max-w-none sm:text-sm sm:tracking-[0.45em] lg:hidden">
