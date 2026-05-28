@@ -15,15 +15,19 @@ export function MetricCard({
   className?: string;
 }) {
   return (
-    <div className={clsx('card p-4', className)}>
-      <div className="text-xs font-medium uppercase tracking-wide text-slate-500">
+    <div className={clsx('card grain-on relative overflow-hidden p-5', className)}>
+      <div className="text-[10px] font-semibold uppercase tracking-[0.35em] text-ink-200/70">
         {label}
       </div>
       {value !== undefined && (
-        <div className="mt-1 text-2xl font-semibold text-slate-900">{value}</div>
+        <div className="mt-2 font-display text-4xl text-white">{value}</div>
       )}
-      {hint && <div className="mt-1 text-xs text-slate-500">{hint}</div>}
-      {children && <div className="mt-3">{children}</div>}
+      {hint && (
+        <div className="mt-1 text-[11px] uppercase tracking-widest text-ink-200/60">
+          {hint}
+        </div>
+      )}
+      {children && <div className="mt-4">{children}</div>}
     </div>
   );
 }

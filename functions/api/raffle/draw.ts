@@ -1,12 +1,12 @@
-import { raffleDrawSchema } from '@shared/schemas';
+import { raffleDrawSchema } from '../../../shared/schemas';
 import { error, json } from '../../_shared/responses';
 import { rowToAttendeeIso, type AttendeeRow } from '../../_shared/db';
 import { sendResendEmail, winnerEmail } from '../../_shared/emails';
 
 type Env = {
   DB: D1Database;
-  RESEND_API_KEY: string;
-  RESEND_FROM: string;
+  RESEND_API_KEY?: string;
+  RESEND_FROM?: string;
 };
 
 export const onRequestPost: PagesFunction<Env> = async (ctx) => {

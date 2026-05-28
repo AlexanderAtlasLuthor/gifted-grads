@@ -1,4 +1,4 @@
-import type { Attendee, InsuranceType } from '@shared/types';
+import type { Attendee, InsuranceType } from '../../shared/types';
 
 interface SendArgs {
   apiKey: string;
@@ -39,12 +39,14 @@ function pad(n: number): string {
 
 function insuranceLabel(t: InsuranceType): string {
   switch (t) {
-    case 'HOUSE':
-      return 'House';
     case 'AUTO':
-      return 'Auto';
-    case 'LIFE':
-      return 'Life';
+      return 'Auto insurance';
+    case 'HOME':
+      return 'Home insurance';
+    case 'COMMERCIAL':
+      return 'Commercial insurance';
+    case 'RENTERS':
+      return 'Renters insurance';
   }
 }
 

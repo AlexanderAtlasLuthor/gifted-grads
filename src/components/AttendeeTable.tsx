@@ -59,8 +59,8 @@ export function AttendeeTable() {
   }
 
   return (
-    <div className="card overflow-hidden">
-      <div className="flex flex-col gap-3 border-b border-slate-200 p-4 lg:flex-row lg:items-center lg:justify-between">
+    <div className="card grain-on overflow-hidden">
+      <div className="flex flex-col gap-3 border-b border-white/10 p-4 lg:flex-row lg:items-center lg:justify-between">
         <input
           type="search"
           className="input lg:max-w-sm"
@@ -70,7 +70,7 @@ export function AttendeeTable() {
         />
         <div className="flex flex-wrap items-center gap-2">
           {isPlaceholderData && (
-            <div className="flex items-center gap-2 text-xs text-slate-500">
+            <div className="flex items-center gap-2 text-xs text-ink-200/70">
               <Spinner /> {t('common.loading')}
             </div>
           )}
@@ -104,43 +104,43 @@ export function AttendeeTable() {
       )}
 
       {isLoading ? (
-        <div className="p-6 text-center text-slate-500">
+        <div className="p-6 text-center text-ink-100/80">
           <Spinner /> <span className="ml-2">{t('common.loading')}</span>
         </div>
       ) : data && data.items.length === 0 ? (
-        <div className="p-6 text-center text-sm text-slate-500">
+        <div className="p-6 text-center text-sm text-ink-200/70">
           {t('dashboard.table.empty')}
         </div>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
+            <thead className="bg-white/[0.03] text-[10px] uppercase tracking-[0.3em] text-ink-200/60">
               <tr>
-                <th className="px-4 py-2 text-left">{t('dashboard.table.number')}</th>
-                <th className="px-4 py-2 text-left">{t('dashboard.table.nombre')}</th>
-                <th className="px-4 py-2 text-left">{t('dashboard.table.email')}</th>
-                <th className="px-4 py-2 text-left">{t('dashboard.table.telefono')}</th>
-                <th className="px-4 py-2 text-left">{t('dashboard.table.insuranceType')}</th>
-                <th className="px-4 py-2 text-left">{t('dashboard.table.createdAt')}</th>
+                <th className="px-4 py-3 text-left">{t('dashboard.table.number')}</th>
+                <th className="px-4 py-3 text-left">{t('dashboard.table.nombre')}</th>
+                <th className="px-4 py-3 text-left">{t('dashboard.table.email')}</th>
+                <th className="px-4 py-3 text-left">{t('dashboard.table.telefono')}</th>
+                <th className="px-4 py-3 text-left">{t('dashboard.table.insuranceType')}</th>
+                <th className="px-4 py-3 text-left">{t('dashboard.table.createdAt')}</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-white/5">
               {data?.items.map((a) => (
                 <tr
                   key={a.id}
-                  className="cursor-pointer transition hover:bg-slate-50"
+                  className="cursor-pointer transition hover:bg-white/[0.04]"
                   onClick={() => setSelected(a)}
                 >
-                  <td className="px-4 py-2 font-mono text-brand-700">
+                  <td className="px-4 py-3 font-mono text-accent-300">
                     {formatParticipantNumber(a.participantNumber)}
                   </td>
-                  <td className="px-4 py-2 font-medium text-slate-900">{a.nombre}</td>
-                  <td className="px-4 py-2 text-slate-600">{a.email}</td>
-                  <td className="px-4 py-2 text-slate-600">{a.telefono}</td>
-                  <td className="px-4 py-2 text-slate-600">
+                  <td className="px-4 py-3 font-medium text-white">{a.nombre}</td>
+                  <td className="px-4 py-3 text-ink-100/80">{a.email}</td>
+                  <td className="px-4 py-3 text-ink-100/80">{a.telefono}</td>
+                  <td className="px-4 py-3 text-ink-100/80">
                     {t(`insurance.${a.insuranceType}`)}
                   </td>
-                  <td className="px-4 py-2 text-slate-500">
+                  <td className="px-4 py-3 text-ink-200/70">
                     {formatDateTime(a.createdAt, locale)}
                   </td>
                 </tr>
@@ -151,7 +151,7 @@ export function AttendeeTable() {
       )}
 
       {data && data.total > 0 && (
-        <div className="flex items-center justify-between border-t border-slate-200 px-4 py-3 text-xs text-slate-600">
+        <div className="flex items-center justify-between border-t border-white/10 px-4 py-3 text-xs text-ink-200/70">
           <span>
             {t('dashboard.pagination.info', {
               page,

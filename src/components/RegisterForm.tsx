@@ -9,7 +9,7 @@ import { Spinner } from './Spinner';
 import { ApiError } from '../lib/api';
 import type { InsuranceType } from '@shared/types';
 
-const insuranceTypes: InsuranceType[] = ['HOUSE', 'AUTO', 'LIFE'];
+const insuranceTypes: InsuranceType[] = ['AUTO', 'HOME', 'COMMERCIAL', 'RENTERS'];
 
 export function RegisterForm() {
   const { t } = useTranslation();
@@ -125,7 +125,7 @@ export function RegisterForm() {
         )}
       </button>
 
-      <p className="flex items-center justify-center gap-1 text-center text-xs text-slate-500">
+      <p className="flex items-center justify-center gap-1 text-center text-xs text-ink-200/70">
         <LockMiniIcon /> {t('register.privacy')}
       </p>
     </form>
@@ -149,7 +149,7 @@ function Field({
         {label}
       </label>
       {children}
-      {error && <p className="mt-1 text-xs text-red-600">{error}</p>}
+      {error && <p className="mt-1 text-xs text-red-300">{error}</p>}
     </div>
   );
 }

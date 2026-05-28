@@ -2,39 +2,62 @@ import { useTranslation } from '../i18n/I18nProvider';
 import { MetricsGrid } from '../components/MetricsGrid';
 import { AttendeeTable } from '../components/AttendeeTable';
 import { RafflePanel } from '../components/RafflePanel';
+import { Bolt } from '../components/decorations';
 
 export function ManagerDashboardPage() {
   const { t } = useTranslation();
   return (
-    <div className="mx-auto max-w-7xl space-y-8 px-4 py-10 sm:px-6">
-      <header>
-        <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-          <span className="accent-underline">{t('dashboard.title')}</span>
-          <span className="ml-2" role="img" aria-label="wave">👋</span>
-        </h1>
-        <p className="mt-2 text-slate-600">{t('dashboard.subtitle')}</p>
-      </header>
+    <div className="event-shell min-h-full overflow-hidden">
+      {/* Supplied dashboard background — silhouettes against clouds. */}
+      <img
+        src="/manager-bg.png"
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none fixed inset-0 h-screen w-screen object-cover opacity-28"
+        style={{ objectPosition: '50% 50%' }}
+      />
+      <div className="pointer-events-none fixed inset-0 bg-gradient-to-b from-ink-950/30 via-ink-950/70 to-ink-950/95" />
+      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_50%_8%,rgba(110,198,232,0.18),transparent_38%)]" />
 
-      <section>
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
-          {t('dashboard.section.metrics')}
-        </h2>
-        <MetricsGrid />
-      </section>
+      <div className="relative mx-auto max-w-7xl space-y-10 px-4 py-10 sm:px-6 lg:py-14">
+        <header className="flex flex-col gap-3">
+          <span className="pill-accent w-fit">
+            <Bolt className="h-3.5 w-3.5" />
+            Born Gifted · Control Room
+          </span>
+          <h1 className="event-title text-[clamp(2.5rem,6vw,4.5rem)]">
+            {t('dashboard.title')}
+          </h1>
+          <p className="max-w-2xl text-ink-100/80">{t('dashboard.subtitle')}</p>
+        </header>
 
-      <section>
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
-          {t('dashboard.section.raffle')}
-        </h2>
-        <RafflePanel />
-      </section>
+        <section>
+          <SectionTitle>{t('dashboard.section.metrics')}</SectionTitle>
+          <MetricsGrid />
+        </section>
 
-      <section>
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
-          {t('dashboard.section.attendees')}
-        </h2>
-        <AttendeeTable />
-      </section>
+        <section>
+          <SectionTitle>{t('dashboard.section.raffle')}</SectionTitle>
+          <RafflePanel />
+        </section>
+
+        <section>
+          <SectionTitle>{t('dashboard.section.attendees')}</SectionTitle>
+          <AttendeeTable />
+        </section>
+      </div>
+    </div>
+  );
+}
+
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="mb-4 flex items-center gap-3">
+      <div className="h-px flex-1 bg-gradient-to-r from-white/15 to-transparent" />
+      <h2 className="font-editorial text-[11px] font-semibold uppercase tracking-[0.4em] text-ink-100/70">
+        {children}
+      </h2>
+      <div className="h-px flex-1 bg-gradient-to-l from-white/15 to-transparent" />
     </div>
   );
 }

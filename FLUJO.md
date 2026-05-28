@@ -124,7 +124,7 @@ Backend: `functions/api/raffle/draw.ts`. UI: `src/components/RafflePanel.tsx`.
 - **Métricas en tiempo real** (auto-refresh cada submission):
   - Total de leads
   - Leads hoy
-  - Distribución por tipo de seguro (House / Auto / Life)
+  - Distribución por tipo de seguro (Auto / Home / Commercial / Renters)
 - **Tabla de leads** con columnas `#, Nombre, Correo, Teléfono, Tipo de
   seguro, Recibido`
 - **Búsqueda** por nombre, correo o número

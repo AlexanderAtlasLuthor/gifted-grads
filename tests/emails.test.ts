@@ -17,9 +17,9 @@ describe('email templates', () => {
     const out = organizerEmail(sample);
     expect(out.subject).toContain('#007');
     expect(out.html).toContain('Lucía &lt;admin&gt;');
-    expect(out.html).toContain('Auto');
+    expect(out.html).toContain('Auto insurance');
     expect(out.text).toContain('Lucía <admin>');
-    expect(out.text).toContain('Auto');
+    expect(out.text).toContain('Auto insurance');
     expect(out.text).toContain('lucia@example.com');
   });
 

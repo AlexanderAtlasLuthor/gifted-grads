@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const insuranceTypeSchema = z.enum(['HOUSE', 'AUTO', 'LIFE']);
+export const insuranceTypeSchema = z.enum(['AUTO', 'HOME', 'COMMERCIAL', 'RENTERS']);
 
 export const registerSchema = z.object({
   nombre: z.string().trim().min(2).max(120),

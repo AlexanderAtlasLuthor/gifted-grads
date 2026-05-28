@@ -16,7 +16,6 @@ compatibility_date = "2025-01-01"
 compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = "dist"
 
-# Plain vars (NOT secrets — these are committed)
 [vars]
 RESEND_FROM = "Gifted Grads <noreply@aainsurances.com>"
 ORGANIZER_EMAIL = "info@aainsurances.com"
@@ -26,5 +25,5 @@ ORGANIZER_EMAIL = "info@aainsurances.com"
 [[d1_databases]]
 binding = "DB"
 database_name = "gifted-grads"
-database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+database_id = "1f16d1ab-b12f-4f1a-98af-4bfef669537d"
 migrations_dir = "migrations"

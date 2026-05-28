@@ -1,5 +1,4 @@
-import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
-import clsx from 'clsx';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from '../i18n/I18nProvider';
 import { LanguageToggle } from './LanguageToggle';
 import { Logo } from './Logo';
@@ -17,26 +16,12 @@ export function Header() {
     navigate('/manager/login');
   }
 
-  const navLinkClass = ({ isActive }: { isActive: boolean }) =>
-    clsx('nav-link', isActive && 'nav-link-active');
-
   return (
-    <header className="border-b border-slate-100 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/70">
+    <header className="sticky top-0 z-30 border-b border-white/5 bg-ink-950/60 backdrop-blur-xl supports-[backdrop-filter]:bg-ink-950/40">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-3 py-3 sm:gap-6 sm:px-6 sm:py-4">
-        <Link to="/" className="flex min-w-0 items-center" aria-label="Gifted Grads Events">
+        <Link to="/" className="flex min-w-0 items-center" aria-label="Born Gifted · Gifted Grads">
           <Logo />
         </Link>
-
-        {!onManager && (
-          <nav className="hidden items-center gap-8 md:flex">
-            <NavLink to="/" className={navLinkClass}>
-              {t('nav.register')}
-            </NavLink>
-            <NavLink to="/manager/login" className={navLinkClass}>
-              {t('nav.manager')}
-            </NavLink>
-          </nav>
-        )}
 
         <div className="flex shrink-0 items-center gap-2 sm:gap-3">
           <LanguageToggle />
